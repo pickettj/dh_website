@@ -1,15 +1,1063 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
     <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>My Test Webpage</title>
+        <title>Digital humanities</title>
+        <link href="/css/style.css" rel="stylesheet" type="text/css" />
+        <style type="text/css">
+            img.whitby {
+              max-width: 400px;
+              width: 40%;
+              float: right;
+              margin: 0 0 1em 1em;
+              border: none;
+            }
+            img {
+              border: none;
+            }</style>
     </head>
     <body>
-        
-        <h1>Hello, World!</h1>
-        
-        <p>This is a basic test webpage.</p>
-        
+        <h1><a class="logo" href="http://www.obdurodon.org">&lt;oo&gt;</a>&#x2192;<span class="logo"
+                >&lt;dh&gt;</span> Digital humanities</h1>
+        <hr />
+        <p><a href="http://commons.wikimedia.org/wiki/File:Whitby_Abbey_ruins_18.jpg">
+                <img src="images/500x331x24_Whitby_Abbey_ruins_18.png"
+                    alt="[Mike Peel  - Ruins of Whitby Abbey, Whitby, England]"
+                    title="Photograph of Whitby Abbey by Mike Peel (http://www.mikepeel.net)"
+                    class="whitby" />
+            </a></p>
+        <p class="boilerplate">
+            <span><strong>Maintained by:</strong> David J. Birnbaum (<a
+                    href="mailto:djbpitt@gmail.com">djbpitt@gmail.com</a>) <a
+                    href="http://creativecommons.org/licenses/by-nc-sa/3.0/" style="outline: none;">
+                    <img src="/images/cc/88x31.png"
+                        alt="[Creative Commons BY-NC-SA 3.0 Unported License]"
+                        title="Creative Commons BY-NC-SA 3.0 Unported License"
+                        style="height: 1em; vertical-align: text-bottom;" />
+                </a>
+            </span>
+            <span><strong>Last modified:</strong>
+                <!--#echo var="LAST_MODIFIED" --></span>
+        </p>
+        <hr />
+        <div class="note">
+            <p><strong>Quick links:</strong>
+                <a href="#admin">Administrative</a> | <a href="#css">Cascading style sheets
+                    (CSS)</a> | <a href="#general">General</a> | <a href="#gis">Geographic
+                    information systems (GIS)</a> | <a href="#html">HTML</a> | <a href="#js"
+                    >JavaScript</a> | <a href="#markdown">Markdown</a> | <a href="#music">Music</a>
+                | <a href="#nlp">NLP</a> | <a href="#network">Network analysis</a> | <a
+                    href="#projects">Projects</a>
+                <!--| <a
+                    href="#r">R</a>--> | <a href="#regex">Regular expressions</a> |
+                    <a href="#relaxng">Relax NG</a> | <a href="#schematron">Schematron</a> | <a
+                    href="#software">Software</a> | <a href="#svg">SVG</a> | <a href="#tei">TEI</a>
+                | <a href="#lda">Topic modeling</a> | <a href="#unicode">Unicode</a> | <a
+                    href="#visualization">Visualization</a> | <a href="#xml">XML</a> | <a
+                    href="#xpath">XPath</a> | <a href="#xproc">XProc</a> | <a href="#xquery"
+                    >XQuery</a> | <a href="#xslt">XSLT</a>
+                <!--| <a href="#xspec">XSpec</a>--></p>
+        </div>
+        <hr />
+        <section>
+            <h3>Course materials</h3>
+            <section id="admin">
+                <h4>Administrative</h4>
+                <ul>
+                    <li><a href="description.xhtml">Course description</a>, spring 2023 (2234)</li>
+                    <li><a href="syllabus.xhtml">Syllabus</a>, spring 2023 (2234)</li>
+                    <li><a href="file-naming_conventions.xhtml">File-naming conventions</a> (see
+                        also the <a href="html-css_assignments.xhtml">special conventions for the
+                            two HTML/CSS assignments</a>)</li>
+                    <li><a href="http://dh.obdurodon.org/collaboration.xhtml">Guidelines for
+                            collaboration on homework assignments</a></li>
+                    <li><a href="writing-your-own-code.xhtml">Guidelines for the ethical use of code
+                            that you find on the Internet</a></li>
+                    <!--<li><a href="zoom-suggestions.xhtml">How to get the most out of our online class
+                            meetings</a></li>-->
+                </ul>
+            </section>
+            <section id="projects">
+                <h4>Course projects</h4>
+                <ul>
+                    <li><a href="course-projects.xhtml">Course projects</a></li>
+                    <li>Project planning<ul>
+                            <!--<li>Pamella Lach’s <a href="project-planning.xhtml">Project planning
+                                    guidelines</a></li>
+                            <li>Aaron Brenner’s guide to <a
+                                    href="https://docs.google.com/presentation/d/10QWynj_bupwgRhN9hpu9MdR0HNVr1h6qO7FIXhJtmLY/edit#slide=id.p"
+                                    >Project management resources</a></li>-->
+                            <li><a href="project-structure.xhtml">Project structure guide</a> (how
+                                to set up a directory structure, filename conventions, etc. when
+                                you’re starting to build the project)</li>
+                            <li><a href="project-checklist.xhtml">Project requirements checklist</a>
+                                (during development of your project)</li>
+                            <li><a href="projects_tab.xhtml">GitHub tab guide</a></li>
+                        </ul></li>
+                </ul>
+            </section>
+            <section id="general">
+                <h4>General</h4>
+                <ul>
+                    <li><a href="http://dh.obdurodon.org/nitle.xhtml"><q>Can humanities undergrads
+                                learn to code?</q></a> Guest posting by undergraduate teaching
+                        assistants Janis Chinn and Gabrielle Kirilloff on <cite>Techne</cite>, the
+                        former blog site of the National Institute for Technology in Liberal
+                        Education [NITLE], 2012-01-31</li>
+                    <li><a href="projects.xhtml">Interesting digital humanities projects</a></li>
+                    <li><a href="organizations.xhtml">Digital humanities organizations, conferences,
+                            and journal</a></li>
+                    <li><a href="mounting-projects.xhtml">Uploading your project files</a></li>
+                    <li><a href="oxygen-xslt-configuration.xhtml">Configuring &lt;oXygen/&gt; for
+                            XSLT development and debugging</a></li>
+                    <!--<li>Agile development video tutorials:<ul>
+                            <li>Uzility Software <a href="https://youtu.be/9TycLR0TqFA?t=35s"
+                                    >Introduction to Scrum</a></li>
+                            <li>Development that pays <a
+                                    href="https://www.youtube.com/watch?v=rIaz-l1Kf8w">Scrum vs
+                                    kanban - what’s the difference?</a></li>
+                        </ul></li>-->
+                    <li>Git and GitHub: <ul>
+                            <li>Our <a href="git">Git</a> and <a href="jekyll.xhtml">GitHub
+                                    Pages</a> tutorials</li>
+                            <li>Sven Hoffmansven’s <a
+                                    href="https://gist.github.com/hofmannsven/6814451">Using Git</a>
+                                command-line cheat sheet</li>
+                            <!--Server can't be found 2022-09-14 
+                                <li>Got a merge conflict? See <a
+                                    href="http://blog.wuwon.id.au/2010/09/painless-merge-conflict-resolution-in.html"
+                                    >Painless merge conflict resolution in Git</a></li>-->
+                        </ul></li>
+                    <!--<li><a href="http://www.pitt.edu/~schunn/feedback/">A short tutorial on how to
+                            give good peer feedback on writing</a> (Christian Schunn)</li>-->
+                    <!--                    <li><a href="romanov/MCIW_Practicum_Zotero.pdf">Zotero: managing
+                            bibliography</a> (Maxim Romanov)</li>
+                    <li><a href="http://programminghistorian.org">The programming historian</a>
+                        (miscellaneous tutorials: Zotero, Python, data manipulation, GIS, Omeka,
+                        topic modeling, scraping)</li>-->
+                </ul>
+            </section>
+            <section>
+                <h4 id="software">Software</h4>
+                <section>
+                    <h5>Required software</h5>
+                    <ul>
+                        <li><em>All users:</em>
+                            <ul>
+                                <li>Download and install <a href="http://www.oxygenxml.com"
+                                        >&lt;oXygen/&gt;</a> (XML editor and development
+                                    environment. Enrolled students will find a license key in the
+                                    announcements section of <a href="http://canvas.pitt.edu"
+                                        >Canvas</a>)</li>
+                                <li>Create an account on <a href="https://github.com/"
+                                    >GitHub</a><!-- (includes GUI clients,
+                                    but see also third-party <a
+                                        href="http://sourceforge.net/projects/gitextensions/">Git
+                                        Extensions</a> Windows client)--></li>
+                                <!--<li><a href="htts://exist-db.org">eXist-db</a> XML database (we’ll
+                                    discuss installation when we get to our XQuery unit)</li>-->
+                            </ul></li>
+                        <li><em>Windows users:</em> download and install PuTTY and WinSCP, both of
+                            which are available at <a
+                                href="https://www.technology.pitt.edu/software/student"
+                                >https://www.technology.pitt.edu/software/student</a>.</li>
+                        <li><em>Mac users:</em> Download and install <a href="https://cyberduck.io/"
+                                >Cyberduck</a></li>
+                    </ul>
+                </section>
+                <section>
+                    <h5>Open-source command-line XML-related utilities (optional)</h5>
+                    <ul>
+                        <li>General purpose <ul>
+                                <li><a href="https://www.saxonica.com/html/documentation10/gizmo/"
+                                        >Gizmo</a> is distributed as part of <a
+                                        href="https://sourceforge.net/projects/saxon/files/"
+                                        >Saxon</a>, and can be used to perform XPath, XSLT, and
+                                    validation tasks (validation only against XSD schemas, and not
+                                    Relax NG)</li>
+                            </ul></li>
+                        <li>XSLT <ul>
+                                <li>Evan Lenz’s <a
+                                        href="https://github.com/evanlenz/xslt-visualizer"
+                                        >xslt-visualizer</a></li>
+                            </ul></li>
+                        <li>XPath <ul>
+                                <li><a href="https://www.videlibri.de/xidel.html">Xidel -
+                                        HTML/XML/JSON data extraction tool</a></li>
+                                <li><a href="http://xmlsoft.org/xmllint.html">xmllint</a> is a
+                                    command-line XML Swiss army knife (XPath 1.0)</li>
+                                <li><a href="http://xmlstar.sourceforge.net/">XMLStarlet</a> is a
+                                    command-line XML Swiss army knife (XPath 1.0)</li>
+                            </ul></li>
+                        <li>Schema languages <ul>
+                                <li><a href="https://github.com/relaxng/jing-trang">jing and
+                                        trang</a> are command-line utilities for working with Relax
+                                    NG. jing validates XML against a Relax NG schema, and trang
+                                    translates across schema languages.</li>
+                                <li>The one type of schema translation that trang does not perform
+                                    is that it does not translate from XSD to Relax NG. For that
+                                    purpose use <a href="https://github.com/epiasini/xsdtorng"
+                                        >XSDtoRNG</a>.</li>
+                                <li><a href="https://github.com/schxslt/schxslt">SchXslt</a>
+                                    transforms a Schematron schema document into an XSLT stylesheet
+                                    that can be applied to documents to be validated.</li>
+                            </ul></li>
+                        <li>XInclude<ul>
+                                <li><a href="https://github.com/ndw/sinclude">sinclude</a> is a
+                                    Saxon XInclude processor</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+            </section>
+        </section>
+        <section id="xml">
+            <h3>XML</h3>
+            <ul>
+                <li><a href="what-is-xml.xhtml">An even gentler introduction to XML</a></li>
+                <li><a href="beginner-pitfalls.xhtml">You aren’t a beginning XML developer anymore
+                    </a> (common beginner tagging mistakes and how to avoid them)</li>
+                <!--<li><a href="2234_test-01_xml.xhtml">XML test</a> (<a
+                        href="2234_test-01_xml_answers.xhtml">answers</a>)</li>-->
+            </ul>
+        </section>
+        <section id="relaxng">
+            <h3>Relax NG</h3>
+            <ul>
+                <li><a href="relaxng.xhtml">Introduction to Relax NG</a></li>
+                <li><a href="relaxng-practice.xhtml">Relax NG practice</a> (self-test, with
+                    answers)</li>
+                <li><a href="relaxng_notes.xhtml">Patterns, anti-patterns, and other Relax NG
+                        details</a></li>
+                <li><a href="relaxng_mixed-content.xhtml">Mixed content and empty elements in Relax
+                        NG</a></li>
+                <li><a
+                        href="https://pitt.primo.exlibrisgroup.com/permalink/01PITT_INST/1sjtb5p/alma9998520778106236"
+                        >Eric van der Vlist’s <cite>Relax NG</cite></a> (Pitt library copy, requires
+                    authentication)</li>
+                <!--<li><a href="2234_test-02_relax-ng.xhtml">Relax NG test</a> (<a
+                        href=" 2234_test-02_relax-ng_answer.xhtml">answers</a>)</li>-->
+            </ul>
+        </section>
+        <section id="tei">
+            <h3>Text Encoding Initiative (TEI)</h3>
+            <ul>
+                <li>Lou Burnard’s <a href="http://books.openedition.org/oep/426?lang=en"><cite>What
+                            is the Text Encoding Initiative? How to add intelligent markup to
+                            digital resources</cite></a></li>
+                <li><a href="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/index.html">TEI
+                        Guidelines (P5)</a></li>
+                <li><a href="http://teibyexample.org/TBE.htm">TEI By Example</a> offers a series of
+                    freely available online tutorials walking individuals through the different
+                    stages in marking up a document in TEI.</li>
+                <li>Subscribe to the <a href="http://www.tei-c.org/Support/index.xml#tei-l"
+                        >TEI-L</a> discussion list</li>
+                <!--<li><a href="tei-assignment-01.xhtml">TEI assignment #1</a></li>-->
+            </ul>
+        </section>
+        <section id="regex">
+            <h3>Regular expressions</h3>
+            <ul>
+                <li>Introductory tutorials and practice<ul>
+                        <li><a href="http://www.regular-expressions.info/quickstart.html">Regular
+                                expressions quick start</a> (with links to other tutorials) at <a
+                                href="http://www.regular-expressions.info/"
+                                >http://www.regular-expressions.info/</a></li>
+                        <li><a href="https://regexone.com/">RegexOne introduction with simple,
+                                interactive exercises</a></li>
+                        <li>Learn regular expressions with <a
+                                href="https://v4.software-carpentry.org/regexp/index.html">Software
+                                Carpentry</a></li>
+                        <li><a
+                                href="http://web.mit.edu/hackl/www/lab/turkshop/slides/regex-cheatsheet.pdf"
+                                >Regular expressions cheat sheet</a></li>
+                    </ul></li>
+                <li><a href="http://regexpal.com/">regexpal</a> and <a
+                        href="https://extendsclass.com/regex-tester.html">ExtendsClass regex
+                        tester</a> (on-line regular expression testers)</li>
+                <li><a href="regex-tips.xhtml">Regex tips</a> and <a
+                        href="http://dh.newtfire.org/explainRegex.html">Autotagging with regular
+                        expressions</a> (at our sibling newtFire site)</li>
+                <!--<li><a href="http://www.gutenberg.org/cache/epub/1041/pg1041.txt">The Project Gutenberg
+                    EBook of Shakespeare’s sonnets</a> (plain text: utf8)</li>
+            <li><a href="http://www.gutenberg.org/cache/epub/2081/pg2081.txt">The Project Gutenberg
+                    EBook of <cite>The Blithedale Romance</cite>, by Nathaniel Hawthorne</a> (plain
+                text: utf8)</li>
+            <li>Useful regex expressions<ul>
+                    <li><a href="regex.xhtml">Regex tutorial</a> (based on Blithedale)</li>
+                    <li><a href="http://www.regular-expressions.info/">Regular-Expressions.info</a>
+                        (tutorial and reference materials)</li>
+                    <li>Blank line (two new-line characters): <code>\n\n</code></li>
+                    <li>Quotation (non-greedy text inside quotation marks):
+                        <code>"(.*?)"</code></li>
+                    <li>Chapter titles in Blithedale (after conversion):
+                            <code>//p[matches(.,"^[IVX]+\. [A-Z \-,']+$")]</code></li>
+                    <li>Empty paragraphs in Blithedale (after conversion):
+                            <code>//p[matches(.,"^$")]</code></li>
+                    <li>Paragraphs in Blithedale that contain no lower-case letters (after
+                        conversion): <code>//p[matches(.,'^\P{Ll}*$')]</code></li>
+                </ul></li>-->
+                <li><a href="analyze-string.xhtml"><code>&lt;xsl:analyze-string&gt;</code>
+                        tutorial</a></li>
+                <li><a href="regex-assignment-01.xhtml">Regex assignment #1</a></li>
+                <li><a href="regex-assignment-02.xhtml">Regex assignment #2</a></li>
+                <li><a href="regex-assignment-03.xhtml">Regex assignment #3</a></li>
+                <!--<li><a href="2234_test-03_regex.xhtml">Regex test</a> (<a
+                        href="2234_test-03_regex_answers.xhtml">answers</a>)</li>-->
+            </ul>
+        </section>
+        <section id="html">
+            <h3>HTML</h3>
+            <ul>
+                <li><a href="html_basics.xhtml">HTML basics</a></li>
+                <li><a href="ssi.xhtml">Server side includes (SSI)</a></li>
+                <li><a href="https://validator.w3.org/">W3C markup validation service</a></li>
+                <!--            <li>For the most part we use XHTML as our flavor of HTML, but HTML5 is currently under
+                development and provides some features that may be useful for specific purposes.
+                Anything currently under development must be used cautiously, since 1) not all
+                features are supported in all major browsers, and 2) a feature we rely on today
+                could be removed from the spec tomorrow, but here are some links that outline new features:<ul>
+                    <li>w3schools <a href="http://www.w3schools.com/html/html_intro.asp">general
+                            HTML tutorial</a> (includes HTML5 features) and discussion of <a
+                            href="http://www.w3schools.com/html/html5_new_elements.asp">new HTML
+                            features</a></li>
+                    <li>Official W3C <a href="http://www.w3.org/TR/html5-diff/">guide to differences
+                            between HTML5 and previous standards</a></li>
+                    <li>WHATWG outline of <a href="http://wiki.whatwg.org/wiki/HTML%5Fvs.%5FXHTML"
+                            >differences between XML and HTML syntax for HTML5</a> (use only XML
+                        syntax in course projects)</li>
+                </ul></li>-->
+                <!--<li>Image maps<ul>
+                        <li><a href="https://www.image-map.net/">Image map generator</a> (calculates
+                            coordinates for image maps in HTML)</li>
+                        <li>Dudley Storey’s <a
+                                href="https://thenewcode.com/760/Create-A-Responsive-Imagemap-With-SVG"
+                                >Create a responsive imagemap with SVG</a></li>
+                    </ul></li>-->
+            </ul>
+        </section>
+        <section id="css">
+            <h3>Cascading style sheets (CSS)</h3>
+            <ul>
+                <li><a href="css-intro.xhtml">Introduction to Cascading style sheets (CSS)</a></li>
+                <li><a href="class-and-span.xhtml">Using <code>&lt;span&gt;</code> and
+                        <code>@class</code> to style your HTML</a></li>
+                <li>Layout and CSS:<ul>
+                        <li>Our <a href="html_layouts">Website layouts</a></li>
+                        <li><a href="http://learnlayout.com">Learn CSS Layout</a></li>
+                        <li><a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">A
+                                complete guide to Flexbox</a> and <a
+                                href="https://www.freecodecamp.org/news/flexbox-the-ultimate-css-flex-cheatsheet/"
+                                >The ultimate CSS flex cheatsheet (with animated diagrams!)</a></li>
+                        <!--<li><a href="https://css-tricks.com/snippets/css/complete-guide-grid/">A
+                                complete guide to Grid</a> and <a href="https://www.euismod.dev"
+                                >Practice Grid interactively </a></li>-->
+                        <li>W3Schools <a href="https://www.w3schools.com/css/css_grid.asp">CSS Grid
+                                tutorial</a></li>
+                    </ul></li>
+                <li><a href="cssAnimationsIntro.xhtml">Introduction to CSS animations</a></li>
+                <li><a href="http://dh.obdurodon.org/usingWebfonts.xhtml">Using Webfonts</a>
+                    tutorial</li>
+                <li><a href="http://www.csszengarden.com/">The CSS zen garden</a></li>
+                <li><a href="http://jigsaw.w3.org/css-validator/">W3C CSS validation service</a>
+                    (Jigsaw)</li>
+                <li><a href="https://color.a11y.com/">A11y</a> color contrast accessibility
+                    validator</li>
+                <li>You can edit and develop CSS interactively in the browser. See <a
+                        href="https://developers.google.com/web/tools/chrome-devtools/css">Get
+                        Started With Viewing And Changing CSS</a> for a brief tutorial. The tutorial
+                    is written for Chrome, but all of the major browsers have comparable developer
+                    tools.</li>
+                <li>Color<ul>
+                        <li><a href="http://www.color-hex.com/">Color-hex</a> gives information
+                            about colors including color models (RGB,HSL,HSV and CMYK), Triadic
+                            colors, monochromatic colors and analogous colors calculated in color
+                            page.</li>
+                        <li><a href="http://colorbrewer2.org">Color Brewer</a> provides attractive,
+                            curated color palettes, primarily for maps. See Rick Wicklin’s brief <a
+                                href="https://blogs.sas.com/content/iml/2014/10/01/colors-for-heat-maps.html"
+                                >description</a> to learn more about how to use it.</li>
+                        <li><a href="https://www.rapidtables.com/web/color/RGB_Color.html">Rapid
+                                tables</a> offers a variety of color-selection utilities</li>
+                        <li><a
+                                href="http://www.useragentman.com/blog/2010/08/28/coding-colors-easily-using-css3-hsl-notation/"
+                                >Coding colors easily using CSS3 <code>hsl()</code> notation
+                            </a></li>
+                    </ul></li>
+            </ul>
+        </section>
+        <section id="xpath">
+            <h3>XPath</h3>
+            <ul>
+                <li><a href="introduction-xpath.xhtml">What can XPath do for me?</a></li>
+                <li><a href="functions.xhtml">The XPath functions we use most</a></li>
+                <li>XPath: Looking Stuff Up<ul>
+                        <li>Michael Kay, <cite>XSLT 2.0 and XPath 2.0. 4th Edition</cite>, available
+                            on line in the Pitt library system at <a
+                                href="http://site.ebrary.com/lib/pitt/detail.action?docID=10381092"
+                                >http://site.ebrary.com/lib/pitt/detail.action?docID=10381092</a>
+                            (authentication required)</li>
+                        <li><a href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery
+                                functions and operators 3.1</a> (W3C recommendation 21 March
+                            2017)</li>
+                        <li><a href="https://www.w3.org/TR/xpath-31/">XML Path Language (XPath)
+                                3.1</a> (W3C recommendation 21 March 2017 )</li>
+                        <li><a
+                                href="https://www.saxonica.com/documentation11/index.html#!functions/fn"
+                                >Saxon XPath function documentation</a></li>
+                        <li>W3Schools <a href="https://www.w3schools.com/xml/xsl_functions.asp"
+                                >XSLT, XPath, and XQuery functions</a></li>
+                        <li><a href="https://devhints.io/xpath">devhints.io XPath cheat
+                            sheet</a></li>
+                    </ul></li>
+                <li>Martin Honnen’s <a href="https://martin-honnen.github.io/xml-workbench/">XML
+                        Workbench</a></li>
+                <!--            <li><a href="xpath-activity01.html">XPath class activity #1</a></li>-->
+                <!--<li><a href="fables.xml">fables.xml</a> (Selected Aesopian fables, in class
+                    activity)</li>-->
+                <li><a href="xpath-assignment-01.xhtml">XPath assignment #1</a></li>
+                <li><a href="xpath-assignment-02.xhtml">XPath assignment #2</a></li>
+                <li><a href="xpath-assignment-03.xhtml">XPath assignment #3</a></li>
+                <li><a href="xpath-assignment-04.xhtml">XPath assignment #4</a></li>
+                <!--<li><a href="2234_test-04_xpath.xhtml">XPath test</a> (<a
+                        href="2234_test-04_xpath_answer.xhtml">answers</a>)</li>-->
+            </ul>
+        </section>
+        <section id="xslt">
+            <h3>XSLT</h3>
+            <ul>
+                <li><a href="xslt-basics.xhtml">XSLT basics</a></li>
+                <li>Our <a href="http://dh.obdurodon.org/oxygen-xslt-configuration.xhtml">XSLT
+                        configuration in &lt;oXygen/></a> describes how to set up the
+                    &lt;oXygen/&gt; XSLT debugging view to transform XML to HTML (and other output
+                    formats) using XSLT</li>
+                <li><a href="xslt-basics-2.xhtml">XSLT basics, part 2: variables, conditionals,
+                        keys, and push and pull</a></li>
+                <li><a href="xslt-functions.xhtml">User-defined functions</a></li>
+                <li><a href="xslt3.xhtml">What’s new in XSLT 3.0 and XPath 3.1?</a> (in
+                    progress)</li>
+                <li><a
+                        href="http://www.wwp.northeastern.edu/outreach/seminars/xslt_2011-06/presentations/xslt/djb_xslt-paradigm.xml"
+                        >The XSLT paradigm</a> and <a
+                        href="http://www.wwp.northeastern.edu/outreach/seminars/xslt_2011-06/presentations/xslt/djb_built-in_template_rules.xml"
+                        >Default template rules</a> (slide sets from TEI XSLT workshop at Brown
+                    University)</li>
+                <!--            <li><a href="2011-10-07_bad-hamlet.xsl">Sample XSLT to convert <cite>Bad Hamlet</cite>
+                    from XML to HTML for reading</a></li>
+-->
+                <!--<li><q>Dr. Who</q>, <cite>Terror of the Autons</cite> (episode 8, season 1)<ul>
+                    <li><a href="S8E01_Autons.xml">XML</a> (from <a href="http://who.obdurodon.org"
+                            >The UNIT <q>dating</q> crisis: Investigating shipping choices in
+                                <cite>Doctor Who</cite>’s UNIT era</a>)</li>
+                    <li><a href="http://dwtpscripts.tripod.com/3rddoc/eee/eee1.html">HTML</a> (at
+                        the <a href="http://dwtpscripts.tripod.com"><cite>Doctor Who</cite>
+                            transcript project</a>)</li>
+                </ul></li>-->
+                <li><a href="algorithms.xhtml">Thinking in algorithms</a> (how to conceptualize an
+                    XSLT transformation before you begin to write the code)</li>
+                <li><a href="developing-xslt.xhtml">Developing an XSLT stylesheet</a> (the workflow
+                    of writing XSLT)</li>
+                <li><a href="identity.xhtml">Using the XSLT identity transformation</a></li>
+                <li><a href="count-acts-in-hamlet.html">How to convert <cite>Bad Hamlet</cite> from
+                        XML to an HTML tables that counts the number of speeches in each
+                    act</a></li>
+                <li><a href="modal-xslt.xhtml">Modal XSLT</a></li>
+                <li><a href="avt.xhtml">Attribute Value Templates (AVTs)</a></li>
+                <!--<li>Sample text for practice: <a href="http://dh.obdurodon.org/wilde-testimony.xml"
+                    >Testimony from the Oscar Wilde trials</a> (XML, with linked CSS)</li>-->
+                <li>There are two basic ways to transform XML in &lt;oXygen/&gt; and save the
+                    output. We usually use the first one in our own work:<ul>
+                        <li><a href="creating_from_xslt.html">Saving generated output from XSLT
+                                transformations</a></li>
+                        <li><a href="transformation-scenario.xhtml">Transforming XML with XSLT using
+                                transformation scenarios</a></li>
+                    </ul></li>
+                <li><a href="xslt-assignment-01.xhtml">XSLT assignment #1</a><!-- (<a
+                        href="xslt-assignment-01-answers.xhtml">answers</a>)--></li>
+                <li><a href="xslt-assignment-02.xhtml">XSLT assignment #2</a><!-- (<a
+                        href="xslt-assignment-02-answers.xhtml">answers</a>)--></li>
+                <li><a href="xslt-assignment-03.xhtml">XSLT assignment #3</a><!-- (<a
+                        href="xslt-assignment-03-answers.xhtml">answers</a>)--></li>
+                <li><a href="xslt-assignment-04.xhtml">XSLT assignment #4</a><!-- (<a
+                        href="xslt-assignment-04-answers.xhtml">answers</a>)--></li>
+                <li><a href="xslt-assignment-05.xhtml">XSLT assignment #5</a><!-- (<a
+                        href="xslt-assignment-05-answers.xhtml">answers</a>)--></li>
+                <li>(Not assigned in spring 2023: <a href="xslt-assignment-06.xhtml">XSLT assignment
+                        #6</a>)</li>
+                <!--<li><a href="2234_test-05_xslt.xhtml">XSLT test</a> (<a
+                        href="2234_test-05_answers.xhtml">answers</a>)</li>-->
+                <li><a href="xslt-functions-assignment-01.xhtml">User-defined functions in XSLT:
+                        exercise 1</a></li>
+            </ul>
+        </section>
+        <section id="xquery">
+            <h3>XQuery</h3>
+            <ul>
+                <li><a href="xquery-abcs.xhtml">Getting started with XQuery</a></li>
+                <li><a href="http://en.wikibooks.org/wiki/XQuery">XQuery Wikibook</a> (general and
+                    eXist-db-specific XQuery documentation and examples)</li>
+                <!--<li><a href="https://www.progress.com/tutorials/xquery/tour"
+                        >XQuery: a guided tour</a> (excerpted from <cite>XQuery from the experts: a
+                        guide to the W3C XML query language</cite>; see especially the discussion of
+                    FLWOR expressions at the <a
+                        href="https://www.progress.com/products/data-integration-suite/data-integration-suite-developer-center/data-integration-suite-tutorials/learning-xquery/xquery-\-\-a-guided-tour/combining-and-restructuring-nodes-in-xquery"
+                        >Combining and Restructuring Nodes in XQuery</a> subsection)</li>-->
+                <li>StylusStudio <a
+                        href="https://www.stylusstudio.com/tutorials/xquery-tutorials.html">XQuery
+                        tutorials</a></li>
+                <li>XML databases<ul>
+                        <li>eXist-db<ul>
+                                <li><a href="http://exist-db.org">eXist-db XML database and
+                                        application platform</a></li>
+                                <li><a href="https://github.com/eXist-db/xst">xst: Command-line
+                                        interface for eXist-db</a></li>
+                                <li><a
+                                        href="https://github.com/Pittsburgh-NEH-Institute/hoaXed/wiki"
+                                        >hoaXed wiki: Tutorial for creating eXist-db app</a></li>
+                                <li><a href="http://dh.obdurodon.org/php-xquery.xhtml">Using PHP to
+                                        query the eXist XML database</a></li>
+                            </ul></li>
+                        <li><a href="https://basex.org/">BaseX</a></li>
+                    </ul></li>
+                <li>See also the <a href="#xqueryNetwork">XML to network visualization by way of
+                        XQuery exercises</a> in the Network analysis listings</li>
+                <!--<li><a href="shakespeare-characters.html">Listing the cast of Shakespearean
+                plays</a></li> This uses an old version of the plays, and needs to be rewritten if we want to use it again-->
+                <li><a href="xquery-assignment-01.html">XQuery assignment #1</a><!-- (<a
+                        href="xquery-assignment-01-answers.xhtml">answers</a>)--></li>
+                <li><a href="xquery-assignment-02.html">XQuery assignment #2</a><!-- (<a
+                        href="xquery-assignment-02-answers.xhtml">answers</a>)--></li>
+                <li><a href="xquery-assignment-03.xhtml">XQuery assignment #3</a></li>
+                <!--<li><a href="xquery-test-2194.xhtml">XQuery
+                    test</a><!-\- (<a
+                        href="xquery-test-solution.xhtml">answers</a>)-\-></li>-->
+            </ul>
+        </section>
+        <section id="schematron">
+            <h3>Schematron</h3>
+            <ul>
+                <li><a href="schematron-intro.xhtml">Introduction to Schematron</a></li>
+                <li><a href="schematron-class-01.html">Examples of Schematron from our
+                    projects</a></li>
+                <!--<li><a href="http://rmtp.obdurodon.org">Russian movie theater project</a><ul>
+                        <li>Sample interview (xml) <a href="RMTP/alyrzaeva.xml"
+                            >alyrzaeva.xml</a></li>
+                        <li>Relax NG schema <a href="RMTP/schema_interview.rnc"
+                                >schema_interview.rnc</a></li>
+                        <li>Schematron schema <a href="RMTP/exampleSchematron.sch"
+                                >exampleSchematron.sch</a></li>
+                        <li>Reference index <a href="RMTP/index.xml"
+                            >index.xml</a><!-\- and Relax NG schema
+                        for index <a href="RMTP/index.rnc">index.rnc</a>-\-></li>
+                    </ul></li>-->
+                <li>Validating references with Schematron <ul>
+                        <li>Skyrim <a href="skyrim.xml">XML</a> and <a href="skyrim.rnc">Relax
+                                NG</a><!--,
+                            and <a href="skyrim.sch">Schematron</a>--></li>
+                        <li><a href="schematron-skyrim.xhtml">Analysis</a></li>
+                    </ul></li>
+                <li><a href="schematron-class-02.html">Using Schematron in editing</a></li>
+                <li><a href="schematron-assignment-01.xhtml">Schematron assignment #1</a></li>
+                <li><a href="schematron-assignment-02.xhtml">Schematron assignment #2</a></li>
+                <!--<li><a href="2234_test-07_schematron.xhtml">Schematron test</a> (<a
+                        href="2234_test-07_schematron-answers.xhtml">answers</a>)</li>-->
+
+            </ul>
+        </section>
+        <section id="svg">
+            <h3>SVG</h3>
+            <ul>
+                <li><a href="https://www.w3schools.com/graphics/svg_intro.asp">w3schools
+                        introductory SVG tutorial</a> (good, basic introduction; start here for a
+                    quick initial overview with brief examples of the most common features)</li>
+                <li><a href="http://tutorials.jenkov.com/svg/index.html">Jakov Jenkov SVG
+                        tutorial</a> (also introductory, but longer and with more detail than the
+                    preceding; start here for something more comprehensive)</li>
+                <li><a href="http://www.math.wsu.edu/kcooper/M300/svgcheat.php">SVG cheat sheet</a>
+                    (Washington State University)</li>
+                <li><a href="coordinate-tutorial.xhtml">Viewbox tutorial: an introduction to the SVG
+                        coordinate space</a></li>
+                <li>Creating stooge bar graph with XSLT:<ul>
+                        <li>Input XML (<a href="stooge.xml">stooge.xml</a>)</li>
+                        <li>Commented XSLT (<a href="stooge-dynamic.xsl"
+                            >stooge-dynamic.xsl</a>)</li>
+                        <li>Output SVG (<a href="stooge-dynamic.svg">stooge-dynamic.svg</a>)</li>
+                    </ul></li>
+                <li><a href="https://css-tricks.com/scale-svg/">How to scale SVG</a> (Amelia
+                    Bellamy-Royds’s tutorial about how scaling SVG doesn’t work like scaling other
+                    types of images).</li>
+                <li>Katherine Kato’s <a href="https://css-tricks.com/svg-properties-and-css/">SVG
+                        properties and CSS</a></li>
+                <li>By Sara Soueidan:<ul>
+                        <li><a
+                                href="http://slides.com/sarasoueidan/building-better-interfaces-with-svg#/"
+                                >Building better interfaces with SVG</a></li>
+                        <li><a href="http://sarasoueidan.com/blog/svg-coordinate-systems/"
+                                >Understanding SVG coordinate systems and transformations (Part 1) —
+                                The viewport, viewBox, and
+                            <code>@preserveAspectRatio</code></a></li>
+                        <li><a href="https://sarasoueidan.com/blog/svg-transformations/"
+                                >Understanding SVG coordinate systems and transformations (Part 2) —
+                                The <code>@transform</code> attribute</a></li>
+                        <li><a href="https://www.sarasoueidan.com/blog/nesting-svgs/">Understanding
+                                SVG coordinate systems and transformations (Part 3) – Establishing
+                                new viewports</a></li>
+                        <li><a
+                                href="http://tympanus.net/codrops/2014/08/19/making-svgs-responsive-with-css/"
+                                >Making SVGs responsive with CSS</a></li>
+                    </ul></li>
+                <!--<li>SVG image maps (Dudley Storey)<ul>
+                        <li><a
+                                href="http://thenewcode.com/699/Web-Developer-Reading-List-SVG-Imagemaps-Interactivity"
+                                >Web developer reading list: SVG Imagemaps and
+                            interactivity</a></li>
+                        <li><a
+                                href="http://thenewcode.com/696/Using-SVG-as-an-Alternative-To-Imagemaps"
+                                >Using SVG as an alternative to Imagemaps</a></li>
+                        <li><a
+                                href="http://thenewcode.com/760/Create-A-Responsive-Imagemap-With-SVG"
+                                >Create a responsive Imagemap with SVG</a></li>
+                    </ul></li>-->
+                <!--<li>On-line SVG editors: <a href="http://editor.method.ac/">Method draw</a> | <a
+                        href="https://svg-edit.github.io/svgedit/releases/svg-edit-2.8.1/svg-editor.html"
+                        >svg-edit</a></li>-->
+                <!--<li>Software: <a href="http://inkscape.org">Inkscape</a> (open-source vector
+                    graphics editor; see also Aaron Nieze’s rich assortment of <a
+                        href="https://tutsplus.com/authors/aaron-nieze">Inkscape tutorials</a>)</li>-->
+                <li><a
+                        href="http://edutechwiki.unige.ch/en/XSLT_to_generate_SVG_tutorial#Creating_a_simple_bar_chart"
+                        >Tutorial: Using XSLT to generate a bar graph</a></li>
+                <li><a href="svg-embedding.xhtml">Embedding SVG in XHTML</a></li>
+                <li><a href="http://www.mathsisfun.com/geometry/unit-circle.html">Trigonometry
+                        refresher</a> (in case you need to plot circular locations)</li>
+                <li><a href="svg-assignment-01.xhtml">SVG assignment #1</a></li>
+                <li><a href="svg-assignment-02.xhtml">SVG assignment #2</a></li>
+                <!--<li><a href="svg-assignment-03-project.xhtml">SVG assignment #3</a></li>-->
+                <li><a href="svg-assignment-03.xhtml">SVG assignment #3</a></li>
+                <li>(Not assigned in spring 2023: <a href="svg-assignment-04.xhtml">SVG assignment
+                        #4</a>)</li>
+                <!--<li><a href="2234_test-06_svg.xhtml">SVG test</a> (<a
+                        href="2234_test-06_answers.xhtml">answers</a>)</li>-->
+            </ul>
+        </section>
+        <!--<section id="xspec">
+            <h3>XSpec</h3>
+            <ul>
+                <li>XSpec assignment #1</li>
+                <li>XSpec assignment #2</li>
+            </ul>
+        </section>-->
+        <section id="xproc">
+            <h3>XProc</h3>
+            <ul>
+                <li><a href="xproc-tutorial.xhtml">XProc: pipelines for project management</a></li>
+                <li>The data &lt;2&gt;type <a
+                        href="https://www.data2type.de/en/xml-xslt-xslfo/xproc/">Overview of
+                        XProc</a></li>
+                <li>Roger Costello’s <a href="http://xfront.com/xproc/index.html">XProc
+                    Tutorial</a></li>
+                <li>George Bina’s <a href="https://www.youtube.com/watch?v=QkG1-lVNQkw">An
+                        introduction to XProc</a> (forty-minute video from the &lt;oXygen/&gt; Users
+                    Meetup, Munich, 2013)</li>
+                <li>Erik Hennum’s <a href="https://ehennum.wordpress.com/2010/09/10/starting-xproc/"
+                        >Getting started with XProc</a></li>
+                <li>The official specification at <a href="https://www.w3.org/TR/xproc/">XProc: An
+                        XML Pipeline Language</a></li>
+            </ul>
+        </section>
+        <section id="visualization">
+            <h3>Visualization</h3>
+            <ul>
+                <li>About visualization<ul>
+                        <li>Claus O. Wilke’s <a href="https://serialmentor.com/dataviz/"
+                                >Fundamentals of data visualization</a></li>
+                        <li><a
+                                href="https://www.tableau.com/about/blog/2013/7/list-books-about-data-visualisation-24182"
+                                >Twelve great books about data visualisation</a></li>
+                        <li>Elijah Meeks’s <a
+                                href="https://medium.com/@Elijah_Meeks/d3-is-not-a-data-visualization-library-67ba549e8520"
+                                >D3 is not a data visualization library</a></li>
+                        <li>Stephen Few’s <a href="http://www.perceptualedge.com/">Perceptual
+                                edge</a> is primarily about business analytics, but the <a
+                                href="http://www.perceptualedge.com/library.php">library</a> and <a
+                                href="http://www.perceptualedge.com/examples.php">examples</a>
+                            sections are applicable to humanities data.</li>
+                        <!--<li>Shawn Graham, Ian Milligan, and Scott Weingart’s <a
+                                href="http://www.themacroscope.org/?page_id=469">Principles of
+                                information visualization</a> (part of their <a
+                                href="http://www.themacroscope.org/"><cite>The historian’s
+                                    macroscope: Big digital history</cite></a>)</li>-->
+                        <li>Angela Zoss’s <a href="http://guides.library.duke.edu/datavis"
+                                >Introduction to data visualization </a></li>
+                        <li>Yan Holtz’s and Conor Healy’s <a href="https://www.data-to-viz.com/"
+                                >From data to viz</a></li>
+                        <li>Peter Aldhous’s <a
+                                href="https://paldhous.github.io/ucb/2016/dataviz/week2.html">Data
+                                visualization: basic principles</a></li>
+                        <li>Dipanjan (DJ) Sarkar’s <a
+                                href="https://medium.com/swlh/effective-visualization-of-multi-dimensional-data-a-hands-on-approach-b48f36a56ee8"
+                                >Effective visualization of multi-dimensional data: a hands-on
+                                approach</a></li>
+                    </ul></li>
+                <li>Visualization galleries<ul>
+                        <li>Michael Bostock’s D3 visualization <a
+                                href="https://observablehq.com/collection/@observablehq/visualization"
+                                >gallery</a></li>
+                        <li>Wikipedia pages for <a href="http://en.wikipedia.org/wiki/Diagram"
+                                >diagrams</a> and <a href="http://en.wikipedia.org/wiki/Chart"
+                                >charts</a></li>
+                        <li>Google graphs <a
+                                href="https://developers.google.com/chart/interactive/docs/gallery"
+                                >Chart gallery</a> and <a
+                                href="https://developers.google.com/chart/interactive/docs/more_charts"
+                                >Additional charts gallery</a></li>
+                        <li>Jeffrey Heer, Michael Bostock, and Vadim Ogievetsky’s <a
+                                href="https://homes.cs.washington.edu/~jheer/files/zoo/">Tour
+                                through the visualization zoo</a></li>
+                        <li>Severino Ribecca’s <a href="http://www.datavizcatalogue.com/index.html"
+                                >Data visualisation catalogue</a></li>
+                        <li>Vega <a href="https://vega.github.io/vega/examples/">Example
+                            gallery</a></li>
+                    </ul></li>
+                <li>Sample visualizations<ul>
+                        <li><a
+                                href="https://jacobg00.github.io/beatles/HTML/song_modality_over_time.html"
+                                >Song modality: trends over time</a> (Jacob Graham, Ted Kondrich,
+                            Vincent Marecic, Shannon Dunn, Bill Campbell; Pitt Greensburg student
+                            project, spring 2022)</li>
+                    </ul></li>
+            </ul>
+        </section>
+        <section id="js">
+            <h3>JavaScript</h3>
+            <ul>
+                <li>Our tutorials<ul>
+                        <li><a href="javascript.xhtml">Introduction to JavaScript</a></li>
+                        <li><a href="javascript_piece-by-piece.xhtml">JavaScript piece by piece</a>
+                            tutorial</li>
+                    </ul></li>
+                <li>External tutorials, portals, and other resources<ul>
+                        <li>Mozilla development network <a
+                                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide"
+                                >JavaScript Guide</a> and <a
+                                href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference"
+                                >JavaScript reference</a></li>
+                        <li>Marijn Haverbeke’s <a href="http://eloquentjavascript.net/">Eloquent
+                                JavaScript</a> (open-access on-line textbook)</li>
+                        <li><a href="http://www.javascriptkit.com">JavaScript Kit</a> (<q>a
+                                comprehensive resource for JavaScript tutorials, scripts, and
+                                more</q>)</li>
+                        <!--<li><a href="http://bonsaiden.github.io/JavaScript-Garden/">JavaScript
+                                garden</a> (JavaScript Garden is a growing collection of
+                            documentation about the most quirky parts of the JavaScript programming
+                            language. It gives advice to avoid common mistakes and subtle bugs, as
+                            well as performance issues and bad practices, that non-expert JavaScript
+                            programmers may encounter on their endeavours into the depths of the
+                            language. JavaScript Garden does not aim to teach you JavaScript.)</li>-->
+                    </ul></li>
+                <li>Debugging tools<ul>
+                        <li>David Smith’s <a
+                                href="http://www.creativebloq.com/javascript/javascript-debugging-beginners-3122820"
+                                >JavaScript debugging for beginners</a> (introduction to using
+                            built-in browser debugging tools)</li>
+                        <li>Advanced guides to debugging in <a
+                                href="https://developers.google.com/chrome-developer-tools/docs/console"
+                                >Chrome</a>, <a
+                                href="https://developer.mozilla.org/en-US/docs/Tools">Firefox</a>,
+                                <a
+                                href="https://docs.microsoft.com/en-us/microsoft-edge/devtools-guide-chromium/landing/"
+                                >Edge</a>, and <a href="https://developer.apple.com/safari/tools/"
+                                >Safari</a></li>
+                    </ul></li>
+                <li>Sample code<ul>
+                        <!--<li><a href="javascript/dropdowns/dropdowns.html">Dropdown menu sample</a> (CSS
+                        only, no JavaScript, but included here because menus are a common JavaScript
+                        task)</li>-->
+                        <li><a href="javascript/obama/obama.xhtml">Highlighting text sample</a>
+                            (2009 Obama inaugural address)</li>
+                        <li><a href="election.xhtml">Using JavaScript to change text</a> (2012 US
+                            election results; illustrates JavaScript show/hide and innerHTML, as
+                            well as embedding SVG in XHTML)</li>
+                        <li><a href="javascript/classListToggle.xhtml">JavaScript toggling with
+                                <code>classList</code></a></li>
+                        <li><a href="javascript/multi_select">Setting a value based on two dropdown
+                                lists</a></li>
+                        <li><a href="javascript/dropdown/test.html">Show/hide and styling with
+                                JavaScript</a></li>
+                        <!-- Deprecated; there are better approaches
+                            <li><a href="javascript/popup">Popups that permit markup, including
+                                clickable links</a></li>-->
+                    </ul></li>
+                <li><a href="javascript-assignment-01.xhtml">JavaScript assignment
+                    #1</a><!-- (<a href="javascript-assignment-01-answers.xhtml">answers</a>)--></li>
+                <li><a href="javascript/popup2/javascript-assignment-02.xhtml">JavaScript assignment
+                        #2</a><!-- (<a href="javascript/popup2/javascript-assignment-02-answers.xhtml">answers</a>)--></li>
+                <!--<li><a href="javascript-test_2151.xhtml">JavaScript test</a></li>-->
+            </ul>
+        </section>
+        <section id="markdown">
+            <h3>Markdown</h3>
+            <ul>
+                <li>GitHub three-minute guide to <a
+                        href="https://guides.github.com/features/mastering-markdown/">Mastering
+                        markdown</a></li>
+                <li>John Gruber’s guide to <a
+                        href="https://daringfireball.net/projects/markdown/syntax">Markdown
+                        syntax</a></li>
+            </ul>
+        </section>
+        <!--<section id="r">
+            <h3>The R statistical programming language</h3>
+            <ul>
+                <li><a href="http://daedalus.umkc.edu/StatisticalMethods/index.html">Statistical
+                        methods for studying literature using R</a> (Jeff Rydberg-Cox; general
+                    tutorial)</li>
+                <li><a
+                        href="http://web.stanford.edu/dept/english/cgi-bin/humComp/2008Gp1/stylizer/index.php"
+                        >The <cite>Sound and the fury</cite> stylizer tool</a> (Caitlin Crandell,
+                    Emily Gong, Rachel Kraus, Jacob Mason-Marshall, and Tiffany Lieu;
+                    application)</li>
+                <li><a href="http://www.matthewjockers.net/2008/11/11/executing-r-in-php/">Executing
+                        R in php</a> (Matthew Jockers; how-to, based on the preceding tool)</li>
+                <li><a href="R-script.xhtml">Sample R script to generate scatterplot from CSV
+                        input</a></li>
+                <li><a href="clustering-in-r.xhtml">Clustering and dendrogram visualization</a>
+                    (bibliography)</li>
+            </ul>
+        </section>-->
+        <section id="lda">
+            <h3>Topic modeling</h3>
+            <ul>
+                <li><a href="http://mallet.cs.umass.edu/">Mallet</a> (MAchine Learning for LanguagE
+                    Toolkit; software for topic modeling)</li>
+                <li><a href="http://dsl.richmond.edu/dispatch/">Mining the <cite>Dispatch</cite></a>
+                    (Topic modeling in action)</li>
+                <li><a href="http://programminghistorian.org/lessons/topic-modeling-and-mallet"
+                        >Getting Started with Topic Modeling and MALLET</a> (Topic modeling
+                    tutorial)</li>
+                <!--<li><a href="http://www.cs.princeton.edu/~blei/topicmodeling.html">David M. Blei’s
+                        introductory and teaching materials</a></li>-->
+                <li><a href="http://benschmidt.org/">Ben Schmidt</a> about topic modeling and
+                    similar technologies<ul>
+                        <li><a
+                                href="http://journalofdigitalhumanities.org/2-1/words-alone-by-benjamin-m-schmidt/"
+                                >Words alone: Dismantling topic models in the humanities</a>
+                            (cautionary notes about the assumptions that underlie topic modeling,
+                            especially with diachronic data, and suggestions for using it more
+                            effectively)</li>
+                        <li><a
+                                href="http://bookworm.benschmidt.org/posts/2015-10-25-Word-Embeddings.html"
+                                >Vector space models for the digital humanities</a> (differently
+                            from topic modeling, this word-embedding model [WEM] represents
+                            relationships among words as a spatial analogy)</li>
+                    </ul></li>
+            </ul>
+        </section>
+        <section id="network">
+            <h3>Network analysis</h3>
+            <ul>
+                <li><a href="http://www.orgnet.com/sna.html">Social network analysis: an
+                        introduction</a> (includes David Krackhardt’s <q>Kite network</q>)</li>
+                <li><a href="http://faculty.ucr.edu/~hanneman/nettext/"><cite>Introduction to social
+                            network methods</cite></a> (Robert A. Hanneman and Mark Riddle)</li>
+                <li><a href="http://www.scottbot.net/HIAL/?tag=networks-demystified">Networks
+                        demystified</a> (Scott Weingart)</li>
+                <li><a href="http://ebeshero.github.io/thalaba/cytosc.html">An introduction to
+                        network analysis and Cytoscape for XML coders</a> (Elisa
+                    Beshero-Bondar)</li>
+                <!--<li><a href="http://miriamposner.com/blog/visualize-a-network-of-film-casts-and-crews/"
+                    >Visualize a network of film casts and crews</a> (Cytoscape tutorial by Miriam
+                Posner)</li>-->
+                <li id="xqueryNetwork">The following two exercises, from our sibling newtFire
+                    course, illustrate how to use XQuery to extract data from your XML files and
+                    visualize it using Cytoscape: <ul>
+                        <li><a href="http://dh.newtfire.org/NetworkExercise1.html">XQuery to
+                                network</a></li>
+                        <li><a href="http://dh.newtfire.org/NetworkExercise2.html">Graphing a
+                                network in Cytoscape</a></li>
+                    </ul></li>
+                <li>Software: <a href="http://www.cytoscape.org/download.html">Cytoscape</a> | <a
+                        href="https://gephi.org/">Gephi</a> | <a
+                        href="http://vlado.fmf.uni-lj.si/pub/networks/pajek/">Pajek</a> (pronounced
+                        <q>PAH-yeck</q>) | <a
+                        href="http://www.yworks.com/en/products_yed_about.html">yEd</a></li>
+            </ul>
+        </section>
+        <section id="gis">
+            <h3>Geographic information systems (GIS)</h3>
+            <ul>
+                <li>Keyhole Markup Language <ul>
+                        <li><a href="kml/kml-tutorial.xhtml">Introduction to KML</a> (our tutorial;
+                            see also <a href="kml/kml-samples.xhtml">our samples</a>)
+                            <!-- I'm tempted to say here "the official tutorial in Obdurodonia" --></li>
+                        <li><a href="https://developers.google.com/kml/documentation/">KML
+                                documentation</a> (Google tutorial and reference)</li>
+                        <!--<li><a href="romanov/MCIW_Practicum_GoogleEarth.pdf">Google Earth practicum: a
+                            simple mapping solution</a> (Maxim Romanov)</li>-->
+                        <li><a href="http://dh.newtfire.org/XQueryExercise3.html">Using XQuery and
+                                XSLT together to produce KML for mapping</a> (from Elisa
+                            Beshero-Bondar’s Pitt-Greensburg DH course)</li>
+                        <!--                The following three are all mentioned in the tutorial:    
+                    <li><a href="kml/kml-gadget.xhtml">Fake KML gadget</a> (create a URL to embed a
+                        Google GIS visualization of your KML)</li>
+                    <li><a href="http://www.zonums.com/kmltoolbox.html">Zonum Solutions KML
+                            toolbox</a> (a collection of online tools to create, enhance, process,
+                        and import/export KML code)</li>
+                    <li><a href="http://www.kmlvalidator.com/home.htm">Galdos KML validator</a></li>-->
+                    </ul>
+                </li>
+                <li>Geocoding <ul>
+                        <li><a href="http://www.gpsvisualizer.com/geocoding.html">Geocoding
+                                utilities at GPSVisualizer.com</a></li>
+                        <li><a href="http://www.geonames.org/">GeoNames geographical
+                            database</a></li>
+                        <!--                    <li><a href="http://geonames.nga.mil/gns/html/">NGA GEOnet names server</a>
+                        (GNS)</li>
+                    <li>National Geodetic Survey <a
+                            href="http://www.ngs.noaa.gov/TOOLS/Nadcon/Nadcon.shtml">Geodetic
+                            Toolkit: NADCON</a> and <a href="https://tools.wmflabs.org/geohack"
+                            >GeoHack</a> (degrees, minutes, seconds and decimal degrees
+                        latitude/longitude conversions)</li>
+                    <li><a href="http://itouchmap.com/latlong.html">iTouchMap</a> (reverse
+                        geocoding)</li>-->
+                    </ul></li>
+                <li>Datasets and maps<ul>
+                        <!--<li><a
+                    href="http://chicagocolloquium.org/wp-content/uploads/2011/11/dhcs2011_submission_15.pdf"
+                        ><q>Geolocation Extraction and Mapping of Nineteenth-Century U.S.
+                        Fiction</q></a> (Matthew Wilkens, 2011)</li>-->
+                        <!--<li><a href="http://code.google.com/apis/maps/documentation/geocoding/">The Google
+                    Geocoding API</a></li>-->
+                        <li><a href="http://www.naturalearthdata.com/">Natural Earth</a> (public
+                            domain map dataset)</li>
+                        <li><a href="https://www.openstreetmap.org/#map=5/51.500/-0.100"
+                                >OpenStreetMap</a> (collaborative project to create a free editable
+                            map of the world)</li>
+                        <li><a href="http://www.davidrumsey.com">David Rumsey Map
+                            Collection</a></li>
+                        <li><a href="http://www.lib.utexas.edu/maps/">Perry-Castañeda Library map
+                                collection</a> (University of Texas, Austin)</li>
+                    </ul></li>
+                <li>GIS visualization software <ul>
+                        <li><a href="https://leafletjs.com">Leaflet</a></li>
+                        <li><a href="http://www.qgis.org/en/site/">QGIS</a> (visualization, editing,
+                            and analysis of geographic information; see also <a
+                                href="http://www.qgistutorials.com/en/">QGIS Tutorials and
+                            Tips</a>)</li>
+                        <!--<li><a href="http://warp.worldmap.harvard.edu">WorldMap WARP</a>
+                            (open-source online tool for digitally aligning [geo-rectifying] scanned
+                            historical maps)</li>-->
+                        <!--                    <li><a href="http://osgearth.org/">osgEarth</a> (open-source C++ SDK for global
+                        terrain rendering that reads a XML based file format called an <em>Earth
+                            File</em>)</li>
+                    <li><a href="http://cesiumjs.org/">Cesium</a> (open source JavaScript
+                        library)</li>
+                    <!-\-<li><a href="https://marble.kde.org/">Marble (KDE)</a> (virtual globe that
+                        supports KML)</li>-\->
+                    <li><a href="http://www.worldwindcentral.com/wiki/Main_page">NASA World Wind</a>
+                        (open-source virtual globe)</li>
+                    <li><a href="http://www.simile-widgets.org/exhibit/">Exhibit</a> (publishing
+                        framework for interactive pages)</li>-->
+                    </ul></li>
+                <li> Other resources <ul>
+                        <li><a
+                                href="https://en.wikipedia.org/wiki/Comparison_of_geographic_information_systems_software"
+                                >Comparison of geographic information systems software</a> (article
+                            from <cite>Wikipedia</cite>)</li>
+                        <li><a href="http://www.e-perimetron.org/">e-Perimetron</a> (e-journal on
+                            sciences and technologies affined to history of cartography and
+                            maps)</li>
+                        <!--<li><a
+                                href="http://web.stanford.edu/group/spatialhistory/cgi-bin/site/gallery.php"
+                                >Stanford Spacial history project</a></li>-->
+                    </ul></li>
+                <!-- 
+    We need a better tutorial for *approaches to mapping* with some more information on data formats used in mapping software. 
+    What does one do with an image from Perry-Castañeda or Rumsey, to turn it into a base map? What are good options for working 
+    with that map, and what kinds of data can we pull or bind to it from the kinds of XML projects we’re doing? I would like (for 
+    myself and my projects and our students) a better orientation to the various approaches to mapping for web projects: Should we 
+    try the free version of a web-ready Javascript-library based app like Leaflet or CartoDB (as I did for my Southey-Darwin talk in 
+    June)—just a step removed from d3? (Or what about d3?) What’s the difference between these services and what Google Maps or 
+    Google Earth can provide? And what QGIS: What makes it different from the others in the way it handles and layers images?  
+    
+    GIS-for-DH Vocabulary Terms/Concepts (stuff we ought to be able to define somewhere, a somewhat random list):
+    KML vs. KMZ
+    CZML
+    .shp (shape files)
+    GeoJSON 
+    TopoJSON
+    WebGL
+    georectification and projection standards (see for example: https://en.wikipedia.org/wiki/List_of_map_projections )
+            -->
+            </ul>
+        </section>
+        <section id="nlp">
+            <h3>Natural language processing</h3>
+            <ul>
+                <li><a href="http://nlp.lsi.upc.edu/freeling/index.php">FreeLing: An open source
+                        suite of language analyzers</a></li>
+                <li><a href="http://www.nltk.org/">Natural language tool kit (NLTK)</a></li>
+                <li><a href="http://nlp.stanford.edu/software/">Stanford NLP Group tools</a></li>
+                <li>Yandex <a href="https://tech.yandex.ru/mystem/">MyStem</a> Russian NLP</li>
+            </ul>
+        </section>
+        <section id="music">
+            <h3>Music</h3>
+            <ul>
+                <li>Music analysis software<ul>
+                        <li><a href="http://www.macmusic.org/software/cat.php/lang/en/id/7033/"
+                                >Software music analyzers (Mac OS)</a></li>
+                        <li><a href="http://www.sonicvisualiser.org/">Sonic Visualiser</a> is a
+                            free, open source application for viewing and analysing the contents of
+                            music audio files. For tutorial guidance see especially Nicholas Cook
+                            and Daniel Leech-Wilkinson’s <a
+                                href="http://www.charm.rhul.ac.uk/analysing/p9_1.html">A
+                                musicologist’s guide to Sonic Visualiser</a>.</li>
+                        <li><a href="http://www.audacityteam.org/">Audacity</a> is free, open
+                            source, cross-platform software for recording and editing sounds.</li>
+                        <li><a href="http://web.mit.edu/music21/">music21: a toolkit for
+                                computer-aided musicology</a></li>
+                    </ul></li>
+                <li>Music encoding initiative (MEI)<ul>
+                        <li><a href="http://music-encoding.org/">MEI main project page</a>
+                            <ul>
+                                <li><a
+                                        href="https://music-encoding.org/guidelines/v4/content/introduction.html"
+                                        >An introduction to MEI</a></li>
+                                <li><a href="https://music-encoding.org/resources/tutorials.html"
+                                        >MEI tutorials</a></li>
+                            </ul></li>
+                        <li><a href="http://www.verovio.org/mei-viewer.xhtml">Verovio</a> (on-line
+                            tool to visualize MEI as musical score notation)</li>
+                        <li><a href="http://www.kb.dk/en/nb/dcm//projekter/mermeid.html">Metadata
+                                Editor and Repository for MEI Data (MerMEId)</a></li>
+                        <li><a
+                                href="https://dev2.dariah.eu/wiki/pages/viewpage.action?pageId=7439804"
+                                >MEI Score Editor (MEISE; Musical Note Editor)</a></li>
+                        <li><a href="https://music-encoding.org/community/projects-users.html"
+                                >Sample MEI projects</a></li>
+                        <!--            <li><a href="MEI/descMarkupExercise.html">MEI assignment #1</a></li>
+            <li><a href="MEI/mei-exercise-answer.html">Answer to MEI assignment #1</a></li>-->
+                    </ul></li>
+            </ul>
+        </section>
+        <section id="unicode">
+            <h3>Unicode</h3>
+            <ul>
+                <li><a href="http://www.unicode.org/">Unicode Consortium</a> (includes <a
+                        href="http://www.unicode.org/charts/">code charts</a>)</li>
+                <li><a href="http://earthlingsoft.net/UnicodeChecker/">Unicode checker</a> (MacOS
+                    only; explore, analyze, and convert text among encodings)</li>
+                <li><a href="https://r12a.github.io/app-conversion/">Unicode code converter</a>
+                    (on-line, by Richard Ishida; see also his <a
+                        href="http://r12a.github.io/applist">other Unicode utilities</a>)</li>
+                <li><a href="http://shapecatcher.com">shapecatcher.com</a> (draw a character and
+                    find it in the Unicode database)</li>
+            </ul>
+        </section>
+        <hr />
+        <p class="boilerplate"><span>Photograph of Whitby Abbey by Mike Peel (<a
+                    href="http://www.mikepeel.net">http://www.mikepeel.net</a>).</span></p>
     </body>
 </html>
