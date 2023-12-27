@@ -4,10 +4,24 @@
     <!--#set var="title" value="Course description: Spring 2023 (2234)" -->
     <!--#config timefmt="%Y-%m-%dT%X%z" -->
     <head>
-        <title><!--#echo var="title" --></title>
+        <title>Digital Humanities</title>
         <link rel="stylesheet" type="text/css" href="css/style.css"/>
-        <!--#include virtual="inc/dh-header.html" -->
+        <style type="text/css">
+            img.whitby {
+              max-width: 400px;
+              width: 40%;
+              float: right;
+              margin: 0 0 1em 1em;
+              border: none;
+            }
+            img {
+              border: none;
+            }</style>
+
+                    <!-- Note: Github Pages does not support SSI modular content, such as (formerly coded): #include virtual="inc/dh-header.html" and #echo var="title"; which necessitates cutting and pasting -->
     </head>
+
+ 
     <body>
         <!--#include virtual="inc/dh-boilerplate.html" -->
         <h3>In brief</h3>
