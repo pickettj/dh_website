@@ -101,6 +101,15 @@ h3 {
 
 }
 
+h4 {
+
+  padding: 2px;
+  margin-left: 4%;
+  margin-top: 1%;
+  border-bottom: 1px dotted #000;
+  font-style: italic;
+
+}
 
 span {
 
