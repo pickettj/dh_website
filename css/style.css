@@ -88,7 +88,9 @@ h2 {
 
     padding: 5px;
     margin-left: 4%;
-    padding-bottom: 25px;
+    padding-bottom: 10px;
+    background: #cad5bb;
+    font-variant: small-caps;
 
 }
 
@@ -142,7 +144,7 @@ img.map {
 p {
   padding: 2px;
   margin-left: 4%;
-  margin-right: 2%;
+  margin-right: 8%;
   line-height: 1.5;
 }
 
@@ -159,4 +161,11 @@ div.toc {
   background-size: cover;
   background-repeat: no-repeat;
 
+}
+
+blockquote {
+  margin: 0 0 1em; /* Adjust margin as needed */
+  padding: 0.5em 20px; /* Add padding to the left for better readability */
+  border-left: 4px solid #333; /* Left border for emphasis */
+  color: #555; /* Text color */
 }
