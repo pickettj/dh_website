@@ -55,6 +55,12 @@ nav {
     background: #e6e6cc;
     }
 
+nav a {/* Overriding the default link underlining behavior just in the navigation bar */
+    text-decoration: none; /* Remove default underline */
+    border-bottom: none; /* Remove the dotted line */
+    /* Add any additional styling for links within the nav element */
+    }
+
 h1 {
 
 font-weight: bold;
@@ -176,6 +182,7 @@ a:visited {color: #1a3300;}
 }
 a{
     text-decoration:none; /* don't underline links */
+    border-bottom: 1px dotted #333; /*some indication necessary that does not rely on color */
 }
 a:link:hover,
 a:visited:hover{
