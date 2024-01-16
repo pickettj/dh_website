@@ -1,0 +1,27 @@
+body {
+    background-color:#f9ffe6;
+    color:black;
+    font-family:'Assistant', sans-serif;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-bottom: 10%;
+    margin-top: 3%;
+}
+.week-list {
+    align-items: center
+}
+h1 {
+    font-size: 40px;
+    text-align: center;
+}
+#disclaimer {
+    text-align: center;
+    font-style: italic;
+    font-size: 25px;
+}
+.week {
+    font-size: 23px;
+}
+.section ul li {
+    font-size: 19px;
+}
