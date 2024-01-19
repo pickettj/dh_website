@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Test #1: XML" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+        <title>Digital Humanities</title>
+    </head>
+    <body class="line-numbers">
+        <nav>
+            <a href="index.xhtml">Home</a>
+            <a href="syllabus.xhtml">Syllabus</a>
+            <a href="projects.xhtml">Projects</a>
+            <!-- <a href="assignments.xhtml">Assignments</a> -->
+            <a href="http://dh.obdurodon.org/">Resources</a>
+            <a href="https://bactriana.org">Bactriana</a>
+        </nav>
+        <h1>Computational Methods in the Humanities</h1>
+        <h2>Unit Test: XML</h2>
+        <section>
+            <h3>Instructions</h3>
+            <p>Answer the following questions and upload your answers to Canvas. All tests in this
+                course are open book, so you can look things up and you can try out your code in
+                &lt;oXygen/&gt;, but you cannot receive help from another person or from ChatGPT or
+                other AI services.</p>
+            <p> Create your answers in &lt;oXygen/> as a plain-text document, which you can do by
+                creating a new document (using the File → New menu options) and typing <q>text</q>
+                into the <q>Type filter text</q> box. Do not use a word processor (like Microsoft
+                Word) because word processors do things like changing your straight quotation marks
+                to curly ones, which you don’t want. The file you upload must follow our <a
+                    href="file-naming_conventions.xhtml">file-naming conventions</a>, using
+                    <i>.txt</i> as the filename extension (to indicate that you are submitting a
+                plain-text file).</p>
+        </section>
+        <section>
+            <h3>Questions</h3>
+            <ol>
+                <li><p> The following is an example of an XML document. What is the name of the root
+                        element of this example?</p>
+                    <pre class="language-xml"><code><![CDATA[<ingredients>
+  <ingredient>sugar</ingredient>
+  <ingredient>butter</ingredient>
+  <ingredient>flour</ingredient>
+  <ingredient>chocolate chips</ingredient>
+</ingredients>]]></code></pre>
+                </li>
+                <li><p>What is the difference between <dfn>descriptive markup</dfn> and
+                            <dfn>presentational markup</dfn>? Give an example of each type and
+                        explain a) why the descriptive markup is descriptive, b) why the
+                        presentational markup is presentational, and c) why we recommend using
+                        descriptive markup in digital humanities projects.</p></li>
+                <!-- Question assessing well-formedness. An alternative version of the question could contain no red-herring answers, and only ask about how
+                a given error-causing scenario could be fixed. More or fewer examples could be used to modulate the time this question takes.-->
+                <li><p>Which of the following scenarios would cause a well-formedness error (red
+                        square) in an XML document? (Some may be poor style because they’re
+                        confusing, while still being well-formed, and the task is to identify only
+                        the ones that are not well-formed.) For each example that is not
+                        well-formed, explain why it is not well-formed and how you might fix it.</p>
+                    <ol style="list-style-type: upper-alpha;">
+                        <li><p>An element in the document does not contain any content, e.g.:</p>
+                            <pre class="language-xml"><code>&lt;bookmark&gt;&lt;/bookmark&gt;</code></pre></li>
+                        <li><p>A speech is tagged as having two speakers, e.g.:</p>
+                            <pre class="language-xml"><code>&lt;speech speaker="homer" speaker="bart"&gt;Doh!&lt;/speech&gt;</code>.</pre></li>
+                        <li><p>A comment occurs inside an element, e.g.:</p>
+                            <pre class="language-xml"><code><![CDATA[<speech speaker="Horatio">
+    <!-- to Hamlet -->
+    <line>As I do live, my honoured lord, 'tis true;</line>
+    <line>And we did think it writ down in our duty</line>
+    <line>To let you know of it.</line>
+</speech>]]></code></pre></li>
+                        <li><p>An attribute <em>name</em> (in this case,
+                                <code class="language-xquery">main speaker</code>) contains a space
+                                character, e.g.:</p>
+                            <pre class="language-xml"><code><![CDATA[<speech main speaker="Gertrude">
+    <line>If it be,</line>
+    <line>Why seems it so particular with thee?</line>
+</speech>]]></code></pre></li>
+                        <li><p>An attribute <em>value</em> contains a space character, e.g.:</p>
+                            <pre class="language-xml"><code><![CDATA[<speech speaker="Hamlet’s mother">
+    <line>If it be,</line>
+    <line>Why seems it so particular with thee?</line>
+</speech>]]></code></pre></li>
+                        <li><p>Paired start- and end-tags differ in capitalization:</p>
+                            <pre class="language-xml"><code><![CDATA[<speech speaker="Gertrude">
+    <Line>If it be,</line>
+    <Line>Why seems it so particular with thee?</line>
+</speech>]]></code></pre></li>
+                        <li><p>A complete document lacks a single root node, e.g.:</p>
+                            <pre class="language-xml"><code><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<stooge>Curly</stooge>
+<stooge>Larry</stooge>
+<stooge>Moe</stooge>]]></code></pre></li>
+                        <li><p>An element contains a less-than sign:</p>
+                            <pre class="language-xml"><code><![CDATA[<equation>1 < 2</equation>]]></code></pre></li>
+                        <li><p>An element contains a greater-than sign:</p>
+                            <pre class="language-xml"><code><![CDATA[<equation>2 > 1</equation>]]></code></pre></li>
+
+                        <li><p>An element (in this case
+                                <code class="language-xml">&lt;quote&gt;</code>) starts in one
+                                context and ends in another (in this case, two different
+                                <code class="language-xml">&lt;line&gt;</code> elements), e.g.:</p>
+                            <pre class="language-xml"><code><![CDATA[<stanza>
+    <line>And all should cry, <quote>Beware! Beware!</line>
+    <line>His flashing eyes, his floating hair!</line>
+    <line>Weave a circle round him thrice,</line>
+    <line>And close your eyes with holy dread,</line>
+    <line>For he on honey-dew hath fed</line>
+    <line>And drunk the milk of Paradise.</quote></line>
+</stanza>]]></code></pre></li>
+                    </ol>
+                </li>
+            </ol>
+        </section>
+    </body>
+</html>
