@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Regular expressions #1: answer key" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+        <title>Digital Humanities</title>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <h3>The assignment</h3>
+        <p>Produce an XML version from the plain-text version of Shakespeare’s sonnets by using
+            find-and-replace operations with regular expressions. There are many different ways to
+            approach this task, so if you did it differently than described below, your solution may
+            well have been just as good as the one outlined here. Consider this answer sheet as a
+            guide to how one might approach this type of task, rather than as The One True Answer.
+            It is not necessary to get all the way to complete solution; the point of the assignment
+            is to gain experience with using regex to up-convert (that is, add markup to)
+            documents.</p>
+        <h3>Manually delete Gutenberg-specific header and footer information</h3>
+        <p>The first step is to remove the excess metadata content at the beginning and end of the
+            Gutenberg text. Manually highlight and remove lines 1 through 289, making the very first
+            sonnet’s number, Roman numeral I, the first line of the document. Then, scroll to the
+            end of the document and delete everything from line 2618 through the end (line
+            2635).</p>
+        <h3>Replace reserved characters with XML entities</h3>
+        <p>The next step we need to take when transforming raw text into XML is to accommodate
+            special characters, such as ampersands and angle brackets, that, if retained unchanged,
+            would interfere with the markup we need to insert into our document. In this document
+            there aren’t any, so nothing bad will happen if you don’t do any of the following, but
+            you should nonetheless get in the habit of always checking for them first.</p>
+        <section class="note">
+            <p>Although you don’t have to replace any reserved characters in this particular text,
+                you nonetheless need to know how to do it. Since the replacement strings we’ll be
+                inserting in this step all begin with an ampersand, we need to replace any existing
+                ampersands first; otherwise, if we were to replace ampersands <em>after</em>
+                inserting other entities, we would also wind up replacing all of the ampersands we
+                had inserted ourselves, which we don’t want to do, since those really <em>are</em>
+                markup. In Real Life, we do this at the beginning of every <dfn>up
+                    transformation</dfn>, that is, any transformation from plain text to XML. If
+                there aren’t any reserved characters in the input text, no harm is done, since the
+                global find/replace operation finds nothing to replace and therefore changes
+                nothing. If there are, though, this will get any existing reserved characters out of
+                the way, so that we can begin inserting markup.</p>
+        </section>
+        <p>To replace reserved characters with their entity representations, open your find/replace
+            dialog window in &lt;oXygen/&gt; (using Ctrl-f on Windows or Command-f on Mac) and enter
+            <code class="language-regex">&amp;</code> as the text to find, replacing it with its
+            entity, <code class="language-xml">&amp;amp;</code>. We do the same for left and right
+            angle brackets: find <code class="language-regex">&lt;</code> and replace it with
+            <code class="language-xml">&amp;lt;</code>, then find
+            <code class="language-regex">&gt;</code> and replace it with
+            <code class="language-xml">&amp;gt;</code>. If there aren’t any, so much the better.
+            You’re searching for plain text characters here, so you don’t need to check the
+                <q>Regular expression</q> box.</p>
+        <h3>Get rid of extraneous white space</h3>
+        <p>The plain text edition uses white space (blank lines, leading spaces at the beginning of
+            a line) to demarcate parts of the edition, but since we’re going to use real markup in
+            our XML edition, we want to get rid of any white space we don’t need. In some
+            up-translations we might need to use the white space (indentation, blank lines) as part
+            of the regex we try to match, but since we can find what we want to find in this
+            particular edition without that white space, we get rid of it before introducing any
+            markup.</p>
+        <p>To do that, in the find/replace dialog we check the box to turn on regular expression
+            matching and replace <code class="language-regex">\n+</code> (sequences of one or more
+            new-line character) with <code class="language-regex">\n</code> (just a single new-line
+            character). This collapses multiple line breaks (that is, blank lines) all at once. You
+            could, alternatively, search for just <code class="language-regex">\n\n</code>, and that
+            will work here because there are no sequences of more than one blank line between lines
+            of text. If there were, though, just <code class="language-regex">\n\n</code> would
+            match just the first two, and you’d have to keep rerunning the operation, removing one
+            at a time, until they were all gone. The plus sign, though, will match any number of
+            consecutive new-line characters.</p>
+        <p>To get rid of leading spaces (two of them before every line, except that there are four
+            before each line in the final couplets), we do a find/replace operation to relace
+            <code class="language-regex">^ +</code> with nothing. Note the leading caret; this
+            regular expression finds sequences of one or more space characters <em>only at the
+                beginning of a line</em> and replaces them with nothing, that is, erases them.
+            Without the caret, we would delete spaces between words, and we don’t want to do
+            that!</p>
+        <p>Our file at this point looks roughly like:</p>
+        <pre>II
+When forty winters shall besiege thy brow,
+And dig deep trenches in thy beauty's field,
+Thy youth's proud livery so gazed on now,
+Will be a tatter'd weed of small worth held:
+Then being asked, where all thy beauty lies,
+Where all the treasure of thy lusty days;
+To say, within thine own deep sunken eyes,
+Were an all-eating shame, and thriftless praise.
+How much more praise deserv'd thy beauty's use,
+If thou couldst answer 'This fair child of mine
+Shall sum my count, and make my old excuse,'
+Proving his beauty by succession thine!
+This were to be new made when thou art old,
+And see thy blood warm when thou feel'st it cold.
+III
+Look in thy glass and tell the face thou viewest
+Now is the time that face should form another;
+Whose fresh repair if now thou not renewest,
+Thou dost beguile the world, unbless some mother.
+For where is she so fair whose unear'd womb
+Disdains the tillage of thy husbandry?
+Or who is he so fond will be the tomb,
+Of his self-love to stop posterity?
+Thou art thy mother's glass and she in thee
+Calls back the lovely April of her prime;
+So thou through windows of thine age shalt see,
+Despite of wrinkles this thy golden time.
+But if thou live, remember'd not to be,
+Die single and thine image dies with thee.</pre>
+        <p>Note that there are no blank lines and no leading white space at the beginning of any
+            line.</p>
+        <h3>Where we want to wind up</h3>
+        <p>Eventually we want to have each sonnet wrapped in
+            <code class="language-xml">&lt;sonnet&gt;</code> tags and each line of a sonnet wrapped
+            in <code class="language-xml">&lt;line&gt;</code> tags. We want to retain the Roman
+            numerals, but they aren’t lines of poetry, so by the time we’re done we don’t want them
+            to be encoded as <code class="language-xml">&lt;line&gt;</code> elements. We’ll say more
+            below about how we <em>do</em> want them to look at the end of the conversion process.
+            As a first step, though, it’s convenient to tag <em>every</em> line of text in the
+            plain-text edition as a <code class="language-xml">&lt;line&gt;</code> element, whether
+            it’s a line of poetry or the Roman numeral that identifies the sonnet. We’ll later
+            change the markup for the Roman numerals, but for now it’s simplest to treat all lines
+            identically. Over-generalizing and then correcting the over-generalizations separately
+            is a common strategy in up-conversion, since it is often simpler than trying to write
+            more exact and specific replacement rules.</p>
+        <h3>Matching every line of the input file</h3>
+        <p>We can wrap every line with <code class="language-xml">&lt;line&gt;</code> start- and
+            end-tags with a global search and replace operation, which means that we need to use a
+            regular expression to say <q>match each and every line, no matter what it contains.</q>
+            The regular expression we use for this purpose is
+            <code class="language-regex">.+</code>. Here we exploit the fact that the dot
+            (<code class="language-regex">.</code>) matches any character except a new line, which
+            means that first we’ll match every character in the first line up to the (invisible)
+            new-line at the end, and after we’ve processed that we’ll do the same with next line,
+            etc. We need to specify that we want to allow any number of characters, and so we use
+            the plus sign (<code class="language-regex">+</code>) occurrence indicator to say
+                <q>match one or more instances of whatever precedes the plus sign, that is, match
+                any sequence of one or more characters, but stop when you reach a new-line.</q></p>
+        <p>Note that you shouldn’t have <q>Dot matches all</q> selected. By default, the dot matches
+                <em>any character except a new line</em>. If you select <q>Dot matches all</q>, dot
+            will also match a new line. If you check this box, your match will span multiple lines,
+            which isn’t what you want—in fact, you’ll match the entire document as if it were just
+            one line! What you want is to match all of the characters between the beginning of a
+            line and the end of the <em>same</em> line.</p>
+        <h3>The replacement string</h3>
+        <p>Before running a global search and replace we always click <q>Find All</q> in
+            &lt;oXygen/&gt; to verify that we’re matching what we think we’re matching. Once you’ve
+            done that and verified that you are matching each line, now you have to decide what to
+            use to replace the line. In this case, we want to replace them with themselves, plus
+            surrounding <code class="language-xml">&lt;line&gt;</code> tags. More specifically, we
+            want to capture each entire match (each entire individual line) and reuse it in the
+            replacement pattern, and that’s the easiest way to say <q>replace the contents of the
+                line with itself, but wrap that self in
+                <code class="language-xml">&lt;line&gt;</code> tags</q>. The string
+            <code class="language-regex">\0</code> (backslash followed by the digit zero) in the
+            replacement pattern automatically inserts the entire matched string into the
+            replacement. Since we’re capturing the entire line in this case, we could use
+            <code class="language-xml">&lt;line&gt;\0&lt;/line&gt;</code> as our replacement string,
+            and it would do what we want. </p>
+        <p>What if we want to capture only part of a match? In that case we can put the part that we
+            want to capture in parentheses and refer to it in the replacement string with a
+            backslash followed by a number greater than zero. For example,
+            <code class="language-regex">\1</code> at a particular location in the replacement
+            string would insert into that location whatever was matched by the first parenthesized
+            sub-expression (the first captured part of the match),
+            <code class="language-regex">\2</code> the second parenthesized (captured)
+            sub-expression, etc., up to as many as we need. Note that parentheses in the match
+            expression are not actually matched, that is, the line doesn’t have to include literal
+            parenthesis characters for the match to succeed. The parentheses are
+                <dfn>metacharacters</dfn> that serve to capture part of the match, so that we can
+            reuse them in the replacement. (If you need to match a literal parenthesis character,
+            how do you think you would do that?)</p>
+        <p>Once we’ve specified our search and replace strings, we click Replace All, which should
+            wrap <code class="language-xml">&lt;line&gt;</code> tags around every line of input. If
+            you make a mistake and don’t get the results you want, you can undo the global search
+            and replace (or anything else) with Ctrl-z (Windows) or Command-z (Mac) and try
+            again.</p>
+        <h3>Adding a root element</h3>
+        <p>At this point, the text in our document is consistent enough to do regular expression
+            pattern-matching to distinguish the <code class="language-xml">&lt;line&gt;</code>
+            elements we’ve created that represent lines of poetry from those that contain Roman
+            numerals, and we can transform them accordingly. Before we do that, though, this is as
+            good a time as any to insert a root element manually by putting a start-tag at the top
+            and an end-tag at the very bottom. We called this root element
+            <code class="language-xml">&lt;sonnets&gt;</code>. At this point our document looks
+            like:</p>
+        <pre class="language-xml"><code>&lt;sonnets&gt;
+…            
+&lt;line&gt;II&lt;/line&gt;
+&lt;line&gt;When forty winters shall besiege thy brow,&lt;/line&gt;
+&lt;line&gt;And dig deep trenches in thy beauty's field,&lt;/line&gt;
+&lt;line&gt;Thy youth's proud livery so gazed on now,&lt;/line&gt;
+&lt;line&gt;Will be a tatter'd weed of small worth held:&lt;/line&gt;
+&lt;line&gt;Then being asked, where all thy beauty lies,&lt;/line&gt;
+&lt;line&gt;Where all the treasure of thy lusty days;&lt;/line&gt;
+&lt;line&gt;To say, within thine own deep sunken eyes,&lt;/line&gt;
+&lt;line&gt;Were an all-eating shame, and thriftless praise.&lt;/line&gt;
+&lt;line&gt;How much more praise deserv'd thy beauty's use,&lt;/line&gt;
+&lt;line&gt;If thou couldst answer 'This fair child of mine&lt;/line&gt;
+&lt;line&gt;Shall sum my count, and make my old excuse,'&lt;/line&gt;
+&lt;line&gt;Proving his beauty by succession thine!&lt;/line&gt;
+&lt;line&gt;This were to be new made when thou art old,&lt;/line&gt;
+&lt;line&gt;And see thy blood warm when thou feel'st it cold.&lt;/line&gt;
+&lt;line&gt;III&lt;/line&gt;
+&lt;line&gt;Look in thy glass and tell the face thou viewest&lt;/line&gt;
+&lt;line&gt;Now is the time that face should form another;&lt;/line&gt;
+&lt;line&gt;Whose fresh repair if now thou not renewest,&lt;/line&gt;
+&lt;line&gt;Thou dost beguile the world, unbless some mother.&lt;/line&gt;
+&lt;line&gt;For where is she so fair whose unear'd womb&lt;/line&gt;
+&lt;line&gt;Disdains the tillage of thy husbandry?&lt;/line&gt;
+&lt;line&gt;Or who is he so fond will be the tomb,&lt;/line&gt;
+&lt;line&gt;Of his self-love to stop posterity?&lt;/line&gt;
+&lt;line&gt;Thou art thy mother's glass and she in thee&lt;/line&gt;
+&lt;line&gt;Calls back the lovely April of her prime;&lt;/line&gt;
+&lt;line&gt;So thou through windows of thine age shalt see,&lt;/line&gt;
+&lt;line&gt;Despite of wrinkles this thy golden time.&lt;/line&gt;
+&lt;line&gt;But if thou live, remember'd not to be,&lt;/line&gt;
+&lt;line&gt;Die single and thine image dies with thee.&lt;/line&gt;
+…
+&lt;/sonnets&gt;</code></pre>
+        <h3>Tagging the individual sonnets and fixing the sonnet numbers</h3>
+        <p>Lines that contain Roman numerals have a sequence of <q>I</q>, <q>V</q>, <q>X</q>,
+                <q>L</q>, and <q>C</q> characters in any order and nothing else, and no real line of
+            poetry has content that matches that pattern, so we can match a
+            <code class="language-xml">&lt;line&gt;</code> with the regular expression
+            <code class="language-xml">&lt;line&gt;([IVXLC]+)&lt;/line&gt;</code>. Reading from the
+            inside out, the letters inside the square brackets form a <dfn>character class</dfn>,
+            which matches any single character from that class. Since we want to match a sequence of
+            one or more characters from that class, we put a plus sign after the closing square
+            bracket. The character class means <q>choose any one of these</q> and the plus sign
+            after the entire class (that is, after the closing square bracket) makes the act of
+            choosing repeatable, and therefore means <q>make that choice at least once up to as many
+                times as you want</q>.</p>
+        <p>So why do we then wrap the character class and the plus sign in parentheses? Remember our
+            discussion above of how to capture just part of a regex for reuse in the replacements?
+            We’ve used parentheses to capture the Roman numeral portion of the pattern (separately
+            from the <code class="language-xml">&lt;line&gt;</code> start- and end-tags) so that we
+            can write it into the replacement string as <code class="language-regex">\1</code>.</p>
+        <p>We want to write Roman numeral into the replacement as the attribute value, which means
+            that we have to write between the quotation marks that demarcate that value. Our full
+            replacement string, then, is <code class="language-xml">&lt;/sonnet&gt;\n&lt;sonnet
+                number="\1"&gt;</code>. The way to read this is that we match the line
+            that contains the Roman numeral, capture only the numeral itself, and then replace the
+            entire line that we just matched with a <code class="language-xml">&lt;/sonnet></code>
+            end-tag (because we’re at the end of the preceding sonnet), a new line (for human
+            legibility), and then a <code class="language-xml">&lt;sonnet></code> start-tag with an
+            <code class="language-regex">n</code> attribute, the value of which is the Roman numeral
+            that we captured during the match. Because we don’t capture the original
+            <code class="language-xml">&lt;line&gt;</code> tags, we throw them away. After we run a
+                <q>replace all</q> , we have a document that looks like this:</p>
+        <pre class="language-xml"><code>&lt;sonnets&gt;
+…            
+<span class="pre-highlight">&lt;/sonnet&gt;
+&lt;sonnet number="II"&gt;</span>
+&lt;line&gt;When forty winters shall besiege thy brow,&lt;/line&gt;
+&lt;line&gt;And dig deep trenches in thy beauty's field,&lt;/line&gt;
+&lt;line&gt;Thy youth's proud livery so gazed on now,&lt;/line&gt;
+&lt;line&gt;Will be a tatter'd weed of small worth held:&lt;/line&gt;
+&lt;line&gt;Then being asked, where all thy beauty lies,&lt;/line&gt;
+&lt;line&gt;Where all the treasure of thy lusty days;&lt;/line&gt;
+&lt;line&gt;To say, within thine own deep sunken eyes,&lt;/line&gt;
+&lt;line&gt;Were an all-eating shame, and thriftless praise.&lt;/line&gt;
+&lt;line&gt;How much more praise deserv'd thy beauty's use,&lt;/line&gt;
+&lt;line&gt;If thou couldst answer 'This fair child of mine&lt;/line&gt;
+&lt;line&gt;Shall sum my count, and make my old excuse,'&lt;/line&gt;
+&lt;line&gt;Proving his beauty by succession thine!&lt;/line&gt;
+&lt;line&gt;This were to be new made when thou art old,&lt;/line&gt;
+&lt;line&gt;And see thy blood warm when thou feel'st it cold.&lt;/line&gt;
+<span class="pre-highlight">&lt;/sonnet&gt;
+&lt;sonnet number="III"&gt;</span>
+&lt;line&gt;Look in thy glass and tell the face thou viewest&lt;/line&gt;
+&lt;line&gt;Now is the time that face should form another;&lt;/line&gt;
+&lt;line&gt;Whose fresh repair if now thou not renewest,&lt;/line&gt;
+&lt;line&gt;Thou dost beguile the world, unbless some mother.&lt;/line&gt;
+&lt;line&gt;For where is she so fair whose unear'd womb&lt;/line&gt;
+&lt;line&gt;Disdains the tillage of thy husbandry?&lt;/line&gt;
+&lt;line&gt;Or who is he so fond will be the tomb,&lt;/line&gt;
+&lt;line&gt;Of his self-love to stop posterity?&lt;/line&gt;
+&lt;line&gt;Thou art thy mother's glass and she in thee&lt;/line&gt;
+&lt;line&gt;Calls back the lovely April of her prime;&lt;/line&gt;
+&lt;line&gt;So thou through windows of thine age shalt see,&lt;/line&gt;
+&lt;line&gt;Despite of wrinkles this thy golden time.&lt;/line&gt;
+&lt;line&gt;But if thou live, remember'd not to be,&lt;/line&gt;
+&lt;line&gt;Die single and thine image dies with thee.&lt;/line&gt;
+…
+&lt;/sonnets&gt;</code></pre>
+        <h3>Last details</h3>
+        <p>You will have to fix the tags around your first and last sonnets because those are not
+            between two sonnets, which is what our regex matched, We do that manually. In this
+            description we have already added the tags for our root element above, but if you didn’t
+            to it there, you can do it now.</p>
+        <section class="note">
+            <p>The sonnets are <dfn>tesselated</dfn>, which means that the beginning of each sonnet
+                simultaneously marks the end of the preceding sonnet. The tesselated structure is
+                why we don’t have to match the ends of the sonnets at all; when we match something
+                that we expect to find at the beginning of every sonnet (a Roman-numeral line), we
+                know that we have found both the beginning of a new sonnet and the end of the
+                preceding one, so we can introduce both the start-tag for the new sonnet and the
+                end-tag for the preceding one. Except …</p>
+            <p>The first and last items in a tesselated sequence are special because the start of
+                the first sonnet doesn’t match the end of the preceding one because there is no
+                preceding one, and because we find the end of a sonnet only by finding the beginning
+                of the next one, our pattern doesn”t find the end of the last sonnet. This is why we
+                need to fix the markup of the first and last sonnets manually.</p>
+            <p>Some versions of regular expressions, including the version that works in the
+                &lt;oXygen/&gt; find-and-replace dialog, have <dfn>look-ahead</dfn> and
+                    <dfn>look-behind</dfn> features, which you can use to match each entire sonnet,
+                including the first and last ones. We don’t teach look-ahead and look-behind because
+                our regular-expression time is limited, they are advanced features, and we can live
+                without them, but they do offer an appealing alternative approach here. If you’re
+                curious, feel free to read up on them at <a href="">Lookahead and Lookbehind
+                    Zero-Length Assertions</a> and try using them to tag the sonnets in a way that
+                doesn’t require manual clean-up of the first and last ones.</p>
+        </section>
+        <p>Once you’re done, if you told &lt;oXygen/> to create an XML document, it should do
+            well-formedness checking automatically, so you can make sure that you have a green
+            square. If you told &lt;oXygen/> to create a plain text document, though, you have to
+            tell it that it is no longer plain text, and should now be treated as XML. In order to
+            do that you need to use the <b>Save as</b> menu option (under File) to save the document
+            as XML (that is, with an <i>.xml</i> filename extension), close it, and open it again in
+            &lt;oXygen/&gt;. Perhaps confusingly, you have to close and open it so that
+            &lt;oXygen/&gt; will recognize that it’s XML; just saving it as XML isn’t enough, and
+            &lt;oXygen/&gt; will incorrectly think it’s still plain text despite the new filename,
+            but if you close it and reopen it, &lt;oXgyen/&gt; will recognize it correctly as XML.
+            If it’s well formed, you’ll get a green square. If not, you’ll need to figure out what
+            went wrong and fix it. Sometimes you can use regex to clean up regex errors, but often
+            when we mess up this type of autotagging, we find it easier to start anew with a clean
+            copy of the plain text.</p>
+    </body>
+</html>
