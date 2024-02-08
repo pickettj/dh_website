@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Regex assignment #2: answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <!--#include virtual="inc/dh-header.html" -->
+        <style type="text/css">
+            body * {
+              line-height: 1.5 !important;
+            }</style>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <h3>The task</h3>
+        <p>Assume that we’ve been given a plain-text file like the Project Gutenberg EBook of <a
+                href="http://www.gutenberg.org/cache/epub/2081/pg2081.txt"><cite>The Blithedale
+                    Romance</cite></a>, by Nathaniel Hawthorne, and we want to convert it to XML,
+            but we don’t want to type all of the angle brackets manually. (Note that this site
+            sometimes shows you a pop-up welcome screen and a list of different versions of the
+            file, instead of taking you to the plain text one directly. If that happens, click
+                <q>OK</q> on the <q>Welcome</q> pop-up and then select the version labeled <q>Plain
+                Text UTF-8</q>.) In this case Project Gutenberg makes the same book available in
+            HTML, and in Real Life we’d probably convert from HTML to XML (using XSLT, which we’ll
+            learn later in the semester) rather than from plain text, but since there are situations
+            where all we have is plain text, we’ll ignore the HTML version on the Gutenberg site,
+            pretend that all they provide is plain text, and work with that. So what can we tag
+            automatically, with global find-and-replace operations? Some of the markup we might want
+            to introduce for analytical purposes might require us to touch every word of the text,
+            but, at a minimum, we can autotag chapters, chapter titles, paragraphs, and quotations
+            using regex tools, and that’s the goal of the present assignment.</p>
+        <h3>Preliminaries</h3>
+        <p>Select the plain-text version of the document and open it in &lt;oXygen/&gt;. Then cut
+            out the front matter (before the main title title) and the back matter (after the last
+            line of the text of the novel, which is <q>I--I myself--was in love--with--Priscilla!
+            </q>). In Real Life we might want to mark those parts up eventually and reintroduce them
+            into the XML as metadata, but for this assignment we’ll just delete everything that
+            isn’t part of the text of the novel.</p>
+        <h3>Step by step</h3>
+        <p>There’s more than one way to accomplish this task, so it’s fine if your solution is
+            different from ours as long as you use regex in a meaningful way to get the output you
+            want, but one way to approach the problem is as follows:</p>
+        <h4>Reserved characters</h4>
+        <p>The plain text file could, at least in principle, contain characters that have special
+            meaning in XML: the ampersand and the angle brackets. You need to search for those and
+            replace them with their corresponding XML entities, and it turns out that there aren’t
+            any instances of these characters in this document.</p>
+        <h4>Extra blank lines</h4>
+        <p>The blank lines are pseudo-markup that tell us where titles and paragraphs begin and end,
+            but in some cases there are multiple blank lines in a row (for example, there are two
+            blank lines between the title and the word <q>by</q>). Those extra blank lines don’t
+            tell us anything useful, so we’ll start by getting rid of them. We search for
+            <code class="language-regex">\n{3,}</code> (three or more consecutive new line
+            characters) and replace them with <code class="language-regex">\n\n</code> (exactly two
+            new line characters). Note that the numerical quantifiers work in searches but not in
+            replaces, so you need to write <code class="language-regex">\n\n</code> (rather than
+            <code class="language-regex">\n{2}</code>) in the replace box.</p>
+        <h4>Paragraphs</h4>
+        <p>What’s left after deleting the beginning and ending metadata and extra blank lines is
+            mostly (except for the stuff at the top) a bunch of chapter titles and paragraphs,
+            separated from one another by single blank lines, and we can use a regex to find all
+            blank lines (<code class="language-regex">\n{2}</code>) and replace them with the
+            sequence <code class="language-xml">&lt;/p&gt;\n&lt;p&gt;</code>. For human legibility,
+            we insert a new line character between the tags, instead of just outputting the end tag
+            followed immediately by the start tag, so that each paragraph will start on a new line.
+            We then add the <code class="language-xml">&lt;p&gt;</code> start tag before the first
+            paragraph and the <code class="language-xml">&lt;/p&gt;</code> end tag after the last
+            one manually.</p>
+        <h4>Chapter titles</h4>
+        <p>We’ve erroneously tagged chapter titles as paragraphs, and we can fix that by searching
+            for <code class="language-xml">&lt;p&gt;([IVX]+\..*)&lt;/p&gt;</code> and replacing it
+            with <code class="language-xml">&lt;title&gt;\1&lt;/title&gt;</code>. The parentheses in
+            the regex <em>capture</em> the information between them, which is everything except the
+            <code class="language-xml">&lt;p&gt;</code> tags, and we can write the captured content
+            into the new <code class="language-xml">&lt;title&gt;</code> tags by using
+            <code class="language-regex">\1</code> to retrieve the first (and, in this case, only)
+            capture group. The <code class="language-xml">&lt;p&gt;</code> tags serve to anchor the
+            search so that it has to match everything between the start and end tag. In our pattern,
+            the first thing after the start tag is a character class consisting of one or more
+            instances of <q>I</q>, <q>V</q>, or <q>X</q>, that is, a Roman numeral. To avoid
+            matching one-line paragraphs that begin with the pronoun <q>I</q>, we require the Roman
+            numeral to be followed by a literal period, and since the dot in regex means <q>any
+                character except a new line</q>, we have to precede it with a backslash so that it
+            will lose that special meaning and match only a literal dot. The second dot, though,
+            does mean any character except a new line, and the asterisk tells the regex processor to
+            include in the match all characters on the line after the literal period following the
+            Roman numeral and up to the closing <code class="language-xml">&lt;/p&gt;</code>
+            tag.</p>
+        <h4>Chapters</h4>
+        <p>If all we do here is retag the chapter titles correctly, we wind up with a sequence of
+            <code class="language-xml">&lt;title&gt;</code> and
+            <code class="language-xml">&lt;p&gt;</code> elements, but nothing that records that the
+            chapters themselves are a hierarchical level in the structure of the document. That is,
+            the body of the novel does not contain just a combination of titles and paragraphs; it
+            contains chapters, and it’s the chapters that contain the titles and paragraphs. We can
+            fix that by searching for our <code class="language-xml">&lt;title&gt;</code> start tags
+            (since we know that they’re at the beginning of each chapter) and replacing them with a
+            <code class="language-xml">&lt;/chapter&gt;</code> end tag, a new line, a
+            <code class="language-xml">&lt;chapter&gt;</code> start tag, and another new line, so
+            that we wind up with a structure like the following for each chapter:</p>
+        <pre class="language-xml"><code>&lt;chapter&gt;
+    &lt;title&gt;&lt;!– title goes here -->&lt;/title&gt;
+    &lt;p&gt;&lt;!– text of first paragraph goes here -->&lt;/p&gt;
+    &lt;!-- more paragraphs --&gt;
+&lt;/chapter&gt;</code></pre>
+        <p>We then have to fix the first and last chapters manually, removing the spurious
+            <code class="language-xml">&lt;/chapter&gt;</code> end tag from before the first chapter
+            and adding the missing <code class="language-xml">&lt;/chapter&gt;</code> end tag after
+            the last chapter. This is similar to the way we tagged the sonnets in the first
+            assignment, where we used the sonnet numbers as <dfn>milestones</dfn> to mark the
+            boundary between a preceding and a following unit, and whenever we use that sort of
+            strategy, we have to fix the first and last units manually because there is no
+                <q>between</q> in their case. In this case it’s the titles that function as the
+            milestones, since the presence of a title signals the end of the preceding chapter and
+            the beginning of a new one.</p>
+        <h4>Quotes</h4>
+        <p>We have to check <q>Dot matches all</q> in the Find-and-replace dialog in order to
+            capture matches that might cross new line characters, and if we do that and then try
+            <code class="language-regex">".+"</code>, it might look as if we would match a quotation
+            mark and then one or more characters, up to the next quotation mark. That doesn’t do
+            what we want, though, because by default regex matches are <em>greedy</em>, that is,
+            they select the longest possible match, so we wind up matching everything from the very
+            first quotation mark in the entire document up to the last, as if there were only one
+            very long quotation in the novel.</p>
+        <p>Here’s how greediness works: If you match a pattern like
+            <code class="language-regex">".+"</code>, you’re asking to match one or more consecutive
+            characters between quotation marks, and if there are multiple matches that conform to
+            the pattern, it chooses the longest one. Since quotation marks are characters, too, if
+            your text reads <q>He said "hello" and she said "good bye"</q>, the greedy match
+            <code class="language-regex">".+"</code> will start at the quotation mark before
+            <code class="language-regex">hello</code>, but when it has to decide which of the three
+            following quotation marks should delimit the end of the quotation, if chooses the one
+            after <q>good bye</q>, as if there were one long quotation instead of two short ones
+            with a narrative interpolation between them. Regex patterns are greedy by default, but
+            you can make them non-greedy by putting a question mark after the pattern, so that
+            <code class="language-regex">".+?"</code> will match each quotation individually.</p>
+        <p>In other contexts a question mark is a repetition indicator that means <q>zero or one</q>
+            (that is, <q>optional</q>), but here it means <q>non-greedy</q>. How does a regex parser
+            know when a question mark means <q>zero or one</q> and when it means <q>non-greedy</q>?
+            The answer is that it only means <q>non-greedy</q> when it occurs after a plus sign or
+            an asterisk. That’s the only context in which non-greediness is an issue (it has to know
+            where to stop if there are multiple possible matches, of different lengths), and it
+            wouldn’t make sense to put a repetition indicator after another repetition indicator, so
+            it can’t mean <q>zero or one</q> there. The technical term for using the same symbol
+            with different meanings in different contexts is <dfn>overloading</dfn>. It’s an
+            efficient way to avoid reserving more symbols than you need for special functions, but
+            it can be confusing for humans until we realize that we need to look not only at the
+            symbol, but also at the context. It might make more sense if you remember that normal
+            English orthography has overloading, too. For example, a single curly apostrophe can
+            function as an apostrophe (in contractions like <q>don’t,</q> for example or possessive
+            expressions like <q>Santa’s reindeer</q>), but it functions as a closing quotation mark
+            when there’s a single opening curly quotation mark earlier (e.g.: He said <q>XML stands
+                for <q>extensible markup language</q></q>).</p>
+        <p>When we tag the quotation by writing it between <code class="language-xml">&lt;q></code>
+            tags, we want to remove and discard the original quotation marks, since those were only
+            pseudo-markup, used to represent the beginnning and end of a quotation in plain text,
+            and in the XML version we’re replacing them with real markup. We do that by using
+            parentheses to capture only the content between the quotation marks, and we then write
+            that capture group into the output. Our final search regex is
+            <code class="language-regex">"(.+?)"</code> and we replace it with
+            <code class="language-xml">&lt;q&gt;\1&lt;/q&gt;</code>. </p>
+        <h4>Cleanup and checking the results</h4>
+        <p>At this point we clean up the results by fixing the starting material (title, author,
+            table of contents) by hand and adding a root element. We then save the file as XML (with
+            a <q>.xml</q> filename extension), reopen it in &lt;oXygen/&gt;, and check it for
+            well-formedness. Once it’s well formed, you can also pretty-print it to improve the
+            indentation.</p>
+    </body>
+</html>
