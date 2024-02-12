@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Regex assignment #3" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <link rel="stylesheet" type="text/css" href="http://www.obdurodon.org/css/style.css" />
+        <!--#include virtual="inc/dh-header.html" -->
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h3>Before you begin</h3>
+            <!--<p>We will use the same text for Regex assignment #3 and for the regex test. The
+                homework assignment (details below) will focus on adding specific types of markup
+                using regular expressions, and the test will build on top of the homework tasks.
+                We’ll post a solution to assignment #3 after the due date and before the test, so
+                that if you don’t manage to complete all of the tasks for the homework assignment,
+                you can use our posted solution as a starting point for the test.</p>-->
+            <p>There’s a lot that we could do to autotag this document and it isn’t realistic to try
+                to squeeze all of it into a homework assignment, so we’ll stop at some point and
+                leave the rest as optional bonus tasks.</p>
+        </section>
+        <section>
+            <h3>The text</h3>
+            <p>Oscar Wilde’s <cite>The importance of being Earnest</cite> is available in plain text
+                from Project Gutenberg at <a
+                    href="http://www.gutenberg.org/cache/epub/844/pg844.txt"
+                    >http://www.gutenberg.org/cache/epub/844/pg844.txt</a>. Download the text and
+                manually remove the Project Gutenberg boilerplate from the beginning and end, so
+                that all that remains is the text as Oscar Wilde wrote it.</p>
+        </section>
+        <section>
+            <h3>The task</h3>
+            <p>Your task is to begin to prepare an XML-encoded digital edition of this play from the
+                plain text using search and replace operations to introduce the markup. As is
+                appropriate for a play, we eventually want the XML to identify any of the following
+                that it finds: acts, scenes, settings, speeches, speakers, and stage directions. Our
+                goal is to use search and replace operations with regular expressions to create
+                descriptive well-formed XML markup (rather than, for example, to create a
+                presentational HTML editon). We want to avoid manual tagging except in situations
+                that occur so rarely that they don’t justify search and replace operations, such as
+                tagging the title of the play or creating a root element.</p>
+        </section>
+        <section>
+            <h3>What to submit</h3>
+            <p>For this homework assignment please complete just the tasks described below and
+                submit a markdown document describing the steps you took. Include your
+                    <em>exact</em> regular expressions and, if you are matching and replacing
+                something, the <em>exact</em> replacement expression. For each regex operation,
+                    <em>specify whether dot-matches-all was checked or unchecked</em>. Note that we
+                are not asking you to tag speeches or speakers yet, even though that’s most of the
+                text; those are optional bonus tasks.</p>
+        </section>
+        <section>
+            <h3>Steps to complete</h3>
+            <ol>
+                <li><p>Delete the Gutenberg boilerplate manually.</p></li>
+                <li><p>Use regex to search for and replace reserved characters. What are they, and
+                        how many did you find?</p></li>
+                <li><p>Use regex to collapse multiple blank lines, leaving only one blank line
+                        betweeen lines of the input document.</p></li>
+                <li><p>Use regex to remove multiple consecutive space characters to leave only
+                        single spaces.</p></li>
+                <li><p>Manually select and cut everything before the line that says <q>FIRST ACT</q>
+                        and save it to a different file. In Real Life you would tag that separately
+                        later and then paste it back in.</p></li>
+                <li><p>Italics are represented by underscores. There are seven instances, which seem
+                        to fall into three types:</p><ul>
+                        <li><p>Emphasis, e.g., <q>I believe it _is_ a very pleasant state,
+                                sir.</q></p></li>
+                        <li><p>Newspaper title, e.g., <q>… will appear in the _Morning Post_ on
+                                    Saturday …</q></p></li>
+                        <li><p>Individual punctuation marks that seem to have been italicized for no
+                                apparent reason, e.g., <q>[Lane goes out_._]</q></p></li>
+                    </ul>
+                    <p>Use regex to:</p>
+                    <ul>
+                        <li><p>Strip out the underscores around the single punctuation marks without
+                                replacement.</p></li>
+                        <li><p>Assume that if the content begins with an upper-case letter it
+                                represents a newspaper title and use regex to replace the
+                                underscores with <code class="language-xml">&lt;title&gt;</code>
+                                tags.</p></li>
+                        <li><p>Assume that the rest are emphasis and replace the underscores with
+                                <code class="language-xml">&lt;emph&gt;</code> tags.</p></li>
+                    </ul></li>
+                <li><p>Stage directions (that is, actions performed by characters) are inside square
+                        brackets, sometimes on their own line and sometimes inside a speech. A
+                        speech may have more than one stage direction, and stage directions may
+                        cross line boundaries. Nothing else is inside square brackets. Use regex to
+                        tag all stage directions as <code class="language-xml">&lt;stage&gt;</code>,
+                        removing the square brackets.</p></li>
+                <li><p>As a way of learning about how acts and scenes are labeled, search for every
+                        line that contains no lower-case letters with
+                        <code class="language-regex">^[^a-z\n]+$</code>. (This is a negated
+                        character class; see the discussion at <a
+                            href="https://www.regular-expressions.info/charclass.html"
+                            >https://www.regular-expressions.info/charclass.html</a>.) Note that
+                        acts begin with the act number, then <q>SCENE</q>, and then they end with
+                            <q>ACT DROP</q>, except that the last one ends with <q>TABLEAU</q>.
+                        Since every act has just one scene, use a regex to remove the lines that say
+                            <q>SCENE</q> or <q>ACT DROP</q> or <q>TABLEAU</q> (including their
+                        trailing new lines) by replacing them with nothing. You can do this with a
+                        single regex.</p></li>
+                <li><p>Now tag all of the act labels (lines that read <q>FIRST ACT</q>, etc.) as
+                        <code class="language-xml">&lt;act&gt;</code> elements. These aren’t really
+                        acts; they’re just the headings for acts, and in Real Life we would then use
+                        those labels to tag the actual acts.</p></li>
+                <li><p>There appears to be a description of the setting, in the form of a plain-text
+                        paragraph, at the beginning of each act, we can find it because it occurs
+                        immediately after the "ACT" label, and those are the only places where the
+                        string "ACT", all in upper case, occurs. Find these paragraphs using regex
+                        and tag them as <code class="language-xml">&lt;setting&gt;</code>.</p></li>
+            </ol>
+        </section>
+        <section>
+            <h3>Optional bonus activities</h3>
+            <p>The bulk of this document is speeches, which are separated from one another by blank
+                lines. You want to tag each speech, and each speaker at the beginning of each
+                speech, along the lines of:</p>
+            <pre class="language-xml"><code><![CDATA[<sp>
+  <speaker>Algernon</speaker>
+  <text>No cucumbers!</text>
+</sp>]]></code></pre>
+            <p>You don’t have to tag lines because the speeches in this play are prose, so the
+                lineation is not informational. Be careful, though! Some speaker names might include
+                dots, some speeches might be spoken by more than one person in unison, some speeches
+                might include stage directions in places where you don’t expect them, and not
+                everything between blank lines is a speech.</p>
+        </section>
+    </body>
+</html>
