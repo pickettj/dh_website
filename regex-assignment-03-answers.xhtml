@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Regex assignment #3: answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <link rel="stylesheet" type="text/css" href="http://www.obdurodon.org/css/style.css" />
+        <!--#include virtual="inc/dh-header.html" -->
+        <style type="text/css">
+            body {
+                counter-reset: div
+            }
+            div {
+                counter-increment: div
+            }
+            body > div > p:first-child::before {
+                content: counter(div) ". "
+            }</style>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <!--<section>
+            <h3>Before you begin</h3>
+            <p>We will use the same text for Regex assignment #3 and for the regex test. The
+                homework assignment (details below) will focus on adding specific types of markup
+                using regular expressions, and the test will build on top of the homework tasks.
+                We’ll post a solution to assignment #3 after the due date and before the test, so
+                that if you don’t manage to complete all of the tasks for the homework assignment,
+                you can use our posted solution as a starting point for the test.</p>
+        </section>-->
+        <section>
+            <h3>The text</h3>
+            <p>Oscar Wilde’s <cite>The importance of being Earnest</cite> is available in plain text
+                from Project Gutenberg at <a
+                    href="http://www.gutenberg.org/cache/epub/844/pg844.txt"
+                    >http://www.gutenberg.org/cache/epub/844/pg844.txt</a>. Download the text and
+                manually remove the Project Gutenberg boilerplate from the beginning and end, so
+                that all that remains is the text as Oscar Wilde wrote it.</p>
+        </section>
+        <section>
+            <h3>The task</h3>
+            <p>Your task is to begin to prepare an XML-encoded digital edition of this play from the
+                plain text using search and replace operations to introduce the markup. As is
+                appropriate for a play, we eventually want the XML to identify any of the following
+                that it finds: acts, scenes, settings, speeches, speakers, and stage directions. Our
+                goal is to use search and replace operations with regular expressions to create
+                descriptive well-formed XML markup (rather than, for example, to create a
+                presentational HTML editon). We want to avoid manual tagging except in situations
+                that occur so rarely that they don’t justify search and replace operations, such as
+                tagging the title of the play or creating a root element.</p>
+        </section>
+        <section>
+            <h3>Steps to complete</h3>
+            <ol>
+                <li><p>Delete the Gutenberg boilerplate manually.</p></li>
+                <li><p>Use regex to search for and replace reserved characters. What are they, and
+                        how many did you find?</p><p>In this case there are no ampersands or
+                        less-than (or greater-than) signs, so nothing to replace. It’s nonetheless
+                        important to look for these characters at the beginning of any
+                        up-conversion, and to replace them with character entities before you add
+                        any real markup.</p></li>
+                <li><p>Use regex to collapse multiple blank lines, leaving only one blank line
+                        betweeen lines of the input document.</p>
+                    <p>Search for <code class="language-regex">\n{3,}</code> and replace with
+                        <code class="language-regex">\n\n</code>. Quantified expressions (inside
+                        curly braces) work in search patterns but not in replacement patterns, so we
+                        have to spell out the two newlines we want in the output. For this step it
+                        doesn’t matter whether dot-matches-all is checked or not, since there are no
+                        dots in the match pattern, but we normally leave it unchecked as a default,
+                        and check it only when that behavior is required.</p></li>
+                <li><p>Use regex to remove multiple consecutive space characters to leave only
+                        single spaces.</p>
+                    <p>Search for <code class="language-regex"> +</code> (that’s a literal space
+                        character followed by a plus sign) and replace with a single space. As with
+                        the preceding step, there is no dot in the match pattern, so whether
+                        dot-matches-all is checked doesn’t affect the behavior.</p></li>
+                <li><p>Manually select and cut everything before the line that says <q>FIRST ACT</q>
+                        and save it to a different file. You’ll tag that separately later, as part
+                        of the test, and then paste it back in.</p></li>
+                <li><p>Italics are represented by underscores. There are seven instances, which seem
+                        to fall into three types:</p><ul>
+                        <li><p>Emphasis, e.g., <q>I believe it _is_ a very pleasant state,
+                                sir.</q></p></li>
+                        <li><p>Newspaper title, e.g., <q>… will appear in the _Morning Post_ on
+                                    Saturday …</q></p></li>
+                        <li><p>Individual punctuation marks that seem to have been italicized for no
+                                apparent reason, e.g., <q>[Lane goes out_._]</q></p></li>
+                    </ul>
+                    <p>Use regex to:</p>
+                    <ul>
+                        <li><p>Strip out the underscores around the single punctuation marks without
+                                replacement.</p>
+                            <p>Since this is the only one-character italicized pattern, you can use
+                                <code class="language-regex">_(.)_</code> and replace with
+                                <code class="language-regex">\1</code>. A stricter strategy would
+                                require the single character to be a punctuation mark, which you can
+                                do by matching <code class="language-regex">_(\p{P})_</code> (see <a
+                                    href="https://www.regular-expressions.info/unicode.html">Unicode
+                                    regular expressions</a> for a more detailed explanation of how
+                                this works). Since there is a dot involved it’s good general
+                                practice to uncheck dot-matches-all, but it won’t matter in this
+                                case because there are no instances of two underscores surrounding
+                                just a newline.</p></li>
+                        <li><p>Assume that if the content begins with an upper-case letter it
+                                represents a newspaper title and use regex to replace the
+                                underscores with <code class="language-xml">&lt;title&gt;</code>
+                                tags.</p>
+                            <p>Search for <code class="language-regex">_([A-Z].*?)_</code> and
+                                replace with
+                                <code class="language-xml">&lt;title&gt;\1&lt;/title&gt;</code>.
+                                Dot-matches-all should be checked because a newspaper title could
+                                span a newline, although that happens not to be the case in this
+                                document. Not checking dot-matches-all and happening to get the
+                                desired output because the document happens not to contain a
+                                possible situation that your pattern doesn’t handle is called a
+                                    <dfn>brittle</dfn> solution; the opposite is <dfn>robust</dfn>.
+                                It’s good practice to write robust patterns that will handle
+                                situations that might reasonably occur, instead of hoping that they
+                                don’t.</p></li>
+                        <li><p>Assume that the rest are emphasis and replace the underscores with
+                                <code class="language-xml">&lt;emph&gt;</code> tags.</p>
+                            <p>Since you have removed all underscores except the ones intended to
+                                represent emphasis, you can now match
+                                <code class="language-regex">_(.+?)_</code> and replace with
+                                <code class="language-regex">&lt;emph&gt;\1&lt;/emph&gt;</code>. You
+                                should check dot-matches-all because an emphasized string could span
+                                a newline, although that happens not to occur in this
+                            document.</p></li>
+                    </ul></li>
+                <li><p>Stage directions (that is, actions performed by characters) are inside square
+                        brackets, sometimes on their own line and sometimes inside a speech. A
+                        speech may have more than one stage direction, and stage directions may
+                        cross line boundaries. Nothing else is inside square brackets. Use regex to
+                        tag all stage directions as <code class="language-xml">&lt;stage&gt;</code>,
+                        removing the square brackets.</p>
+                    <p>Match <code class="language-regex">\[(.+?)\]</code> and replace with
+                        <code class="language-xml">&lt;stage&gt;\1&lt;/stage&gt;</code>.
+                        Dot-matches-all must be checked. You need to escape the square bracket
+                        characters by preceding them with backslashes because square brackets are
+                        special characters (their normal role is to delimit character classes, like
+                        the one you used to match Roman numerals elsewhere), so if you want to match
+                        a literal square bracket character, you need to precede it with a backslash
+                        so that it will instead have its literal meaning.</p></li>
+                <li><p>As a way of learning about how acts and scenes are labeled, search for every
+                        line that contains no lower-case letters with
+                        <code class="language-regex">^[^a-z\n]+$</code>. (This is a negated
+                        character class; see the discussion at <a
+                            href="https://www.regular-expressions.info/charclass.html"
+                            >https://www.regular-expressions.info/charclass.html</a>.) Note that
+                        acts begin with the act number, then <q>SCENE</q>, and then they end with
+                            <q>ACT DROP</q>, except that the last one ends with <q>TABLEAU</q>.
+                        Since every act has just one scene, use a regex to remove the lines that say
+                            <q>SCENE</q> or <q>ACT DROP</q> or <q>TABLEAU</q> (including their
+                        trailing new lines) by replacing them with nothing. You can do this with a
+                        single regex.</p>
+                    <p>Search for <code class="language-regex">(SCENE|TABLEAU|ACT DROP)\n*</code>
+                        and replace with nothing. Because there is no dot in the match pattern it
+                        doesn’t matter whether dot-matches-all is checked.</p>
+                    <p>The parentheses create a capture group because parentheses always create a
+                        capture group, but that’s not why we use them here. We use them here to
+                        create a subpattern, so that we match any of the options in the
+                        parenthesized or-group plus any immediately following newline characters.
+                        The string <q>TABLEAU</q> at the end doesn’t have any following newline
+                        characters because it’s at the very end of the document, so we match zero or
+                        more newlines to consume those that are present after the other matches, but
+                        ensure that we’ll also match against the final <q>TABLEAU</q> because the
+                        newlines are optional.</p></li>
+                <li><p>Now tag all of the act labels (lines that read <q>FIRST ACT</q>, etc.) as
+                        <code class="language-xml">&lt;act&gt;</code> elements. These aren’t really
+                        acts; they’re just the headings for acts, and we’ll fix that later.</p>
+                    <p>Search for <code class="language-regex">^.+?ACT$</code> and replace with
+                        <code class="language-regex">&lt;act&gt;\0&lt;/act&gt;</code>.
+                        Dot-matches-all should be unchecked, since you want to match only a single
+                        line.</p></li>
+                <li><p>There appears to be a description of the setting, in the form of a plain-text
+                        paragraph, at the beginning of each act, we can find it because it occurs
+                        immediately after the "ACT" label, and those are the only places where the
+                        string "ACT", all in upper case, occurs. Find these paragraphs using regex
+                        and tag them as <code class="language-xml">&lt;setting&gt;</code>.</p>
+                    <p>With dot-matches-all checked, match
+                        <code class="language-regex">(&lt;/act&gt;\n+)(.+?)\n\n</code> and replace
+                        with
+                        <code class="language-regex">\1&lt;setting&gt;\2&lt;/setting&gt;\n\n</code>.
+                        The first capture group helps us find the paragraph after the act labels
+                        that we just created. We capture that and then put it back unchanged; we’re
+                        matching it only to find our way to the right place, and not because we need
+                        to process it. (We could, alternatively, use look-behind here, but we find
+                        it easier to capture and replace than to remember the syntax for a
+                        look-behind pattern.) The second capture group matches any sequence of
+                        characters, including newlines, up to the first instance of two consecutive
+                        newlines. This is the setting paragraph, so we write it back into the output
+                        with <code class="language-xml">&lt;setting&gt;</code> tags around
+                    it.</p></li>
+            </ol>
+        </section>
+        <section>
+            <h3>Optional bonus tasks</h3>
+            <p>Tagging with regular expressions relies on consistent patterns in the plain text,
+                which means that if the plain text has any inconsistencies, the regular expression
+                matching becomes less straightforward. To tag speeches we identified patterns that
+                would help us recognize a speech, and then patterns that would help us recognize the
+                speaker name within the speech, and that method misfires in three places because the
+                patterns we relied on were not consistent. In Real Life we would fix the few
+                exceptional cases by hand, but below we also describe how to adapt our regular
+                expressions to deal with the exceptions more systematically.</p>
+            <p>We found it easier to define the beginnings and ends of speeches separately, so we
+                tagged speeches in two steps:</p>
+            <ol>
+                <li><p>Dot matches all doesn’t matter for the first step because there aren’t any
+                        dots in our pattern. We match
+                        <code class="language-regex">\n\n([^&lt;])</code> and replace it with
+                        <code class="language-xml">\n\n&lt;speech>\1</code>. The match pattern takes
+                        advantage of the fact that we’ve already tagged everything that begins after
+                        two newlines that isn’t a speech: the act labels and stand-alone stage
+                        directions. We use a negative character class to match two newlines followed
+                        by anything that isn’t the beginning of a tag and write that back into the
+                        replacements, except that we insert a
+                        <code class="language-xml">&lt;speech&gt;</code> start-tag after the
+                        newlines.</p></li>
+                <li><p>With dot matches all checked (because speeches can cross multiple lines), we
+                        match <code class="language-regex">(&lt;speech>.+?)\n*</code> and replace it
+                        with <code class="language-xml">\1&lt;/speech>\n\n</code>. This uses the
+                        <code class="language-xml">&lt;speech&gt;</code> start-tag that we inserted
+                        in the previous step to find the beginnings of speeches and we match
+                        everything from there through the first instance of two newlines, which is
+                        the end of the speech. We write that match back into the replacement, except
+                        that we insert the <code class="language-xml">&lt;/speech&gt;</code> end-tag
+                        before the newlines. We made the trailing newlines optional because the last
+                        speech may not be followed by newlines.</p></li>
+            </ol>
+            <p>We’ve tagged the speeches and now need to tag the speakers within them as
+                <code class="language-xml">&lt;speaker&gt;</code> and the spoken text as
+                <code class="language-xml">&lt;text&gt;</code>. We assume (not entirely correctly)
+                that the speaker name begins immediately after the
+                <code class="language-xml">&lt;speech&gt;</code> start-tag and continues until the
+                first literal dot. With dot matches all checked, we match the entire speech with
+                <code class="language-regex">&lt;speech>(.+?)\. (.+?)&lt;/speech></code>, capture
+                the speaker and the spoken lines in two capture groups, and tag them with
+                <code class="language-xml">&lt;speech>\n&lt;speaker>\1&lt;/speaker>\n&lt;text>\2&lt;/text>\n&lt;/speech></code>.</p>
+            <p>After we wrap a root element around our document and validate it as XML,
+                &lt;oXygen/&gt; notifies us that there are two well-formedness errors, which are
+                actually three tagging errors. The original plain text is:</p>
+            <pre>Gwendolen and Cecily [Speaking together.]  Your Christian names are still
+an insuperable barrier.  That is all!
+
+Jack and Algernon [Speaking together.]  Our Christian names!  Is that
+all?  But we are going to be christened this afternoon.
+
+Gwendolen.  [To Jack.]  For my sake you are prepared to do this terrible
+thing?
+</pre>
+            <p>Our tagging method yields incorrect results because the speaker names <q>Gwendolyn
+                    and Cecily</q> and then <q>Jack and Algernon</q> are not followed by a dot and,
+                immediately, a space, which we had relied on. With the speeches (but not yet the
+                speakers) tagged we see:</p>
+            <pre class="language-xml"><code><![CDATA[<speech>Gwendolen and Cecily <stage>Speaking together.</stage> Your Christian names are still
+an insuperable barrier. That is all!</speech>
+
+<speech>Jack and Algernon <stage>Speaking together.</stage> Our Christian names! Is that
+all? But we are going to be christened this afternoon.</speech>
+
+<speech>Gwendolen. <stage>To Jack.</stage> For my sake you are prepared to do this terrible
+thing?</speech>]]></code></pre>
+            <p>When we tag speakers, we wind up with the incorrect:</p>
+            <pre class="language-xml"><code><![CDATA[<speech>
+<speaker>Gwendolen and Cecily <stage>Speaking together.</stage> Your Christian names are still
+an insuperable barrier</speaker>
+<text>That is all!</text>
+</speech>
+
+<speech>
+<speaker>Jack and Algernon <stage>Speaking together.</stage> Our Christian names! Is that
+all? But we are going to be christened this afternoon.</speech>
+
+<speech>Gwendolen</speaker>
+<text><stage>To Jack.</stage> For my sake you are prepared to do this terrible
+thing?</text>
+</speech>
+]]></code></pre>
+            <p>Since we discovered this inconsistency only after running the find-and-replace
+                operation and it affects only three consecutive speeches, in Real Life we would fix
+                it manually. A reasonably robust alternative, had we known earlier, would have been
+                to tag the speeches, then fix the two places where speakers are not followed by a
+                dot, and then tag the speakers. Those two places are the only instances where a
+                stage direction reads <q>[Speaking together.]</q>, so we could use that pattern to
+                find the moments that require repair. Specifically, we could interpose a search for
+                <code class="language-xml">&#xa0;&lt;stage&gt;Speaking together\.&lt;/stage&gt;</code>
+                (note the leading space character) and replace it with
+                <code class="language-regex">.\0</code>. This inserts a literal dot after the
+                speaker names, which regularizes the plain text and enables our original find-and
+                replace operations to match and tag all speakers correctly.</p>
+        </section>
+    </body>
+</html>
