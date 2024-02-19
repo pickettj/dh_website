@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Test #3: Regular expressions: answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <!--#include virtual="inc/dh-header.html" -->
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <p>We can think of our markup for this particular document as having five phases. We begin
+            with preparatory cleanup (Phase 1), after which we tag major structural components
+            (Phase 2, blocks but not inline snippets). At that point we do a bit of manual cleanup
+            (Interlude, Phase 3) and add a root element to create a well-formed document. We next
+            tag italics (Phase 4) and, finally, clean up blank lines (Phase 5). Your solution does
+            not have to be divided into phases and does not have to follow our order.</p>
+        <section>
+            <h3>Phase 1: Preparation</h3>
+            <section>
+                <h4>Reserved characters</h4>
+                <p>We search for ampersands, less-than signs, and greater-than signs in the original
+                    text, since if they were there we would have to replace them with character
+                    entities to keep them from looking like markup characters. There aren’t any, but
+                    we can’t know that without looking for them, so this is always the first thing
+                    we do with any up-conversion task.</p>
+            </section>
+            <section>
+                <h4>Remove extraneous newlines</h4>
+                <p><strong>Match:</strong>
+                    <code class="language-regex">\n{3,}</code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex">\n\n</code></p>
+                <p><strong>Dot matches all status:</strong> Unchecked (doesn’t matter, since there
+                    is no dot in the match pattern)</p>
+                <p><strong>Discussion:</strong> We trim instances of multiple blank lines down to a
+                    single blank line. For example, initially there are four blank lines between the
+                    title of the novel, on the first line, and the label <q>CHAPTER I</q>, on the
+                    sixth. Our match pattern uses numerical quantification to match sequences of
+                    three or more newlines, but because numerical quantification works only in match
+                    patterns, and not in replacements, we have to write two literal newlines into
+                    the replacement. There are several alternatives ways to match two or more
+                    sequential newlines, so you’re welcome to use whatever you prefer. You don’t
+                    have to remove extra newlines at all, but we find that doing so makes the
+                    document easier to work with.</p>
+            </section>
+        </section>
+        <section>
+            <h3>Phase 2: Structural markup</h3>
+            <section>
+                <h3>Tag paragraphs</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex">\n\n</code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[</p>\n\n<p>]]></code></p>
+                <p><strong>Dot matches all status:</strong> Unchecked (doesn’t matter, since there
+                    is no dot in the match pattern)</p>
+                <p><strong>Discussion:</strong> We use a blank line (two consecutive newlines) as a
+                    surrogate for the transition from one paragraph to the next, so we replace the
+                    two newlines with two newlines that have a paragraph end-tag before them and a
+                    paragraph start-tag after them. We then fix the first and last paragraphs
+                    manually since we’re matching transitions between paragraphs, and the first has
+                    no preceding paragraph and the last has no following paragraph. When we’re done
+                    with this step our document is a sequence of
+                    <code class="language-xml">&lt;p&gt;</code> elements with blank lines between
+                    them, and although it is <dfn>well-balanced</dfn>, it is not well-formed because
+                    it has no root element.</p>
+                <p>This method erroneously tags some non-paragraphs as paragraphs, most
+                    conspicuously the novel title and chapter labels (e.g., <q>CHAPTER I</q>) titles
+                    (e.g., <q>JONATHAN HARKER'S JOURNAL</q>, subtitles (e.g., <q>(_Kept in
+                        shorthand._)</q>). We find it simplest to let our pattern overgeneralize and
+                    then retag these items than to try to exclude them from the initial match
+                    pattern.</p>
+                <p>It is possible to match and replace the paragraphs themselves, rather than the
+                    blank lines between them, by using <a
+                        href="https://www.regular-expressions.info/lookaround.html">regex
+                        lookaround</a>. This is more elegant than the approach we describe above
+                    because it does not require manual fix-up, but we nonetheless match the blank
+                    lines between paragraphs because we find that easier to understand.</p>
+            </section>
+            <section>
+                <h3>Tag chapter headings</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[<p>(CHAPTER.+)</p>]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[<heading>\1</heading>]]></code></p>
+                <p><strong>Dot matches all status:</strong> Must be unchecked.</p>
+                <p><strong>Discussion:</strong> We tag the chapter headings before the titles,
+                    subtitles, or the chapters as a whole because they are the easiest to match.
+                    Once we’ve tagged them distinctively, we can use our introduced
+                    <code class="language-xml">&lt;heading&gt;</code> tags to help find chapter
+                    beginnings. It’s fine if you chose to omit the heading as a separate element and
+                    instead used an attribute on your chapter tags, e.g.,
+                    <code class="language-xml">&lt;chapter n="I"&gt;</code>.</p>
+                <section class="note">
+                    <p>We’ve assumed that chapter headings, titles, and subtitles all occupy only a
+                        single line. A novel with very long chapter titles or subtitles might
+                        include newlines in these elements, and our pattern would fail to match in
+                        those cases. Whether you make the simplifying assumption that we do here or
+                        write a more robust pattern (which requires turning on Dot matches all and
+                        using non-greedy matching) is a matter of personal preference. In a short
+                        document where we can look at all the titles, such as here, we opt for the
+                        simpler pattern. If our corpus were so large that we couldn’t exclude the
+                        possibility of multi-line titles and we couldn’t realistically look at them
+                        all, we’d write the more robust regular expression.</p>
+                </section>
+            </section>
+            <section>
+                <h3>Chapter titles</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[(</heading>\n\n)<p>(.+)</p>]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[\1<title>\2</title>]]></code></p>
+                <p><strong>Dot matches all status:</strong> Must be unchecked</p>
+                <p><strong>Discussion:</strong> The first pseudo-paragraph after the
+                    <code class="language-xml">&lt;heading&gt;</code> element is the chapter title,
+                    so we match the <code class="language-xml">&lt;/heading&gt;</code> end-tag, the
+                    two newlines that follow it, and then the
+                    <code class="language-xml">&lt;p&gt;</code> element after the newlines, which
+                    represents the chapter title. We capture everything from that match except the
+                    <code class="language-xml">&lt;p&gt;</code> tags, which we replace with
+                    <code class="language-xml">&lt;title&gt;</code> tags. We used the element name
+                    <code class="language-xml">&lt;title&gt;</code> instead of something like
+                    <code class="lanugage-xml">&lt;chapter-title&gt;</code> because we’re going to
+                    tag the chapters, so we’ll be able to distinguish titles of chapters from the
+                    title of the novel (which we’ll also tag as
+                    <code class="language-xml">&lt;title&gt;</code>) by the context.</p>
+            </section>
+            <section>
+                <h3>Chapter subtitles</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[(</title>\n\n)<p>(\(_.+_\))</p>]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[\1<subtitle>\2</subtitle>]]></code></p>
+                <p><strong>Dot matches all status:</strong> Must be unchecked</p>
+                <p><strong>Discussion:</strong> The first chapter has what we consider a subtitle
+                    and the second one doesn’t. To distinguish them we hypothesize that if a chapter
+                    title is followed by a 1) one-line paragraph that is 2) bracketed by parentheses
+                    and 3) italicized (represented by underscores inside the parentheses) it
+                    represents a subtitle. If the paragraph that follows the title is longer than
+                    one line or lacks the parentheses or lacks the italics, we assume that it’s a
+                    regular chapter paragraph, and not a subtitle.</p>
+            </section>
+            <section>
+                <h3>Chapters</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[<heading>]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[</chapter>\n\n<chapter>\n\n\0]]></code></p>
+                <p><strong>Dot matches all status:</strong> Unchecked (doesn’t matter, since there
+                    is no dot in the match pattern)</p>
+                <p><strong>Discussion:</strong> After running the find-and-replace we have to remove
+                    manually the spurious <code class="language-xml"><![CDATA[</chapter>]]></code>
+                    end-tag before the first chapter and we have to add the missing
+                    <code class="language-xml"><![CDATA[</chapter>]]></code> end-tag after the last
+                    chapter.</p>
+                <p>Chapters are <dfn>tesselated</dfn>, which means that each one starts where the
+                    last one ends, as was also the case with paragraphs. We can use that information
+                    to find the start position of the chapters by using the
+                    <code class="language-xml"><![CDATA[<heading>]]></code> elements that we
+                    introduced and assuming that the start of any chapter marks the end of the
+                    preceding one. As with paragraphs, that assumption will fail for the first and
+                    last chapters because the first doesn’t follow any chapter, so we’ll have
+                    inserted a spurious <code class="language-xml"><![CDATA[</chapter>]]></code>
+                    end-tag that we’ll then need to remove, and the second doesn’t have a following
+                    chapter, so we’ll incorrectly have failed to insert its end-tag, which we’ll
+                    have to add manually. With only two chapters, both of which require manual
+                    fix-up, it would be reasonable to tag them both manually, but if we were tagging
+                    the entire novel the amount of correct tagging would be much greater than the
+                    two extremes that we need to adjust, so the regex-supported approach, even with
+                    the clean-up it requires, would simplify the job.</p>
+                <section class="note">
+                    <p>We sometimes refer to the approach that we adopt for our tesselated chapters
+                        and paragraphs as a <dfn>milestone method</dfn>. Milestones are single
+                        numbered mile markers on the highway (nowadays metal signs, but once upon a
+                        time stone pillars) that record simultaneous, with one statement, the
+                        beginning of a new mile (or mile segment) and the end of the preceding one.
+                        Similarly we assume that the transitions between paragraphs or between
+                        chapters are milestones that mark, at the same time, the end of the
+                        preceding element and the beginning of the new one.</p>
+                    <p>Because milestones signify transitions, the very beginning and very end
+                        require special treatment, since the start of the first paragraph can’t also
+                        mark the end of the preceding paragraph because there isn’t one, etc. The
+                        milestone method isn’t the only way to tag tesselated structures (see our
+                        treatment of dated diary entries, below), but where we find it easier to
+                        think of finding the transition between items than of finding the items
+                        themselves, we have to remember that the first and last items will typically
+                        require manual fix-up.</p>
+                </section>
+            </section>
+            <section>
+                <h3>Dated diary entries: start-tags</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[<p>_(\d.+)_--]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[<dated-entry>\n\n<date-place>\1</date-place>\n\n<p>]]></code></p>
+                <p><strong>Dot matches all status:</strong> Must be unchecked</p>
+                <p><strong>Discussion:</strong> Diary entries consist of multiple paragraphs. The
+                    first paragraph of an entry begins with a date and place surrounded by
+                    underscores (which represent italics) and followed by two hyphens. That brief
+                    date and place are not the entry (they are just the heading for an entry), and
+                    neither is the single paragraph that begins with the date and place (that is
+                    just the first paragraph of a multi-paragraph entry). Because the dated diary
+                    entry consists of multiple paragraphs, we need to wrap our diary-entry tags
+                    around all of them.</p>
+                <p>To enter the start-tag for all diary entries we extract the entry heading from
+                    the paragraph where it occurs, which must be the first paragraph of a diary
+                    entry. We tag the extracted date and place as a
+                    <code class="language-xml">&lt;date-place&gt;</code>, and add a start-tag for a
+                    <code class="language-xml">&lt;dated-entry&gt;</code> before it (not forgetting
+                    to restore the paragraph start-tag, which now comes after the new
+                    <code class="language-xml">&lt;date-place&gt;</code> element). We remove the
+                    double hyphen since it was present only to separate the date and place from the
+                    actual entry, and now that distinguish it with markup, we no longer need the
+                    pseudo-markup characters. We add the end-tags for diary entries in a separate
+                    step. We’ve chosen kebab case (hyphenation) for this element name for a reason,
+                    about which we’ll say more below. We make the same simplifying assumption about
+                    length here as with chapter headings, title, and subtitles, that is, we assume
+                    that all of these diary entry date and place records do not cross a newline.</p>
+            </section>
+            <section>
+                <h3>Dates and places (optional)</h3>
+                <p>Tagging the date and place reference at the beginning of a dated entry as just a
+                    single element is fine, but in Real Life we would tag the date and the
+                    (optional) place inside, as well. Because only two of the six entries contain a
+                    place after the date, and the rest contain only the date, we find it easier to
+                    tag the dates and places separately:</p>
+                <section>
+                    <h4>Dates</h4>
+                    <p><strong>Match:</strong>
+                        <code class="language-regex"><![CDATA[<date-place>(.+?\.)(.*)</date-place>]]></code></p>
+                    <p><strong>Replace with:</strong>
+                        <code class="language-regex"><![CDATA[<date-place><date>\1</date>\2</date-place>]]></code></p>
+                    <p><strong>Dot matches all status:</strong> Must be unchecked</p>
+                    <p><strong>Discussion:</strong> The date part of a
+                        <code class="language-xml">&lt;date-place&gt;</code> element will always be
+                        present, and consists of the content up to and including the first dot
+                        character. We match and wrap that in
+                        <code class="language-xml">&lt;date&gt;</code> tags. There may or may not be
+                        text, representing the place, after the date portion, and for now we just
+                        capture it and write it back as is, without markup.</p>
+                </section>
+                <section>
+                    <h4>Places</h4>
+                    <p><strong>Match:</strong>
+                        <code class="language-regex"><![CDATA[</date> (.+?)</date-place>]]></code></p>
+                    <p><strong>Replace with:</strong>
+                        <code class="language-regex"><![CDATA[</date><place>\1</place></date-place>]]></code></p>
+                    <p><strong>Dot matches all status:</strong> Must be unchecked</p>
+                    <p><strong>Discussion:</strong> If there are any characters between the
+                        <code class="language-xml">&lt;/date&gt;</code> end-tag that we created in
+                        the last step and the <code class="language-xml">&lt;/date-place&gt;</code>
+                        end-tag, those must be the place, which we capture and wrap in
+                        <code class="language=xml">&lt;place&gt;</code> tags. If there is no text in
+                        that position, the match fails.</p>
+                </section>
+            </section>
+            <section>
+                <h3>Dated diary entries: end-tags at the ends of chapters</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[</chapter>]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[</dated-entry>\n\n\0]]></code></p>
+                <p><strong>Dot matches all status:</strong> Unchecked (doesn’t matter, since there
+                    is no dot in the match pattern)</p>
+                <p><strong>Discussion:</strong></p>
+                <p>The end of a diary entry is marked in one of two ways. If the diary entry is at
+                    the end of the chapter (two occurrences, since we have two chapters) there is no
+                    special mark, and the end of the chapter implicitly ends the diary entry, and
+                    we’ll add those end-tags here first. We discuss the second type in the next
+                    step.</p>
+                <p>There are, then, two related aspects to tagging diary entries: 1) wrap the
+                    diary-entry tags around all of the paragraphs that together constitute the diary
+                    entry and 2) tag the label distinctively. We chose to remove the label from the
+                    first paragraph and treat it as a structural component of the entry that
+                    precedes all of the paragraphs, that is, that is not contained within the first
+                    paragraph (even though it is rendered that way in the plain text).</p>
+            </section>
+            <section>
+                <h3>Dated diary entries: end-tags not at the end of chapters</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[(</p>\n\n)(<dated-entry>)]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[\1</dated-entry>\n\n\2]]></code></p>
+                <p><strong>Dot matches all status:</strong> Unchecked (doesn’t matter, since there
+                    is no dot in the match pattern)</p>
+                <p><strong>Discussion:</strong> If the diary entry is preceded within the same
+                    chapter by another diary entry, it is preceded by a paragraph (four
+                    occurrences). On three of those four occurrences the preceding paragraph is a
+                    single line that contains only asterisks and space characters, but we don’t need
+                    to care about that because <em>any</em> paragraph that immediately precedes the
+                    beginning of a new diary entry is necessarily the last paragraph of the
+                    preceding entry.</p>
+            </section>
+            <section>
+                <h3>Asterisks</h3>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[<p>[* ]+</p>\n\n]]></code></p>
+                <p><strong>Replace with:</strong> [nothing]</p>
+                <p><strong>Dot matches all status:</strong> Unchecked (doesn’t matter, since there
+                    is no dot in the match pattern)</p>
+                <p><strong>Discussion:</strong> The pseudo-paragraphs that contain just asterisks
+                    and space characters are pseudo-markup that signals a separation of dated diary
+                    entries (although not consistently). Now that we have tagged the diary entries
+                    these lines carry no information that we need, so we delete them.</p>
+            </section>
+        </section>
+        <section>
+            <h3>Phase 3: Interlude</h3>
+            <p>By this point we have tagged all of the major structural components of the text
+                except the novel title at the top, and we also do not yet have a root element. We
+                fix that by changing the element name for the title at the top (currently
+                <code class="language-xml"><![CDATA[<p>DRACULA</p>]]></code>) to
+                <code class="language-xml"><![CDATA[<title>]]></code> manually, and also by adding a
+                root element <code class="language-xml"><![CDATA[<novel>]]></code> around the entire
+                content.</p>
+            <p>At this point our document is well-formed XML. If you have been working inside a
+                document that you created as a new XML document, &lt;oXygen/&gt; knows that it’s XML
+                and should show you a happy green square. If you created a plain text document to
+                work in, at this point you need to save it as XML (File → Save as and give it a
+                filename that ends in <i>.xml</i>) <em>and then close and reopen it</em>. Just
+                saving it as XML isn’t enough for &lt;oXygen/&gt; to recognize that it is now an XML
+                document that can be checked for well-formedness; you need to close and reopen
+                it.</p>
+            <p>Once you’re looking at a well-formed XML document you should pretty-print it to
+                improve the legibility. None of the steps below should interfere with
+                well-formedness, so your document should remain well formed for the rest of the
+                processing.</p>
+        </section>
+        <section>
+            <h3>Phase 4: Italics</h3>
+            <p>A regular-expression search for <code class="language-regex"><![CDATA[_.+?_]]></code>
+                with Dot matches all checked reveals that there are eight instances of italics in
+                this document, represented by underscores that surround small amounts of content.
+                These instances have three different types of meaning: two are in a foreign language
+                    (<i>boyar</i>, <i>Quatre Face</i>), four are memorandum notations (<i>Mem.</i>),
+                and two are parts of titles or subtitles and are italicized for no clear reason.
+                    <i>Quatre Face</i> has a newline between the two words, and we would fail to
+                find it if we were to search for the simpler pattern
+                <code class="language-regex">_.+_</code> with Dot matches all unchecked. That is, we
+                can’t safely assume, as we did with other structures earlier, that no italicized
+                phrase will cross a newline boundary.</p>
+            <p>We can’t use regular expressions to find foreign words, which we’d like to tag as
+                <code class="language-xml"><![CDATA[<foreign>]]></code>, but we can find the other
+                two types with regular expressions, tag them as simply
+                <code class="language-xml"><![CDATA[<italic>]]></code> (presentational, because we
+                cannot impute a meaning to the italics in these cases), and then tag whatever is
+                left as <code class="language-xml"><![CDATA[<foreign>]]></code>.</p>
+            <section class="note">
+                <p>Remember when we said that we used the element name
+                    <code class="language-xml">&lt;dated-entry&gt;</code> (kebab case, with a
+                    hyphen) for a reason? We could safely have used camel case
+                    (<code class="language-xml">&lt;datedEntry&gt;</code>), but the point is that we
+                    wanted to avoid snake case
+                    (<code class="langauge-xml">&lt;dated_entry&gt;</code>) because introducing
+                    underscores would have complicated searching for italics, which were represented
+                    in the original input document by underscores. We could have worked around the
+                    issue because the &lt;oXygen/&gt; find-and-replace dialog would let us exclude
+                    characters in element names from our search (check the <q>Enable XML search
+                        options</q> at the bottom of the dialog to see the interface), but since we
+                    didn’t have to create markup that would require us to fine-tune our search for
+                    italics in that way, we decided that it was simplest just to avoid introducing
+                    our own new underscores.</p>
+            </section>
+            <section>
+                <h4>Memoranda</h4>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[_Mem\._]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[<italic>Mem.</italic>]]></code></p>
+                <p><strong>Dot matches all status:</strong> Unchecked (doesn’t matter, since there
+                    is no dot in the match pattern except the literal, escaped one)</p>
+                <p><strong>Discussion:</strong> We escape the dot in the match pattern because we
+                    want to match a literal dot, and without the backslash that part of the pattern
+                    would match any character except a newline. In practice it doesn’t matter
+                    because we know that the document contains no four-letter italic words with the
+                    shape <code class="language-regex">MenX</code>, where
+                    <code class="language-regex">X</code> stands for any character except a newline,
+                    except when <code class="language-regex">X</code> is a literal dot. It’s
+                    nonetheless useful to get in the habit of distinguishing literal dots from the
+                    dot that is a metacharacter.</p>
+            </section>
+            <section>
+                <h4>Titles and subtitles</h4>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[<(title|subtitle)>(.*?)_(.+?)_(.*?)]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[<\1>\2<italic>\3</italic>\4]]></code></p>
+                <p><strong>Dot matches all status:</strong> Must be unchecked</p>
+                <p><strong>Discussion:</strong> We know that the title and subtitle that contain
+                    italics don’t include any newline characters, so we uncheck Dot matches all to
+                    ensure that that we don’t accidentally overrun the end of a line. We chose to
+                    match the title and the subtitle with the same regex, but there’s nothing wrong
+                    with using separate expressions if you find that easier to work with. Our
+                    regular expression as the following parts, in order:</p>
+                <ul>
+                    <li><p>A left angle bracket, which begins a start-tag for a title or
+                            subtitle.</p></li>
+                    <li><p>An or-group of two strings, matching either of the start-tags we care
+                            about, but not any other start-tags. We wrap the or-group in parentheses
+                            to capture whatever we match, which means that when we match a
+                            <code class="language-xml"><![CDATA[<title>]]></code> element the value
+                            of the first capture group (<code class="language-regex">\1</code>) will
+                            be equal to the string <code class="language-regex">title</code>, and
+                            when we match a subtitle it will be equal to
+                            <code class="language-regex">subtitle</code>.</p></li>
+                    <li><p>A right angle bracket, closing the start-tag. Matching tags with regular
+                            expressions is a fragile process because the start-tag could legally
+                            have any amount of whitespace (spaces, newlines, tabs) before the
+                            closing angle bracket and it could also contain attributes. We know that
+                            isn’t the case in this document, though. The take-away is that
+                            processing arbitrary XML with regular expressions is not realistic, but
+                            processing limited, specific XML that you know well (in this case
+                            because you created yourself it) may be useful.</p></li>
+                    <li><p>Zero or more characters up to the first underscore encountered. We
+                            capture this as the part of the title or subtitle that precedes any
+                            italics, and we wrap it in parentheses, so that it becomes the value of
+                            our second capture group.</p></li>
+                    <li><p>An underscore, which marks the beginning of the italic portion. We don’t
+                            capture the underscore because we’re going to replace it with real
+                            markup.</p></li>
+                    <li><p>Everything after the first underscore up to the second one, which becomes
+                            the third capture group.</p></li>
+                    <li><p>Everything after the second underscore until the end of the line. This
+                            will include any non-italicized text that might follow the italics, as
+                            well as the end-tag.</p></li>
+                </ul>
+                <p><strong>Notes: </strong>Our pattern will fail to tag any italic phrase inside a
+                    title or subtitle except the first one, but since we know that there can be at
+                    most one in this document, that isn’t an issue. Any title or subtitle that
+                    doesn’t contain any underscores won’t match the pattern, so it will be
+                    ignored.</p>
+            </section>
+            <section>
+                <h4>Foreign words</h4>
+                <p><strong>Match:</strong>
+                    <code class="language-regex"><![CDATA[_(.+?)_]]></code></p>
+                <p><strong>Replace with:</strong>
+                    <code class="language-regex"><![CDATA[<foreign>\1</foreign>]]></code></p>
+                <p><strong>Dot matches all status:</strong> Must be checked in case foreign phrases
+                    span newlines, and that happens in our document with <i>Quatre Face</i>.</p>
+                <p><strong>Discussion:</strong> The only remaining paired underscores are around the
+                    two foreign expressions, so we can run a relatively simple search for text
+                    between underscores, capture it, and replace it with itself, throwing away the
+                    underscores and wrapping it in
+                    <code class="language-xml"><![CDATA[<foreign>]]></code> tags instead.</p>
+            </section>
+        </section>
+        <section>
+            <h3>Phase 5: Blank lines</h3>
+            <p>The blank lines served a structural purpose in the original plain-text source and we
+                used them to control some of our tagging, but now that our document is fully tagged
+                we no longer need them. You can leave them if you find the XML more legible with
+                them, but if you want to delete them, you can search for two consecutive newlines
+                (<code class="language-regex"><![CDATA[\n\n\]]></code> and replace them with a
+                single newline.</p>
+        </section>
+        <section>
+            <h3>Optional, extra-credit schema</h3>
+            <p>The following schema matches the markup we’ve added to the document:</p>
+            <pre class="language-regex"><code><![CDATA[# Schema for first two chapters of Dracula
+# 
+start = novel
+# 
+# Mixed content that appears in multiple places
+content = mixed { (italic | foreign)* }
+# 
+# Main hierarchy is novel -> chapter -> dated-entry -> p
+novel = element novel { title, chapter+ }
+chapter = element chapter { heading, title, subtitle?, dated-entry+ }
+dated-entry = element dated-entry { date, p+ }
+p = element p { content }
+# 
+# Titles and subtitles may have mixed content, like paragraphs
+title = element title { content }
+subtitle = element subtitle { content }
+#
+# Dates, italic, foreign, and heading elements have text content
+date = element date { text }
+italic = element italic { text }
+foreign = element foreign { text }
+heading = element heading { text }]]></code></pre>
+            <p>We’ve generalized a bit and assumed that elements that can contain italics or foreign
+                phrases might (in other chapters) contain any combination of those two element
+                types. For that reason we define a named pattern with the label
+                <code class="language-xquery">content</code> so that we can reuse it in multiple
+                places without having to retype it. In that way, should we decide to add another
+                inline element we could add it to the schema in one place and it would be available
+                wherever we’ve used the pattern.</p>
+        </section>
+    </body>
+</html>
