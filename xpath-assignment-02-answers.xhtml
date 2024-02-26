@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="XPath assignment #2 answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <!--#include virtual="inc/dh-header.html" -->
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h3>The task and possible solutions</h3>
+            <p>You can find an XML (TEI) version of Shakespeare’s <cite>Hamlet</cite> at <a
+                    href="bad-hamlet.xml">http://dh.obdurodon.org/bad-hamlet.xml</a>. We’ve
+                deliberately damaged some of the markup in this edition to introduce some
+                inconsistencies, but the file is well-formed XML, which means that you can use XPath
+                to explore it. You should download this file to your computer (typically that means
+                right-clicking on the link and selecting <q>save as</q>) and open it in
+                &lt;oXygen/&gt;.</p>
+            <p>Prepare your answers to the following questions in a markdown file upload it to
+                Canvas as an attachment. As always, code snippets (including XPath snippets) in
+                markdown must be surrounded with backticks.</p>
+            <p>Some of these tasks are thought-provoking, and even difficult. If you get stuck, do
+                the best you can, and if you can’t get a working answer, give the answers you tried
+                and explain where they failed to get the results you wanted. As always, you are
+                encouraged to ask questions in the <b>#xpath</b> channel in Slack, but because you
+                want to make progress in learning to debug your own code, your questions should tell
+                us what you tried, what you expected, <em>exactly</em> what you got instead (not
+                just <q>didn’t work</q> or <q>got an error</q>), and what you think the source of
+                the problem is. Sometimes writing that sort of request for advice that will help you
+                figure out what’s wrong on your own (see <a
+                    href="https://en.wikipedia.org/wiki/Rubber_duck_debugging">Rubber duck
+                    debugging</a>), and even when it doesn’t, it will help us identify the difficult
+                moments.</p>
+            <p>These tasks require the use of path expressions, predicates, and the functions
+                <code class="language-xquery">count()</code> and
+                <code class="language-xquery">not()</code>, but they should not require any other
+                XPath functions. There may be more than one possible answer.</p>
+            <p>Using the <cite>Bad Hamlet</cite> document and the XPath browser window in
+                &lt;oXygen/&gt;, construct XPath expressions that will do the following (give the
+                full XPath expressions in your answers, and not just the results):</p>
+            <ol>
+                <li>Most (not all) speeches in Hamlet contain mostly metrical line
+                    (<code class="language-xml">&lt;l&gt;</code>) and <q>anonymous block</q>
+                    (<code class="language-xml">&lt;ab&gt;</code>) elements (an anonymous block is
+                    the TEI element that the tagger used to represent a non-metrical speech line).
+                    Speeches also typically contain
+                    <code class="language-xml">&lt;speaker&gt;</code> elements, and may also contain
+                    stage directions (<code class="language-xml">&lt;stage&gt;</code>). We have
+                    deliberately left out at least one other type of subelement found in speeches.
+                    Based on this understanding:<ol>
+                        <li>
+                            <p>What XPath would find all of the speeches that do not contain any
+                                metrical lines as immediate children. How many are there?</p>
+                            <p><code class="language-xquery">//sp[not(l)]</code></p>
+                            <p>For this answer, we use the predicate
+                                <code class="language-xquery">[not(l)]</code> to check whether there
+                                are <code class="language-xml">&lt;l&gt;</code> elements on the
+                                child axis of all of the speeches we find. We keep only speeches
+                                that <em>do not</em> contain any line elements, throwing away any
+                                speeches that <em>do</em> contain those elements. There are 451
+                                speech elements without line children. Some of you specified
+                                <code class="language-xquery">//sp[not(child::l)]</code>. This is
+                                syntactically valid XPath, but it isn’t consistent with Best
+                                Practice; most coders wouldn’t mention the child axis explicitly
+                                because it’s the default.</p>
+                        </li>
+                        <li>
+                            <p>What XPath would find all of the speeches that do not contain either
+                                any metrical lines (<code class="language-xml">&lt;l&gt;</code>) or
+                                any anonymous blocks (<code class="language-xml">&lt;ab&gt;</code>)?
+                                How many are there? What do they contain instead?</p>
+                            <p>From anywhere in the document (because a path expressions beginning
+                                with a slash will always start at the document node regardless of
+                                your current context location) you can use any of the following:</p>
+                            <ul>
+                                <li><p><code class="language-xquery">//sp[not(l|ab)]</code></p></li>
+                                <li><p><code class="language-xquery">//sp[not(l or ab)]</code></p></li>
+                                <li><p><code class="language-xquery">//sp[not(l)][not(ab)]</code></p></li>
+                                <li><p><code class="language-xquery">//sp[not(l) and not(ab)]</code></p></li>
+                                <li><p><code class="language-xquery">//sp except (//sp[l]|//sp[ab])</code></p></li>
+                            </ul>
+                            <p>These path expressions all return speeches that do not have either
+                                <code class="language-xml">&lt;l&gt;</code> or
+                                <code class="language-xml">&lt;ab&gt;</code> elements as immediate
+                                children. There are seven of these elements. When you navigate to
+                                these speeches in the list that &lt;oXygen/&gt; returns, you find
+                                that the other child elements of speeches that we concealed from you
+                                are line groups, or <code class="language-xml">&lt;lg&gt;</code>.
+                                You can get those child elements by adding an asterisk as the next
+                                path step, meaning <q>find all of the child elements of these
+                                    <code class="language-xml">&lt;sp&gt;</code> elements, whatever
+                                    they might be</q>:
+                                <code class="language-xquery">//sp[not(l or ab)]/*</code> (similarly
+                                with the other options above). You can get the element names,
+                                instead of the elements themselves, by using the simple map operator
+                                to apply the <code class="language-xquery">name()</code> function to
+                                the elements returned by the path expression:
+                                <code class="language-xquery">//sp[not(l or ab)]/* ! name(.)</code>
+                                (likewise for the other expressions above). You can get rid of the
+                                duplicates by using the arrow operator to apply the
+                                <code class="language-xquery">distinct-values()</code> function:
+                                <code class="language-xquery">//sp[not(l|ab)]/* ! name(.) => distinct-values()</code>
+                                (likewise for the other expressions above).</p>
+                            <section class="note">
+                                <p>There are alternatives that don’t use the simple map operator or
+                                    the arrow operator. For example,
+                                    <code class="language-xquery">distinct-values(//sp[not(l|ab)]/*/name())</code>
+                                    returns the same results as the last example above. We recommend
+                                    using the simple map and arrow operators where appropriate
+                                    because the distinctive operators and the left-to-right
+                                    application make the code easier to understand.</p>
+                            </section>
+                            <p><code class="language-xquery">//sp[not(l|ab)]</code> uses the
+                                    <dfn>union</dfn> operator.
+                                <code class="language-xquery">l|ab</code> matches the union of all
+                                lines and anonymous blocks, that is, everything that is either a
+                                line or an anonymous block (and some people refer to the union
+                                connector as the <q>or connector</q>). The path
+                                <code class="language-xquery">//sp</code> collects all of the
+                                speeches, and the predicate then checks on the child axis (the
+                                default, since no axis is specified) and retains only those speeches
+                                that do not have either lines or anonymous blocks as immediate
+                                children.</p>
+                            <p><code class="language-xquery">//sp[not(l or ab)]</code> uses the
+                                <code class="language-xquery">or</code> operator. Without the
+                                <code class="language-xquery">not()</code> function, it would keep
+                                all <code class="language-xml">&lt;sp&gt;</code> elements that have
+                                either <code class="language-xml">&lt;l&gt;</code> or
+                                <code class="language-xml">&lt;ab&gt;</code> children. The
+                                <code class="language-xquery">not()</code> function inverts the
+                                test, so it keeps only the
+                                <code class="language-xml">&lt;sp&gt;</code> elements that have
+                                neither type of child. Some people find the two senses of
+                                    <em>or</em> confusing: the union operator
+                                (<code class="language-xquery">|</code>) finds <em>elements</em>
+                                that are either one thing or another, while the keyword
+                                <code class="language-xquery">or</code> is used in complex
+                                predicates to filter a sequence according to one condition
+                                    <em>or</em> another.</p>
+                            <p><code class="language-xquery">//sp[not(l)][not(ab)]</code> uses two
+                                predicates. It first collects all of the speeches, after which the
+                                first predicate keeps only those that don’t have line elements as
+                                children. The second predicate then filters those still further,
+                                keeping only the ones that also don’t have anonymous blocks as
+                                immediate children. You can reverse the order of the predicates in
+                                this case (although there are other situations where changing the
+                                order of predicates leads to different results).</p>
+                            <p><code class="language-xquery">//sp[not(l) and not(ab)]</code> uses a
+                                compound predicate. It collects all of the speeches and then filters
+                                them all at once, keeping only those that both do not have any lines
+                                as children and do not have any anonymous blocks as children. The
+                                order of the two parts on either side of the
+                                <code class="language-xquery">and</code> operator doesn’t
+                                matter.</p>
+                            <p><code class="language-xquery">//sp except (//sp[l]|//sp[ab])</code>
+                                uses <code class="language-xquery">except</code> to specify the
+                                    <dfn>difference</dfn> of sets of nodes. See Kay pp. 628–31 for
+                                discussion. Our pattern says <q>return all
+                                    <code class="language-xml">&lt;sp&gt;</code> elements, but
+                                    exclude from that return the union of all
+                                    <code class="language-xml">&lt;sp&gt;</code> elements that have
+                                    <code class="language-xml">&lt;l&gt;</code> children and all
+                                    <code class="language-xml">&lt;sp&gt;</code> elements that have
+                                    <code class="language-xml">&lt;ab&gt;</code> children</q>.</p>
+                            <p>All five of these XPaths yield the same sequence of seven elements,
+                                and in all cases that use the
+                                <code class="language-xquery">and</code>,
+                                <code class="language-xquery">or</code>, or union
+                                (<code class="language-xquery">|</code>) operators, you may change
+                                the order of the parts without changing the results. For example
+                                <code class="language-xquery">not(l or ab)</code> returns the same
+                                nodes as <code class="language-xquery">not(ab or l)</code>.</p></li>
+                    </ol>
+                </li>
+                <li>Explain why the following four XPath expressions return different results, and
+                    describe in prose what each of them does return, and why:<ol>
+                        <li><code class="language-xquery">//sp[@who="Hamlet"]/l[1]</code></li>
+                        <li><code class="language-xquery">/descendant::sp[@who="Hamlet"]/l[1]</code></li>
+                        <li><code class="language-xquery">(//sp[@who="Hamlet"]/l)[1]</code></li>
+                        <li><code class="language-xquery">(/descendant::sp[@who="Hamlet"]/l)[1]</code></li>
+                    </ol>
+                    <p>The reason that these four XPath expressions return different results is
+                        because of the <dfn>scoping</dfn> effect of parentheses, that is, how the
+                        parentheses affect the sequence of items within which the system then
+                        applies the predicate <code class="language-xquery">[1]</code> to select
+                        only the first item in a sequence. The other distinguishing factor of these
+                        expressions involves the specification of the descendant axis. The shorthand
+                        <code class="language-xquery">//</code> functions the same way as the long
+                        form <code class="language-xquery">descendant::</code>. The predicate in the
+                        expressions 2a and 2b filter elements in a different context than in
+                        expressions 2c and 2d because the parentheses alter the current context.
+                        Here are the details:</p>
+                    <p>2a (<code class="language-xquery">//sp[@who="Hamlet"]/l[1]</code>) returns
+                        the first line of every speech by Hamlet. XPath expressions operate one step
+                        at a time, and the sequence returned by each step becomes the sequence of
+                        context nodes from which the next step proceeds. This means that when the
+                        first step returns a sequence of all of Hamlet’s speeches, each speech, one
+                        by one, becomes the context for returning the lines in that single speech,
+                        which are then filtered by the predicate to keep only the first line. The
+                        entire expression returns, then, a sequence of all of the first lines
+                        (<code class="language-xml">&lt;l&gt;</code> elements) of all of Hamlet’s
+                        speeches.</p>
+                    <section class="note">
+                        <p>Not all of Hamlet’s speeches contain
+                            <code class="language-xml">&lt;l&gt;</code> child elements, yet when we
+                            ask for the first <code class="language-xml">&lt;l&gt;</code> child
+                            element of each speech we don’t raise any errors. This fact illustrates
+                            another perhaps surprising feature of XPath: asking for something that
+                            does not exist is not an error, so if a speech has no
+                            <code class="language-xml">&lt;l&gt;</code> children we get no result
+                            (an empty sequence) for that speech. When we ask for
+                            <code class="language-xquery">//sp[@who="Hamlet"]/l[1]</code> we get 159
+                            first child <code class="language-xml">&lt;l&gt;</code> elements, but
+                            when we ask for
+                            <code class="language-xquery">//sp[@who="Hamlet"]</code>, we get 357
+                            speeches. This means that 198 speeches don’t have a first
+                            <code class="language-xml">&lt;l&gt;</code> child element, and that
+                            means that they don’t have any
+                            <code class="language-xml">&lt;l&gt;</code> child elements. We can
+                            verify that with
+                            <code class="language-xquery">//sp[@who="Hamlet"][not(l)]</code>, which
+                            asks explicitly for all speeches by Hamlet that contain no
+                            <code class="language-xml">&lt;l&gt;</code> child elements, and which
+                            returns 198 results. We can find out what types of elements those
+                            speeches do have with:</p>
+                        <pre class="language-xml"><code>//sp[@who="Hamlet"][not(l)]/*[not(self::speaker|self::stage)]
+! name(.)
+=> distinct-values()</code></pre>
+                        <p>This finds all speeches by Hamlet
+                            (<code class="language-xml">//sp[@who="Hamlet"]</code>) and filters them
+                            to keep only the ones that do not have any
+                            <code class="language-xml">&lt;l&gt;</code> children
+                            (<code class="language-xml">//sp[@who="Hamlet"][not(l)]</code>). We then
+                            find all of the child elements that those speeches <em>do</em> have
+                            (<code class="language-xml">//sp[@who="Hamlet"][not(l)]/*</code>) and
+                            filter those children to exclude the speaker name and any stage
+                            directions
+                            (<code class="language-xquery">//sp[@who="Hamlet"][not(l)]/*[not(self::speaker|self::stage)]</code>),
+                            since those don’t hold spoken text, and what we’re looking for is the
+                            elements other than <code class="language-xml">&lt;l&gt;</code> that
+                            hold spoken text. We then use the
+                            <code class="language-xquery">name()</code> function to get the names of
+                            each of those elements, using the simple map operator. Since we don’t
+                            need the names of the element types to be repeated, we employ the
+                            <code class="language-xquery">distinct-values()</code> function to
+                            remove the duplicates, using the arrow operator. This tell us that
+                            speeches by Hamlet that don’t have any
+                            <code class="language-xml">&lt;l&gt;</code> children have, instead,
+                            <code class="language-xml">&lt;ab&gt;</code> (anonymous block, which in
+                            this play is used for non-metrical lines) and
+                            <code class="language-xml">&lt;lg&gt;</code> (line group) child
+                            elements.</p>
+                        <p>We used the <code class="language-xquery">self::</code> axis above inside
+                            a predicate to exclude <code>&lt;speaker&gt;</code> and
+                            <code>&lt;stage&gt;</code> elements from the results of a path step. We
+                            could, alternatively, use the
+                            <code class="language-xquery">except</code> operator within the path
+                            step instead of the predicate. That version would look like:</p>
+                        <pre class="language-xquery"><code>//sp[@who="Hamlet"][not(l)]/(* except (speaker|stage))
+! name(.)
+=> distinct-values()</code></pre>
+                        <p>There is no reason to prefer one of these to the other, and you should
+                            use whichever one you find easiest to understand.</p>
+                    </section>
+                    <p>2b (<code class="language-xquery">/descendant::sp[@who="Hamlet"]/l[1]</code>)
+                        starts by looking for <code class="language-xml">&lt;sp&gt;</code> on the
+                        descendant axis from the document node (the top of the tree), and then finds
+                        all of the child line elements of those speeches. As in 2a, the predicate
+                        <code class="language-xquery">[1]</code> modifies the <em>immediately</em>
+                        preceding step of the expression. This means that the expression returns the
+                        first line of each of Hamlet's speeches, the same result as 2a.</p>
+                    <p>2c (<code class="language-xquery">(//sp[@who="Hamlet"]/l)[1]</code>) also
+                        begins by finding all of the speeches by Hamlet, and then all of the child
+                        line elements of those speeches. At that point the full expression is
+                        wrapped in parentheses, making the current context a single, flattened
+                        sequence of all line elements in Hamlet speeches. The predicate
+                        <code class="language-xquery">[1]</code> then applies to that entire
+                        flattened sequence, so it filters the result by asking for the very first
+                        line in the entire sequence of all lines spoken by Hamlet. As a result 2c
+                        returns only one line.</p>
+                    <section class="note">
+                        <p>The way the parentheses operate here illustrates a perhaps surprising
+                            feature of sequences in XPath: sequences flatten their contents into a
+                            single sequences. For example, the sequence
+                            <code class="language-xquery">( (1, 2, 3), (4, 5, 6) )</code> might look
+                            like a sequence of two items, each of which is itself a sequence of
+                            three integers. The way XPath works, though, is that this is equivalent
+                            to <code class="language-xquery">(1, 2, 3, 4, 5, 6)</code> because
+                            nested sequences in XPath are automatically flattened. This is why
+                            wrapping all of the lines of all of Hamlet’s speeches in parentheses
+                            causes them to behave like a single sequence of lines, instead of a
+                            sequence of sequences of lines.</p>
+                        <p>XPath has a structure called an <dfn>array</dfn> that is similar to
+                            sequences except that it permits this type of nesting without
+                            flattening. We don’t introduce arrays in this course because they are
+                            not needed for most document processing, but if you do require array
+                            functionality for your project, the instructors will help you learn to
+                            use them.</p>
+                    </section>
+                    <p>2d
+                        (<code class="language-xquery">(/descendant::sp[@who="Hamlet"]/l)[1]</code>),
+                        like the others, starts by looking for
+                        <code class="language-xml">&lt;sp&gt;</code> elements on the descendant axis
+                        from the document node and filtering them to keep only the ones by Hamlet.
+                        As in 2c, the numerical predicate is applied to the entire expression, and
+                        not to each individual speech, since the predicate applies to everything
+                        wrapped in parentheses, that is, to all of Hamlet’s line as a single
+                        sequence. For that reason, it keeps only the first line that is spoken by
+                        Hamlet and returns only one line, the same result as 2c.</p>
+                    <p>The point is that a predicate applies to the <em>current context</em>, which
+                        is defined as the <em>immediately preceding sequence</em>. In 2a and 2b,
+                        it’s <em>each</em> sequence of lines in <em>each</em> speech,
+                            <em>separately</em>, so the predicate applies once for every speech, and
+                        returns the first line of every speech. In the 2c and 2d, the parentheses
+                        cause the entire preceding expression to function as a single, flattened
+                        sequence, so the predicate applies only once, to the continuous sequence of
+                        all lines spoken by Hamlet, and therefore returns only one line, the first
+                        line spoken by Hamlet in the entire play.</p>
+                </li>
+            </ol>
+        </section>
+        <hr />
+        <section id="descendant-or-self">
+            <h3>What does <code class="language-xquery">//</code> mean?</h3>
+            <section>
+                <h4>Most of the time we can pretend it means
+                    <code class="language-xquery">descendant::</code></h4>
+                <p>Most of the time you don’t need to think about the details of how
+                    <code class="language-xquery">//</code> doesn’t really mean <q>descendant
+                        axis</q>, even though it seems to behave as if it did. But if you run into
+                    one of the places where <code class="language-xquery">//</code> doesn’t behave
+                    the same way as referring to the descendant axis explicitly, here’s why.</p>
+                <p>In most places <code class="language-xquery">//</code> functions the same way as
+                    <code class="language-xquery">descendant::</code>, so we often think of it as
+                    shorthand for it, just as <code class="language-xquery">@</code> is shorthand
+                    for <code class="language-xquery">attribute::</code>, that is, for referring to
+                    nodes on the attribute axis. But <code class="language-xquery">//</code> isn’t
+                    exactly synonymous with <code class="language-xquery">descendant::</code>; what
+                    it actually means is
+                    <code class="language-xquery">descendant-or-self::node()/</code>. Here’s why
+                    that matters, and why that perhaps confusing path step is useful.</p>
+                <p>The <code class="language-xquery">descendant-or-self::</code> axis means what you
+                    think it means: it looks for specified nodes on the descendant axis, but it also
+                    looks at the current context node, and not only at its descendants. The
+                    expressions <code class="language-xquery">//sp</code> and
+                    <code class="language-xquery">/descendant::sp</code> return the same results
+                    because:</p>
+                <ul>
+                    <li><p><code class="language-xquery">/descendant::sp</code> is straight-forward.
+                            It starts at the document node (because it begins with a slash) and then
+                            looks at all descendants of the current context node (which we’ve just
+                            established as the document node) and selects all descendants that are
+                            elements of type <code class="language-xml">&lt;sp&gt;</code>. </p></li>
+                    <li><p><code class="language-xquery">//sp</code> is short for
+                            <code class="language-xquery">/descendant-or-self::node()/sp</code>. It
+                            also starts at the document node because it also begins with a slash. It
+                            then, as a first path step from the document node, looks at itself (the
+                            document node) and at all of its descendant nodes of itself. It doesn’t
+                            select those nodes, though; that’s an intermediate path step, and from
+                            each of those nodes it then looks at their children and selects them if
+                            they are of type <code class="language-xml">&lt;sp&gt;</code>.</p></li>
+                </ul>
+            </section>
+            <h4>Why is it useful that <code class="language-xquery">//</code> doesn’t mean the same
+                thing as <code class="language-xquery">descendant::</code>?</h4>
+            <p>If you want to find all <code class="language-xquery">@who</code> attributes in the
+                document, you can do that with <code class="language-xquery">//@who</code>. But if
+                you try to write <code class="language-xquery">/descendant::@who</code> you’ll raise
+                an error because you’re trying to look on two axes at once. Attributes aren’t
+                descendants in the sense that they are never on the descendant axis because they are
+                never on any of the directional axes (parent, child, etc.); they are only on the
+                attribute axis. But because <code class="language-xquery">//@who</code> really means
+                <code class="language-xquery">/descendant-or-self::node()/@who</code>, it looks for
+                all nodes on the descendant axis (none of which are attributes themselves) and then
+                looks for <code class="language-xquery">@who</code> attributes on the attribute axis
+                from those nodes. Since it is looking at all descendant nodes of the document node,
+                it winds up looking at all <code class="language-xquery">@who</code> attributes, no
+                matter what their parent.</p>
+            <section class="note">
+                <p>Attributes are not children, which means that they are not located on the child
+                    axis of anything (they are always and only on the attribute axis). But, perhaps
+                    surprisingly, they do have parents: the element that hosts an attribute is
+                    called its parent and you can navigate to it on parent axis from an attribute.
+                    For example, you can find all elements that have a
+                    <code class="language-xquery">@who</code> attribute with
+                    <code class="language-xquery">//@who/parent::*</code> (or the shorthand version
+                    <code class="language-xquery">//@who/..</code>).</p>
+            </section>
+            <section>
+                <h4>What are the pitfalls of using <code class="language-xquery">//</code> as a
+                    synonym for <code class="language-xquery">descendant::</code>?</h4>
+                <p>There are two common types of errors that come from treating
+                    <code class="language-xquery">//</code> as a synonym for
+                    <code class="language-xquery">descendant::</code>:</p>
+                <ol>
+                    <li><p>Suppose you want to find all of the speeches
+                            (<code class="language-xml">&lt;sp&gt;</code>) that have child
+                            <code class="language-xml">&lt;l&gt;</code> elements. If you write
+                            <code class="language-xquery">//sp[l]</code> you’ll get the right
+                            results: your path starts at the document node, eventually finds its way
+                            to all of the <code class="language-xml">&lt;sp&gt;</code> elements in
+                            the document, and uses the predicate to test each one to see whether it
+                            has any <code class="language-xml">&lt;l&gt;</code> children. This works
+                            because every path step is on an axis and the child axis is the default
+                            when no other axis is specified explicitly, so
+                            <code class="language-xquery">//sp[l]</code> is synonymous with
+                            <code class="language-xquery">//sp[child::l]</code>.</p>
+                        <p>We can’t, though, find all <code class="language-xml">&lt;sp&gt;</code>
+                            elements that have <code class="language-xml">&lt;l&gt;</code>
+                            descendants with <code class="language-xquery">//sp[//l]</code>. If you
+                            try this, you’ll select all 1137 speeches in the play, both those have
+                            have <code class="language-xml">&lt;l&gt;</code> descendants and those
+                            that don’t. The reason is that the predicate begins with a slash and a
+                            slash always means <q>start at the document node</q>, so instead of
+                            looking for <code class="language-xml">&lt;l&gt;</code> descendants of
+                            the current context (each <code class="language-xml">&lt;sp&gt;</code>
+                            in turn), your predicate is reporting
+                            <code class="language-xquery">true</code> if there are any
+                            <code class="language-xml">&lt;l&gt;</code> element descendants of the
+                            root node. Since there always are, the predicate always returns
+                            <code class="language-xquery">true</code>, so the test always succeeds
+                            and we wind up not filtering anything.</p>
+                        <p>We can fix this in two ways:</p>
+                        <ol>
+                            <li><p>Specify the descendant axis for real with
+                                    <code class="language-xquery">//sp[descendant::l]</code>. This
+                                    predicate expression does not begin with a slash, so it looks
+                                    for <code class="language-xml">&lt;l&gt;</code> descendants only
+                                    of the current context node, which is each
+                                    <code class="language-xml">&lt;sp&gt;</code> in turn.</p></li>
+                            <li><p>Start the predicate with a dot, which in an XPath context means
+                                        <q>current context node</q>:
+                                    <code class="language-xquery">//sp[.//l]</code>. The predicate
+                                    expression no longer begins with a slash, so it doesn’t start
+                                    from the document node; it starts from the current context node
+                                    (represented by the dot) and looks down from there.</p></li>
+                        </ol>
+                        <p>In our own work we favor the first solution because we find it easier to
+                            understand, but the two will return the same result. They aren’t exactly
+                            equivalent for the reason described above (we can specify an attribute
+                            on the attribute axis right after a double slash), but in practice we
+                            almost never want to do that anyway.</p>
+                    </li>
+                    <li>
+                        <p>Because XPath expressions proceed step by step, where the sequence
+                            selected at each step becomes a sequence of context nodes for the next
+                            step, <code class="language-xquery">//sp//l[1]</code> doesn’t select all
+                            <code class="language-xml">&lt;l&gt;</code> children of <em>all</em>
+                            <code class="language-xml">&lt;sp&gt;</code> elements and then return
+                            the first one. What it does instead is select all
+                            <code class="language-xml">&lt;l&gt;</code> children of <em>each</em>
+                            <code class="language-xml">&lt;sp&gt;</code>, one
+                            <code class="language-xml">&lt;sp&gt;</code> at a time, and it applies
+                            the predicate to those individual sequences of lines. What you are
+                            asking for, then, is the first
+                            <code class="language-xml">&lt;l&gt;</code> child of each speech (one
+                            per speech), instead of the first
+                            <code class="language-xml">&lt;sp&gt;</code> element that is a child of
+                            a speech (one result for the entire play). The same is true of
+                            <code class="language-xquery">//sp/descendant::l[1]</code>; here, too,
+                            you are selecting the descendant lines of each speech, one speech at a
+                            time, and filtering to keep just the first of each of those
+                            speech-specific sequences.</p>
+                        <p>You can work around this limitation by using parentheses to fuse all of
+                            the subsequences into one long sequence before applying the predicate:
+                            <code class="language-xquery">(//sp//l)[1]</code> or
+                            <code class="language-xquery">(//sp/descendant::l)[1]</code> will both
+                            return the first <code class="language-xml">&lt;l&gt;</code> element in
+                            the play that is a descendant of an
+                            <code class="language-xml">&lt;sp&gt;</code> element.</p>
+                    </li>
+                </ol>
+            </section>
+        </section>
+    </body>
+</html>
