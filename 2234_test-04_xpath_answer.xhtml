@@ -1,0 +1,575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Test #4: XPath
+        " -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <!--#include virtual="inc/dh-header.html" -->
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h3>Instructions</h3>
+            <p>This test has two required parts plus an optional bonus (extra credit) section. The
+                first part asks questions about your understanding of XPath and the second asks you
+                to create XPath expressions and use them to learn about a <i>Bad Hamlet</i> file
+                similar to the one you’ve been using for practice. You’ll find the file at <a
+                    href="even-worse-hamlet.xml">http://dh.obdurodon.org/even-worse-hamlet.xml</a>.
+                This file contains altered content that is different from the <q>Bad Hamlet</q>
+                version that you’ve been using in your XPath assignments, so be sure to work with
+                this new file.</p>
+            <p>Don’t forget to set the XPath version in the &lt;oXygen/&gt; XPath toolbar or XPath
+                builder to 3.1. You may also want to revisit our <a href="functions.xhtml">XPath
+                    functions we use most tutorial</a>.</p>
+        </section>
+        <section>
+            <h3>Part 1: Questions about XPath</h3>
+            <p>Your answers do not have to look like ours as long as they show a clear understanding
+                of the terms.</p>
+            <ol>
+                <li><p><b>Question:</b> Define <dfn>nodes</dfn>, <dfn>sequences</dfn> and
+                            <dfn>atomic values</dfn>. Give an example of how each of those concepts
+                        might arise when you use XPath to explore <cite>Hamlet</cite> in
+                        &lt;oXygen/&gt;. Your examples of these three concepts might involve either
+                        XPath expressions themselves or the results that XPath expressions
+                        return.</p>
+                    <ul>
+                        <li><p><b>Nodes</b></p>
+                            <ul>
+                                <li><p><b>Definition:</b> Nodes are the units of information that
+                                        make up the XML hierarchical tree. The most important types
+                                        of nodes are the document node and element nodes, attribute
+                                        nodes, and text nodes, all of which can be selected using
+                                        XPath. Nodes may contain other nodes, for example, a
+                                        <code class="language-xml">&lt;body&gt;</code> element may
+                                        have paragraph <code class="language-xml">&lt;p&gt;</code>
+                                        child elements. XPath describes the relationships among
+                                        nodes in terms of axes, such as child, parent, ancestor,
+                                        preceding- or following-sibling, and descendant.</p>
+                                </li>
+                                <li><p><b>How they are used:</b> Nodes are used in path expressions
+                                        to select parts of the XML tree. For example, the XPath
+                                        expression
+                                        <code class="language-xquery">//body/div[1]/descendant::sp</code>
+                                        selects all speeches in Act 1 by referring to four types of
+                                        nodes: the document node (the initial slash), all
+                                        <code class="language-xml">&lt;body&gt;</code> descendants
+                                        of the document node (there is only one), the first
+                                        <code class="language-xml">&lt;div&gt;</code> child of each
+                                        <code class="language-xml">&lt;body&gt;</code> element, and
+                                        all speeches that are on the descendant axis from that first
+                                        <code class="language-xml">&lt;div&gt;</code>. In this
+                                        example, each path step uses the nodes selected by the
+                                        immediately preceding path step as a starting point (called
+                                        the <dfn>current context</dfn>) and selects new
+                                    nodes.</p></li>
+                            </ul>
+                        </li>
+                        <li><p><b>Sequences</b></p>
+                            <ul>
+                                <li><p><b>Definition:</b> A sequence is an ordered collection of
+                                        zero or more items, such as an ordered collection of nodes
+                                        selected by a step in an XPath path expression. There can
+                                        also be sequences of atomic values, that is, items that are
+                                        not nodes in the tree, such as strings and numbers. For
+                                        example, the XPath expression
+                                        <code class="language-xquery">//sp ! string-length(.)</code>
+                                        returns a sequence of integers, each one representing the
+                                        number of characters (letters, punctuation, spaces, etc.) in
+                                        a speech.</p>
+                                </li>
+                                <li><p><b>How they are used:</b> We often use XPath expressions in
+                                        exploratory data analysis (EDA) to select sequences of nodes
+                                        or to create sequences of atomic values. For example,
+                                        <code class="language-xquery">//body/div</code> selects a
+                                        sequence of <code class="language-xml">&lt;div&gt;</code>
+                                        elements that represent the acts in <cite>Hamlet</cite>, and
+                                        <code class="language-xquery">//body/div => count()</code>
+                                        returns a sequence of a single integer that represents the
+                                        number of acts.</p></li>
+                            </ul></li>
+                        <li><p><b>Atomic values</b></p>
+                            <ul>
+                                <li><p><b>Definition:</b> Unlike nodes, atomic values are not
+                                        located in the XML tree. The atomic values that we use most
+                                        often are strings, integers, doubles (non-integer numbers),
+                                        and boolean values (true or false).</p>
+                                    <p><b>How they are used:</b> Suppose you want to find the string
+                                        length of each speaker’s name throughout the play. You could
+                                        do that with
+                                        <code class="language-xquery">//speaker ! string-length()</code>,
+                                        which would return a sequence of integers that indicate the
+                                        length, in character count, of each speaker element. These
+                                        integers are atomic values because they don’t exist anywhere
+                                        in the XML tree, and are instead constructed in response to
+                                        your instruction to count something.</p></li>
+                            </ul></li>
+                    </ul></li>
+                <li><p><b>Question:</b> What is the difference between an <dfn>axis</dfn> and a
+                            <dfn>predicate</dfn> in a path expression? To answer this question, give
+                        an example of each within an XPath expression, explain how they are
+                        distinguished syntactically (that is, how each is spelled when used in an
+                        XPath expression), and explain what each contributes to the overall meaning
+                        of the XPath expression you use to illustrate them.</p>
+                    <ul>
+                        <li><p><b>Axis</b></p>
+                            <ul>
+                                <li><p><b>Definition:</b> The axis is the part of a path expression
+                                        that describes the direction that XPath looks in the
+                                        hierarchical tree of a document. Common axes include parent,
+                                        child, and descendant. If no axis is specified explicitly in
+                                        a path step, by default XPath looks for nodes on the child
+                                        axis; you can override that default by specifying an
+                                        alternative axis.</p>
+                                    <p><b>Example within an expression:</b> Suppose we want to know
+                                        the types of elements that can have stage-direction
+                                        children. We can ask for that information with
+                                        <code class="language-xquery">//stage/parent::* ! name()</code>.
+                                        This finds all
+                                        <code class="language-xml">&lt;stage&gt;</code> elements and
+                                        then, for each one in turn, looks on the parent axis to
+                                        select its parent element, which could be of any type. We
+                                        then use the <code class="language-xquery">name()</code>
+                                        function to return the names of those parent elements
+                                        instead of the elements themselves. The names are atomic
+                                        values because although the element nodes are in the tree,
+                                        the names, which are strings, are not. If we were using this
+                                        expression for EDA in Real Life we would extend it to
+                                        <code class="language-xquery">//stage/parent::* ! name() => distinct-values()=> sort()</code>
+                                        to remove duplicate element names and sort the list for
+                                        easier reading.</p>
+                                </li>
+                            </ul></li>
+                        <li><p><b>Predicate</b></p>
+                            <ul>
+                                <li><p><b>Definition:</b> A predicate filters the results of an
+                                        XPath step in order to retain items selected by the
+                                        preceding path step only if they meet a specific condition.
+                                        Predicates do not select new items (nodes or atomic values);
+                                        they just filter the items selected by a path expression to
+                                        decide which ones to keep and which ones to ignore.</p></li>
+                                <li><p><b>Example within an expression:</b> Suppose we want to find
+                                        the third act in <cite>Hamlet</cite> using an XPath
+                                        expression. The expression
+                                        <code class="language-xquery">//body/div[3]</code> selects
+                                        all <code class="language-xml">&lt;div&gt;</code> children
+                                        of <code class="language-xml">&lt;body&gt;</code>, which is
+                                        all acts. The predicate then filters that sequence of acts
+                                        to keep only the third item in the sequence, that is, the
+                                        third act.</p></li>
+                            </ul></li>
+                    </ul></li>
+                <li><p><b>Question:</b> Explain the difference between the simple map operator
+                        <code class="language-xquery">!</code> and the arrow operator
+                        <code class="language-xquery">=></code>. For example, consider the two
+                        expressions <code class="language-xquery">//sp ! count(.)</code> and
+                        <code class="language-xquery">//sp => count()</code> and how they return
+                        different results. Give one example each of a reasonable way you might use
+                        these operators to explore <cite>Hamlet</cite>.</p>
+                    <ul>
+                        <li><p><b>Simple map operator
+                                (<code class="language-xquery">!</code>)</b></p>
+                            <ul>
+                                <li><p><b>Definition:</b> The simple map (or <q>bang</q>) operator
+                                        is attached to an XPath expression to indicate that the
+                                        thing on the right must be done once for each item on the
+                                        left. For example,
+                                        <code class="language-xquery">//sp ! count(.)</code> says to
+                                        find all <code class="language-xml">&lt;sp&gt;</code>
+                                        elements and for each one, count how many times it occurs.
+                                        Since this expressions counts each individual speech
+                                        separately it returns 1137 instances of the integer 1, that
+                                        is, one value for each speech in the play. This is probably
+                                        not something you would ask for in Real Life. A more useful
+                                        expression might be
+                                        <code class="language-xquery">//body/div ! count(descendant::sp)</code>.
+                                        This expression selects each act and counts the number of
+                                        speeches it contains, so, because there are five acts, it
+                                        returns a sequence of five integers.</p>
+                                </li>
+                                <li><p><b>Example:</b> Suppose we wanted to return the string length
+                                        of each speech (<code class="language-xml">&lt;sp&gt;</code>
+                                        element). We would use the bang operator to do this because
+                                        we want to run the function separately for each instance of
+                                        speech, and not just once for the sequence of all speeches.
+                                        We could write the expression
+                                        <code class="language-xquery">//sp ! string-length()</code>
+                                        and return a sequence of 1137 integers, each of which is the
+                                        number of characters within a single speech.</p>
+                                </li>
+                            </ul></li>
+                        <li><p><b>Arrow operator (<code class="language-xquery">=></code>)</b></p>
+                            <ul>
+                                <li><p><b>Definition:</b> This operator is used in an XPath
+                                        expression to apply the function on the right to the entire
+                                        sequence on the left. For example,
+                                        <code class="language-xquery">//sp => count()</code> says to
+                                        find all <code class="language-xml">&lt;sp&gt;</code>
+                                        elements in the document and use a sequence of those
+                                        elements as input into the
+                                        <code class="language-xquery">count()</code> function to
+                                        obtain an integer (in this case, 1137).</p>
+                                </li>
+                                <li><p><b>Example:</b> Suppose we wanted to return a deduplicated
+                                        sequence of speaker names within the play. We could write an
+                                        expression that starts by selecting all
+                                        <code class="language-xquery">&lt;speaker&gt;</code> nodes
+                                        (<code class="language-xquery">//speaker</code>) and we
+                                        could then would apply the
+                                        <code class="language-xquery">distinct-values()</code>
+                                        function to that sequence to remove any duplicate values. We
+                                        could do this by nesting the path expression inside the
+                                        function parentheses, that is,
+                                        <code class="language-xquery">distinct-values(//speaker)</code>,
+                                        but because we are used to reading from left to write (and
+                                        not from inside to outside), we find
+                                        <code class="language-xquery">//speaker => distinct-values()</code>
+                                        more legible. The arrow operator says to take the sequence
+                                        on the left and make the entire sequence the input to a
+                                        single instance of the function on the right.</p>
+                                    <p>You may have noticed that you cannot use the
+                                        <code class="language-xquery">string-length()</code>
+                                        function with the arrow operator to compute the length of
+                                        all speeches, e.g.,
+                                        <code class="language-xquery">//sp => string-length()</code>,
+                                        and trying to do that raises an error that says that more
+                                        than one item is not allowed as the first argument to the
+                                        function. This is because the arrow operator operates on the
+                                        entire sequence to the left all at once and the
+                                        <code class="language-xquery">string-length()</code>
+                                        function is defined as accepting only a single item, and not
+                                        a sequence of multiple items, as its input. You could use
+                                        the arrow operator if there were only one thing on the left,
+                                        so that, for example,
+                                        <code class="language-xquery">//body => string-length()</code>
+                                        will work because there is only one
+                                        <code class="language-xml">&lt;body&gt;</code> element in
+                                        the document.</p></li>
+                            </ul></li>
+                    </ul></li>
+            </ol>
+        </section>
+        <section>
+            <h3>Part 2: Creating and using XPath expressions </h3>
+            <p>The functions we used to answer the following questions include
+                <code class="language-xquery">contains()</code>,
+                <code class="language-xquery">count()</code>,
+                <code class="language-xquery">distinct-values()</code>,
+                <code class="language-xquery">not()</code>,
+                <code class="language-xquery">sort()</code>,
+                <code class="language-xquery">string-join()</code>. All of these are described in
+                Michael Kay except <code class="language-xquery">sort()</code> because it was
+                introduced in XPath 3.1 and Mike’s book was written when 2.0 was the most recent
+                version. The <code class="language-xquery">sort()</code> function returns a sequence
+                of items sorted into alphabetical order. There may be more than one correct answer
+                to some of the questions.</p>
+            <p>Questions 5–9 build on one another. If you get stuck at some point, you can still
+                receive partial credit for the following questions by explaining and illustrating
+                how you would answer them if you had the requisite input. For example, if you can’t
+                get the 77 lines you want for question 5, select some alternative lines as input
+                into question 6 and describe and illustrate how you would find the speakers of
+                speeches that contain those lines.</p>
+        </section>
+        <ol>
+            <li><p><b>Question:</b> All line elements in the play
+                    <code class="language-xml">&lt;l&gt;</code> are supposed to have attributes of
+                    type <code class="language-xquery">@n</code>, but some don’t, which is a markup
+                    mistake. What XPath expression will select the lines that don’t have
+                    <code class="language-xquery">@n</code> attributes? (Hint: There are five such
+                    lines.)</p>
+                <ul>
+                    <li><p><b>Possible answer:</b> We would start by selecting all lines and then
+                            filter them with a predicate to keep only the ones that don’t have an
+                            <code class="language-xquery">@n</code> attribute:
+                            <code class="language-xquery">//l[not(@n)]</code></p></li>
+                </ul></li>
+            <li><p><b>Question:</b> Building on the preceding question, what XPath expression will
+                    tell you how many such lines there are? Your expression must return a single
+                    integer value, that is, XPath needs to do the counting instead of returning the
+                    lines and your finding the answer with your human eyeballs by looking next to
+                    the <q>Description</q>.</p>
+                <ul>
+                    <li><p><b>Possible answer:</b> Although &lt;oXygen/&gt; tells you that the
+                            preceding expression selects five elements, that count is not available
+                            for subsequent use (e.g., to check whether it is greater than or less
+                            than some number; to write it into an HTML report). To get XPath to
+                            return the count as something you can use you need to write an
+                            expression that eevaluates to an atomic value that describes the number
+                            of lines that are missing the attribute. We do that with
+                            <code class="language-xquery">//l[not(@n)] => count()</code>, which
+                            returns a single integer value of <q>5</q>.</p></li>
+                </ul></li>
+            <li><p><b>Question:</b> Hamlet’s Ghost (referred to as <q>Ghost</q>), although not
+                    appearing much, is an important symbol in the play as it represents Hamlet’s
+                    dead father. What XPath expression finds the scenes where <q>Ghost</q> is
+                    featured as a speaker? (Hint: There are 2 such scenes.)</p>
+                <ul>
+                    <li><p><b>Possible answers:</b></p>
+                        <pre class="language-xquery"><code>//sp[@who="ham-ghost."]/parent::div</code></pre>
+                        <pre class="language-xquery"><code>//sp[speaker='Ghost']/parent::div</code></pre>
+                        <pre class="language-xquery"><code>//div/div[descendant::speaker='Ghost']</code></pre>
+                        <pre class="language-xquery"><code>///div/div[descendant::sp[@who='ham-ghost.']]</code></pre>
+                        <p>All of these answers are acceptable. The first two work from the bottom
+                            up, that is, they find the speeches by the Ghost and then find the
+                            parent <code class="language-xml">&lt;div&gt;</code> elements of those
+                            speeches, which is a scene. The bottom two work from the top down, that
+                            is, they detect all of the scenes in the play and then filter them to
+                            keep only those that contains speeches by the Ghost.</p>
+                        <p>Testing the speaker for equality
+                            (<code class="language-xquery">@speaker='Ghost'</code>) will fail if the
+                            Ghost speaks together with another character. For example, if Hamlet and
+                            the Ghost happen to speak in unison
+                            (<code class="language-xml">&lt;speaker&gt;Hamlet Ghost&lt;/speaker&gt;</code>)
+                            the XPath expression in the predicate won’t match. Using
+                            <code class="language-xquery">contains()</code> (or, even better, the
+                            XPath 3.0 function
+                            <code class="language-xquery">contains-token()</code>) is therefore more
+                            robust and safer.</p></li>
+                </ul></li>
+            <li><p><b>Question:</b> What XPath expression finds all speeches spoken by <q>Ghost</q>?
+                    Your XPath expression must select the speeches themselves, and not just the
+                    speakers. (Hint: there are 14 such speeches.)</p>
+                <ul>
+                    <li><p><b>Possible answers:</b></p>
+                        <pre class="language-xquery"><code>//sp[@who='ham-ghost.']</code></pre>
+                        <pre class="language-xquery"><code>//sp[speaker='Ghost']</code></pre>
+                        <pre class="language-xquery"><code>//@who[.='ham-ghost.']/..</code></pre>
+                        <pre class="language-xquery"><code>//speaker[.='Ghost']/..</code></pre>
+                        <p>The first two expressions select all speeches and filter them with a
+                            predicate to keep only those spoken by the Ghost. The second two select
+                            all representations of when the Ghost speaks and then, on the next path
+                            step, gets the parent element, which is necessarily a speech. As above,
+                            checking for containment would be more robust than testing for
+                            equality.</p></li>
+                </ul></li>
+            <li><p><b>Question:</b> What XPath expression will find every line
+                    (<code class="language-xml">&lt;l&gt;</code> or
+                    <code class="language-xml">&lt;ab&gt;</code> element) in which the name
+                        <q>Hamlet</q> is spoken? Caution: There are lines that contain stage
+                    direction (<code class="language-xml">&lt;stage&gt;</code>) elements that
+                    mention Hamlet’s name, but being mentioned inside a stage direction isn’t the
+                    same as being spoken. Your XPath expression must include only lines where the
+                    name <q>Hamlet</q> is spoken within speech. (Hint: there are 77 such lines, 10
+                    instances of <code class="language-xml">&lt;l&gt;</code> and 67 of
+                    <code class="language-xml">&lt;ab&gt;</code>.)</p>
+                <ul>
+                    <li><p><b>Possible answers:</b></p>
+                        <pre class="language-xquery"><code>(//l | //ab)[text()[contains(.,"Hamlet")]]</code></pre>
+                        <pre class="language-xquery"><code>(//l | //ab)/text()[contains(.,"Hamlet")]/..</code></pre>
+                        <p>For this question, we need to account for the two types of line elements
+                            (<code class="language-xml">&lt;l&gt;</code> and
+                            <code class="language-xml">&lt;ab&gt;</code>), which we do by using the
+                                <dfn>union operator</dfn>
+                            <code class="language-xquery">|</code>. We wrap parentheses around the
+                            union expression to combine both types of lines into a single sequence,
+                            which we can then filter with a single predicate.</p>
+                        <p>The words spoken in a line of either type are part of a text-node child
+                            of the line element. The first expression above filters the lines to
+                            keep only those that have a text-node child that contains the string
+                                <q>Hamlet</q>. The second expression selects the text-node children,
+                            filters those to select the ones that contain the string <q>Hamlet</q>,
+                            and then, on the next path step, selects their parents, which are the
+                            line elements.</p>
+                        <p>We cannot safely select just the text nodes themselves because a single
+                            line might contain two separate text nodes that mention Hamlet’s name,
+                            which means that we would count two text nodes instead of one line. That
+                            doesn’t happen, but if it did it might look like:</p>
+                        <pre class="language-xml"><code>&lt;ab&gt;Are you there, Hamlet? &lt;stage&gt;pauses&lt;/stage&gt; Hamlet? Are you there?&lt;/ab&gt;</code></pre>
+                        <p>This is one line of speech, but it contains two separate text nodes, each
+                            of which contains a mention of Hamlet.</p>
+                    </li>
+                </ul></li>
+            <li><p><b>Question:</b> What XPath expression will return the speakers of each speech
+                    that contains a line (<code class="language-xml">&lt;l&gt;</code> or
+                    <code class="language-xml">&lt;ab&gt;</code> element) that mentions
+                        <q>Hamlet</q>? (Hint: There are 68 such speakers because some speeches
+                    contain more than one line that mentions <q>Hamlet</q>. Some of the speaker
+                    names are repeats because the same person may have multiple speeches that
+                    mention Hamlet by name.)</p>
+                <ul>
+                    <li><p><b>Possible answers:</b></p>
+                        <pre class="language-xquery"><code>(//l | //ab)[text()[contains(.,"Hamlet")]]/ancestor::sp/speaker</code></pre>
+                        <pre class="language-xquery"><code>(//l | //ab)[text()[contains(.,"Hamlet")]]/parent::sp/speaker</code></pre>
+                        <pre class="language-xquery"><code>(//l | //ab)[text()[contains(.,"Hamlet")]]/preceding-sibling::speaker</code></pre>
+                        <pre class="language-xquery"><code class="language-xquery">(//l | //ab)/text()[contains(.,"Hamlet")]/../../speaker</code></pre>
+                        <p>Lines are usually children of speeches
+                            (<code class="language-xml">&lt;sp&gt;</code>), but sometimes they are
+                            grandchildren of speeches because they are inside a line group
+                            (<code class="language-xml">&lt;lg&gt;</code>). There are 140 lines in
+                            this play that are grandchildren, rather than children, of speeches. No
+                            line children of line groups happen to mention Hamlet, so assuming that
+                            lines are always children of speeches (that is, that speeches are always
+                            parents of lines) happens to get the right result, but it’s nonetheless
+                            a brittle answer because it makes an unnecessary assumption that returns
+                            the correct result only by accident.</p>
+                        <p>The first answer, above, is the best, then, because it avoids the
+                            unnecessary assumption. It finds the lines we care about and it knows
+                            that they are descendants of a speech, but it doesn’t assume that they
+                            are children of the <code class="lanugage-xml">&lt;sp&gt;</code> because
+                            it doesn’t have to. We therefore navigate from the line to the speech on
+                            the ancestor axis and then get the
+                            <code class="language-xml">&lt;speaker&gt;</code> child of the
+                            <code class="language-xml">&lt;sp&gt;</code>.</p>
+                        <p>The other expressions all assume that the lines are children of the
+                            speech. The second version steps up one level to the parent speech and
+                            then selects its speaker child. The third expression assumes that the
+                            lines have a preceding-sibling
+                            <code class="language-xml">&lt;speaker&gt;</code> element, which is true
+                            when the lines are children of the speech. The first three expressions
+                            all selected lines, but the fourth selected text-node children of the
+                            line, so it has to go up an additional level in the hierarchy to find
+                            the speech.</p></li>
+                </ul></li>
+            <li><p><b>Question:</b> What expression would deduplicate the results of the last
+                    expression? In other words, you should return a sequence of strings where each
+                    name is listed only once. (Hint: There are 13 such speaker names.)</p><ul>
+                    <li><p><b>Possible answer:</b> This task requires piping the results of the
+                            preceding step into the
+                            <code class="language-xquery">distinct-values()</code> function. We use
+                            the arrow operator <code class="language-xml">=></code> because we find
+                            it more legible, but you could, alternatively, wrap the
+                            <code class="language-xquery">distinct-values()</code> function around
+                            the entire expression. Our version is:</p>
+                        <pre class="language-xquery"><code>(//l | //ab)[text()[contains(.,"Hamlet")]]
+/ancestor::sp
+/speaker
+=> distinct-values()</code></pre></li>
+                </ul></li>
+            <li><p><b>Question:</b> What XPath expression will sort the sequence in alphabetical
+                    order?</p><ul>
+                    <li><p><b>Possible answer:</b> Sorting is just a further step in the
+                            pipeline:</p>
+                        <pre class="language-xquery"><code>(//l | //ab)[text()[contains(.,"Hamlet")]]
+/ancestor::sp
+/speaker
+=> distinct-values()
+=> sort()</code></pre></li>
+                </ul></li>
+            <li><p><b>Question:</b> What XPath expression will return the sequence as a
+                    comma-separated list?</p><ul>
+                    <li><p><b>Possible answer:</b> The
+                            <code class="language-xquery">string-join()</code> function with two
+                            arguments takes a sequence of items to join as its first argument and a
+                            separator to insert between the items as its second item. The first
+                            argument is the sequence we created to answer the immediately preceding
+                            question and the second item is a two-character string consisting of a
+                            comma and a space, since that’s the usual separater in a comma-delimited
+                            list. When we use the arrow operator the first argument is automatically
+                            inserted, so we specify only the second argument explicitly:</p>
+                        <pre class="language-xquery"><code>(//l | //ab)[text()[contains(.,"Hamlet")]]
+/ancestor::sp
+/speaker
+=> distinct-values()
+=> sort()
+=> string-join(', ')</code></pre></li>
+                </ul></li>
+        </ol>
+        <section>
+            <h3>Part 3: Optional extra-credit questions</h3>
+            <ol>
+                <li><p>What XPath expression will return a deduplicated list of all element names
+                        within the document? (Hint: You’ll need the
+                        <code class="language-xquery">name()</code> function, which you can look up
+                        in Michael Kay. There are 28 distinct element names.)</p><ul>
+                        <li><p><b>Possible answers:</b></p>
+                            <pre class="language-xquery"><code>//* ! name() => distinct-values()</code></pre>
+                            <pre class="language-xquery"><code>/descendant::* ! name() => distinct-values()</code></pre>
+                            <p>We start by selecting all elements in the document. The expression
+                                <code class="language-xquery">//*</code> returns a sequence of all
+                                elements because the double slash indicates that we start at the
+                                document node (because the expression begins with a slash), we look
+                                on the descendant axis, and all elements are descendants of the
+                                document node. The asterisk matches all element nodes, regardless of
+                                the element type.</p>
+                            <p>That expression returns every element node in the document, but we
+                                are looking for the names of the elements, and not the elements
+                                themselves (which include their attributes and contents). To say
+                                    <q>for each element we find return just the name of the
+                                    element</q> we use the
+                                <code class="language-xquery">name()</code> function, and because we
+                                need to apply it to each element individually, we use the simple map
+                                (or bang) operator <code class="language-xquery">!</code>. The
+                                expression <code class="language-xquery">//* ! name()</code>, then,
+                                returns a sequence of strings, each of which is the name of an
+                                element in the document.</p>
+                            <p>Most elements in the document appear more than once and the task was
+                                to return a deduplicated list, so we use the arrow operator to
+                                remove the duplicates with the
+                                <code class="language-xquery">distinct-values()</code> function. The
+                                arrow operator processes the entire sequence to the left all at
+                                once, so the input is a long sequence of element names that include
+                                duplicates and the output is a shorter list without
+                            duplicates.</p></li>
+                    </ul></li>
+                <li><p>What XPath expression will select all speech
+                        <code class="language-xml">&lt;sp&gt;</code> elements that have both
+                        <code class="xml">&lt;l&gt;</code> and <code class="xml">&lt;ab&gt;</code>
+                        children? (Hint: There are 7 such speeches.)</p><ul>
+                        <li><p><b>Possible answers:</b></p>
+                            <pre class="language-xquery"><code>//sp[l and ab]</code></pre>
+                            <pre class="language-xquery">//sp[l] intersect //sp[ab]</pre>
+                            <p>For this answer you will need to find all speech
+                                <code class="language-xml">&lt;sp&gt;</code> element nodes and
+                                filter the results to include only those speeches that have both
+                                <code class="language-xml">&lt;l&gt;</code> and
+                                <code class="language-xml">&lt;ab&gt;</code> children. Our first
+                                solution uses the <code class="language-xquery">and</code> operator
+                                to construct a compound predicate. Our second solution uses the
+                                <code class="language-xquery">intersect</code> operator (Kay, pp.
+                                628–31) to select all speeches that contain lines on the left and
+                                all that contain anonymous blocks on the right and then keep only
+                                the speeches that are members of both the left and the right
+                                groups.</p></li>
+                    </ul></li>
+                <li><p>What XPath expression will return the ratio of
+                        <code class="xml">&lt;l&gt;</code> to <code class="xml">&lt;ab&gt;</code>
+                        children for each of the speeches selected in the previous step and sort
+                        them from lowest to highest? (Hint: There are 7 such ratios, ranging from a
+                        low of 0.117 to a high of 6, and the number 1 appears twice in that list
+                        because two of the speeches in question have the same number of elements of
+                        both types.)</p><ul>
+                        <li><p><b>Possible answer:</b></p>
+                            <pre class="language-xquery"><code>//sp[l and ab] ! (count(l) div count(ab))</code></pre>
+                            <p>We use the bang operator to perform the operation on the right once
+                                for each item on the left, where the items on the left are the ones
+                                we selected to answer the previous question. On the right side we
+                                count the line children and the anonymous block children of each
+                                speech and divide the line count by the anonymous block
+                            count.</p></li>
+                    </ul></li>
+                <li><p>Given the 7 values in the preceding question, what XPath expressions will
+                        return just the lowest value, just the highest value, and just the average
+                        (arithmetic mean) of all 7 values? (Hint: You’ll want to look up the
+                        appropriate functions in Michael Kay.)</p>
+                    <ul>
+                        <li><p><b>Possible answers:</b></p>
+                            <pre class="language-xquery"><code>//sp[l and ab] ! (count(l) div count(ab)) => max()</code></pre>
+                            <pre class="language-xquery"><code>//sp[l and ab] ! (count(l) div count(ab)) => min()</code></pre>
+                            <pre class="language-xquery"><code>//sp[l and ab] ! (count(l) div count(ab)) => avg()</code></pre>
+                            <p>The expression in the preceding question returns a sequence of
+                                numerical values and we can use the arrow operator and the <code class="language-xquery">max()</code>
+                                <code class="language-xquery">min()</code>, and
+                                <code class="language-xquery">avg()</code> functions to return just
+                                the largest, smallest, and average (mean) value for that
+                                sequence.</p></li>
+                    </ul></li>
+            </ol>
+        </section>
+        <section>
+            <h3>What to submit</h3>
+            <p>Write your answers in a <em>properly formatted</em> markdown file with a filename
+                that conforms to our usual <a href="file-naming_conventions.xhtml">filenaming
+                    conventions</a>, with an <i>.md</i> filename extension and upload it to Canvas.
+                You can remind yourself about markdown syntax at the <a
+                    href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax"
+                    >GitHub three-minute guide to Mastering markdown</a> that you read earlier. The
+                test is open book and you can use any references you’d like, except that you cannot
+                receive help from another person.</p>
+            <p> Should you have any questions, please ask in the <i>#xpath</i> channel in our Slack
+                workspace. We can’t give you the answer, but we’ll do whatever we can short of that
+                to help.</p>
+        </section>
+    </body>
+</html>
