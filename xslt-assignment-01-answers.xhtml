@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="XSLT assignment #1 answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <link rel="stylesheet" type="text/css" href="http://www.obdurodon.org/css/style.css" />
+        <!--#include virtual="inc/dh-header.html" -->
+        <style type="text/css">
+            body * {
+              line-height: 1.5 !important;
+            }
+            .note {
+              border: 1px gray solid;
+              padding: 0 1em;
+            }</style>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h3>The assignment</h3>
+            <p>Your assignment is to create an XSLT stylesheet that will transform <cite><a
+                        href="bad-hamlet.xml" title="Download bad-hamlet.xml">Bad Hamlet</a></cite>
+                into a hierarchical outline of the titles of acts and scenes in HTML. This isn’t
+                very interesting on its own, of course, but if you were transforming the entire
+                document into HTML for publication on the web, this might serve as the skeleton. It
+                might also stand on its own as a table of contents at the top of such a publication,
+                so that the reader could click on the title of a scene to jump to that location in
+                the file.</p>
+        </section>
+        <section>
+            <h3>Our solution</h3>
+            <p>There are different ways to do this, but the details we found most important
+                were:</p>
+            <ul>
+                <li>
+                    <p>Know what the output HTML should look like. If you don’t know how to create
+                        HTML by hand that looks like the output you want, you won’t be able to
+                        create XSLT that produces that HTML. This may mean looking up some of the
+                        HTML elements in a reference until you become familiar with them through
+                        experience.</p></li>
+                <li>
+                    <p>Apply templates not directly to the
+                        <code class="language-xml">&lt;head&gt;</code> elements, but to the acts and
+                        scenes. Applying templates to the acts
+                        (<code class="language-xml">&lt;div&gt;</code> elements) makes it easy,
+                        inside a templates that matches acts, to do one thing with its
+                        <code class="language-xml">&lt;head&gt;</code> child and then create an HTML
+                        <code class="language-xml">&lt;ul&gt;</code> wrapper inside which you can
+                        apply templates to the scenes. If you apply templates directly to the
+                        <code class="language-xml">&lt;head&gt;</code> children of acts, you make it
+                        harder (not impossible, but more awkward) to navigate to the
+                    scenes.</p></li>
+            </ul>
+            <pre class="language-xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:math="http://www.w3.org/2005/xpath-functions/math" 
+    exclude-result-prefixes="#all"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0" 
+    version="3.0">
+    &lt;xsl:output method="xhtml" html-version="5" 
+        omit-xml-declaration="no" 
+        include-content-type="no"
+        indent="yes"/>
+    &lt;xsl:template match="/"&gt;
+        &lt;html&gt;
+            &lt;head&gt;
+                &lt;title&gt;Hamlet&lt;/title&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;ul&gt;
+                    &lt;xsl:apply-templates select="//body/div"/&gt;
+                &lt;/ul&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;
+    &lt;/xsl:template&gt;
+    &lt;xsl:template match="body/div"&gt;
+        &lt;li&gt;
+            &lt;xsl:apply-templates select="head"/&gt;
+            &lt;ul&gt;
+                &lt;xsl:apply-templates select="div"/&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/xsl:template&gt;
+    &lt;xsl:template match="div"&gt;
+        &lt;li&gt;
+            &lt;xsl:apply-templates select="head"/&gt;
+        &lt;/li&gt;
+    &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</code></pre>
+        </section>
+        <section>
+            <h3>Housekeeping</h3>
+            <p>We modify the new XSLT skeletal document that &lt;oXygen/&gt; creates for us in the
+                following ways (copied from our <a href="xslt-basics.xhtml">initial XSLT
+                    tutorial</a>):</p>
+            <ul>
+                <li>Add <code class="language-xquery">xmlns="http://www.w3.org/1999/xhtml"</code>
+                    inside the start-tag of the root element to declare that elements created in the
+                    output will be in the HTML namespace (unless we say otherwise).</li>
+                <li>Add
+                    <code class="language-xquery">xpath-default-namespace="http://www.tei-c.org/ns/1.0"</code>
+                    inside the start-tag of the root element to declare that XPath expressions that
+                    refer to the input document will look for elements in the TEI namespace (unless
+                    we say otherwise).</li>
+                <li>Change the value in
+                    <code class="language-xquery">exclude-result-prefixes="#all"</code>. This isn’t
+                    strictly necessary with this particular document because don’t declare any
+                    additional namespace prefixes, but it does no harm, so we always do it when we
+                    write XSLT.</li>
+                <li>Create an <code class="language-xml">&lt;xsl:output&gt;</code> elements that
+                    specifies that we are creating XHTML 5 output using the XML syntax, that we want
+                    it to include the initial XML declaration, that we do not want it to insert a
+                    <code class="language-xml">&lt;meta&gt;</code> element into the
+                    <code class="language-xml">&lt;head&gt;</code> (we only need that if we use HTML
+                    syntax), and that we want the output to be pretty-printed.</li>
+            </ul>
+        </section>
+        <section>
+            <h3>Template rules</h3>
+            <p>Our solution made use of three template rules: for the document node
+                (<code class="language-xquery">/</code>), acts
+                (<code class="language-xquery">body/div</code>), and scenes
+                (<code class="language-xquery">div</code>).</p>
+            <p>The document template creates the basic structure of the HTML document we want to
+                produce. It has the <code class="language-xml">&lt;html&gt;</code> root element
+                along with the required <code class="language-xml">&lt;head&gt;</code> and
+                <code class="language-xml">&lt;body&gt;</code> elements inside it. Inside the body,
+                we create an <q>unordered</q> (that is, bulleted) list, denoted by the
+                <code class="language-xml">&lt;ul&gt;</code> element, that will eventually hold five
+                items, one for each act. Unordered lists in HTML are required to have content in the
+                form of <code class="language-xml">&lt;li&gt;</code> (list item) elements, and we’ll
+                create those later, when we actually process the acts. For now, we just create the
+                wrapper <code class="language-xml">&lt;ul&gt;</code> element that will hold them.
+                Between the start- and end- <code class="language-xml">&lt;ul&gt;</code> tags (since
+                that’s where we eventually want our <code class="language-xml">&lt;li&gt;</code>
+                elements to be created), we apply templates to (that is, process) all of the acts,
+                which we point to with the XPath expression
+                <code class="language-xquery">//body/div</code> as the value of the
+                <code class="language-xquery">@select</code> attribute of the
+                <code class="language-xml">&lt;xsl:apply-templates&gt;</code> elements.</p>
+            <p>The XPath expression <code class="language-xquery">//body/div</code>, above, selects
+                a sequence of all of the acts (all five act
+                <code class="language-xml">&lt;div></code> elements), and the
+                <code class="language-xml">&lt;xsl:apply-templates&gt;</code> elements says to get
+                them processed, but it doesn’t specify <em>how</em> to process them. So how do the
+                acts get processed? What happens is that all of the templates in the stylesheet are
+                constantly watching for something to do, and when that
+                <code class="language-xml">&lt;xsl:apply-templates&gt;</code> element fires, they
+                all see that some <code class="language-xml">&lt;div&gt;</code> elements need to be
+                processed. The first template (the one for the document node) doesn’t match
+                <code class="language-xml">&lt;div&gt;</code> elements, so it doesn’t do anything.
+                The other two templates both match <code class="language-xml">&lt;div&gt;</code>
+                elements; the second template matches <code class="language-xml">&lt;div&gt;</code>
+                elements that have a <code class="language-xml">&lt;body&gt;</code> parent and the
+                third matches all <code class="language-xml">&lt;div&gt;</code> elements. So how is
+                the conflict or competition resolved? Which one gets to handle the acts? Whenever
+                there’s an ambiguity like that, <em>the more specific match rule wins,</em> so the
+                second template rule, the one that matches
+                <code class="language-xquery">body/div</code>, takes charge of each of the five
+                acts. (Alternatively, we could have had the last template rule match not just
+                <code class="language-xquery">div</code>, but specifically
+                <code class="language-xquery">div/div</code>, which would have removed the potential
+                ambiguity. Whether you deal with those situations by writing only unambiguous and
+                specific rules or by letting the <q>more specific match rule wins</q> principle make
+                the decision, you’ll get the same result here.)</p>
+            <p>Each act returned by the path expression, then, triggers the second template, which
+                creates an <code class="language-xml">&lt;li&gt;</code> element, and it creates that
+                <code class="language-xml">&lt;li&gt;</code> element between the start- and end-tags
+                for the <code class="language-xml">&lt;ul&gt;</code> that we created earlier. That’s
+                the effect of putting the
+                <code class="language-xml">&lt;xsl:apply-templates&gt;</code> element between those
+                start- and end-tags; whatever happens as a result of that instruction will be
+                written in the location where the instruction stood. Within that new
+                <code class="language-xml">&lt;li&gt;</code> element, we tell the system to process
+                (apply templates to) the <code class="language-xml">&lt;head&gt;</code> child of the
+                current context (that is, the <code class="language-xml">&lt;head&gt;</code> child
+                of the act we’re processing at the moment) and then to create a new
+                <code class="language-xml">&lt;ul&gt;</code>, an embedded list. Within that new,
+                embedded list it applies templates to another set of nodes, selected by the path
+                expression <code class="language-xquery">div</code>, which are the <code class="language-xml">&lt;div&gt;</code>
+                <em>children</em> of the current act, that is, its scenes. Note that the
+                <code class="language-xml">&lt;xsl:apply-templates&gt;</code> here executes XPath
+                from the current context, which is <em>the act we are processing at the moment</em>,
+                so it gets only the scenes <em>of that act</em>. Remember that the default axis is
+                the child axis, so the expression <code class="language-xquery">div</code> as the
+                value of the <code class="language-xquery">@select</code> attribute says to find all
+                of the <em>child <code class="language-xml">&lt;div&gt;</code> elements inside the
+                    current act</em>.</p>
+            <p>When XSLT finds the <code class="language-xml">&lt;head&gt;</code> elements (just one
+                for each act), it tries to apply templates, but we haven’t defined a template for
+                <code class="language-xml">&lt;head&gt;</code> elements. How does the stylesheet
+                know what to do? XSLT includes <dfn>built-in</dfn>, or default templates, which say
+                that:</p>
+            <ul>
+                <li>If we’re processing an element, throw away the tags and process its child nodes.
+                    These <code class="language-xml">&lt;head&gt;</code> elements each have one
+                    child node, which is a text node.</li>
+                <li>If we’re processing a text node, output the text.</li>
+            </ul>
+            <p>Note that this happens in two steps: first the built-in rule for elements processes
+                the <code class="language-xml">&lt;head&gt;</code> element, so it throws away the
+                tags and automatically applies templates to its only child, which is a text node.
+                Since we don’t have a template that matches text nodes, the built-in template then
+                writes the textual value of the text node into the output.</p>
+            <section class="note">
+                <p>We can write templates that match text nodes if we need to, but it’s relatively
+                    uncommon. In this case we don’t have a template that matches text nodes, so the
+                    built-in template that matches text nodes processes them.</p>
+            </section>
+            <p>Since what we want in this case is to output the textual content of the text-node
+                child of the <code class="language-xml">&lt;head&gt;</code> elements, we let the
+                built-in rules do it for us. The effect is to print something like <q>Act 1</q>
+                before we list all of the scenes in the first act.</p>
+            <section class="note">
+                <h4>Let the computer do the work and don’t make unnecessary assumptions</h4>
+                <ul>
+                    <li><p>We don’t type the word <q>Act</q> or the number <q>1</q>; that gets
+                            retrieved from the <code class="language-xml">&lt;head&gt;</code>
+                            element in the input XML document.</p></li>
+                    <li>
+                        <p>We don’t have separate instructions to process Act 1, Act 2, Act 3, etc.,
+                            since 1) that would prevent us from reusing this code on a play that
+                            didn’t have exactly five acts; 2) it would require us to know something
+                            that we don’t have to know in advance, that is, the number of acts in
+                            the play; and 3) it would make us write the same code multiple times,
+                            which creates unnecessary opportunities for error..</p></li>
+                </ul>
+                <p>Don’t make any assumptions in your XSLT that you don’t have to make. If the prose
+                    description of the task is <q>process all of the acts</q>, aim for a strategy
+                    that does not require you to know how many acts there are in advance.</p>
+            </section>
+            <p>After printing the header, while still inside the list item for the act we’re working
+                on at the moment, we create another unordered list and apply templates to the
+                results of the XPath expression <code class="language-xquery">div</code>. Since our
+                current context is a <code class="language-xml">&lt;div&gt;</code> element that
+                represents an act, this finds all of the
+                <code class="language-xml">&lt;div&gt;</code> children <em>of the act that we are
+                    in</em>. We know from studying the document that these elements <em>must</em> be
+                scenes.</p>
+            <section class="note">
+                <h4>Use the child axis to process children of the current context</h4>
+                <p>A common beginner error is to write
+                    <code class="language-xquery">select="//div"</code> instead of
+                    <code class="language-xquery">select="div"</code>. The incorrect XPath
+                    expression starts with a double slash, so it starts at the document node and
+                    retrieves all <code class="language-xml">&lt;div&gt;</code> elements in the
+                    entire play. This means that you’ll include the same information from all 26
+                    <code class="language-xml">&lt;div&gt;</code> elements five times, once per act.
+                    The correct XPath expression uses the <em>default child axis</em> to include
+                    information only from the <code class="language-xml">&lt;div&gt;</code>
+                    <em>children of the current context item</em> (the current act), that is, only
+                    from the scenes of one act at a time.</p>
+            </section>
+            <p>When the new
+                <code class="language-xml">&lt;xsl:apply-templates select="div"/&gt;</code> element
+                fires, then, the <code class="language-xquery">@select</code> attribute rounds up
+                the <code class="language-xml">&lt;div&gt;</code> children of the current context,
+                which are the scenes in the current act. It doesn’t say how to process them though.
+                As above, the template rules are always watching for new content, and once again the
+                call has gone out to process some <code class="language-xml">&lt;div&gt;</code>
+                elements. The first template rule, the one for the document node, doesn’t match, so
+                it doesn’t do anything. The second template matches
+                <code class="language-xml">&lt;div&gt;</code> elements only when they are the
+                children of a <code class="language-xml">&lt;body&gt;</code> element. Since these
+                new <code class="language-xml">&lt;div&gt;</code> elements are the children of a
+                <code class="language-xml">&lt;div&gt;</code> element, the second template rule
+                won’t touch them either. The third template rule, though, matches
+                <code class="language-xml">&lt;div&gt;</code> elements without looking at their
+                parents or anything else about them, so it takes charge in this case, and generates
+                the list items for the scenes, inserting the values of the
+                <code class="language-xml">&lt;head&gt;</code> children of the scenes, one by one,
+                as they’re processed.</p>
+        </section>
+        <section>
+            <h3>The result</h3>
+            <div class="pre-colored">
+                <ul>
+                    <li>Act 1 <ul>
+                            <li>Act 1, Scene 1</li>
+                            <li>Act 1, Scene 2</li>
+                            <li>Act 1, Scene 3</li>
+                            <li>Act 1, Scene 4</li>
+                            <li>Act 1, Scene 5</li>
+                        </ul>
+                    </li>
+                    <li>Act 2 <ul>
+                            <li>Act 2, Scene 1</li>
+                            <li>Act 2, Scene 2</li>
+                        </ul>
+                    </li>
+                    <li>Act 3 <ul>
+                            <li>Act 3, Scene 1</li>
+                            <li>Act 3, Scene 2</li>
+                            <li>Act 3, Scene 3</li>
+                            <li>Act 3, Scene 4</li>
+                        </ul>
+                    </li>
+                    <li>Act 4 <ul>
+                            <li>Act 4, Scene 1</li>
+                            <li>Act 4, Scene 2</li>
+                            <li>Act 4, Scene 3</li>
+                            <li>Act 4, Scene 4</li>
+                            <li>Act 4, Scene 5</li>
+                            <li>Act 4, Scene 6</li>
+                            <li>Act 4, Scene 7</li>
+                        </ul>
+                    </li>
+                    <li>Act 5 <ul>
+                            <li>Act 5, Scene 1</li>
+                            <li>Act 5, Scene 2</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <section>
+            <h3>Take-aways</h3>
+            <ul>
+                <li>A transformation processes (reads and consumes) nodes from the input tree and
+                    creates nodes in the output tree. Don’t think of tags; the real XML (input and
+                    output) is a tree of nodes.</li>
+                <li>A template matches one thing at a time. For example, if you apply templates to
+                    all acts, the template that handles acts will fire once (separately) for each
+                    act. When it fires, the current context will be the single act that you are
+                    processing at the moment. This means that, for example, if you apply templates
+                    to child <code class="language-xml">&lt;div&gt;</code> elements inside a
+                    template that matches acts, you will process only the scenes in that specific
+                    act. This feature is what lets you construct separate lists for the scenes in
+                    each act.</li>
+                <li>The result of processing nodes will appear wherever you select them for
+                    processing. For example, if you want to create a list of acts (one list, with
+                    one list item per act), create the <code class="language-xml">&lt;ul&gt;</code>
+                    wrapper inside the <code class="language-xml">&lt;body&gt;</code> because you
+                    want one list. Don’t create any list items yet, though! Inside that wrapper
+                    apply templates to the acts, and create an
+                    <code class="language-xml">&lt;li&gt;</code> element inside the template that
+                    matches acts. That combination creates what you want: one list wrapper for all
+                    acts, one list item for each act.</li>
+                <li>When you process a sequence of nodes (such as all acts, or all scenes of a
+                    particular act), the results are returned in document order (unless you specify
+                    otherwise). This means that the order of acts in your output will match the
+                    order in the input, which is what you want.</li>
+                <li>The XSLT processing model divides the responsibility for processing in two.
+                    <code class="language-xml">&lt;xsl:apply-templates&gt;</code> determines which
+                    nodes in the input tree should be processed and where the result of processing
+                    them should be inserted into the output, but it doesn’t say anything about
+                        <em>how</em> to process those nodes.
+                    <code class="language-xml">&lt;xsl:template&gt;</code> then does the processing.
+                    It may be helpful to think of this as a matter of <dfn>cooperative throwing and
+                        catching</dfn>:
+                    <code class="language-xml">&lt;xsl:apply-templates&gt;</code> rounds up nodes to
+                    be processed and <em>tosses them into the air</em>, and the various template
+                    rules then reach up and <em>catch</em> only the elements they know how to
+                    process and take care of them. If you haven’t written a template to process some
+                    type of node, it will be caught (processed) by a <em>built-in template</em>,
+                    that is, by default handling rules.</li>
+                <li>The program flow is controlled cooperatively by the XML and the XSLT, which is
+                    different from the more common <em>procedural</em> or <em>imperative</em>
+                    programming paradigms, where the program alone controls the flow. In the case of
+                    XSLT, the structure of the document helps dictate the processing order. That is,
+                    processing begins at the document node, the sequences to process at particular
+                    locations in the output tree are managed with
+                    <code class="language-xml">&lt;xsl:apply-templates></code> elements, and the
+                    order of processing within a sequence follows document order.</li>
+            </ul>
+        </section>
+    </body>
+</html>
