@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="SVG assignment #2 answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <link rel="stylesheet" type="text/css" href="http://www.obdurodon.org/css/style.css" />
+        <!--#include virtual="inc/dh-header.html" -->
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h3>Overview</h3>
+            <p>The basic task of <a href="svg-assignment-02.xhtml">SVG assignment 2</a> was to
+                create an SVG bar graph of the Democratic results of the 2012 US presidential
+                election. See the <a href="svg-assignment-02.xhtml">assignment page</a> for a more
+                detailed description, suggestions, and a link to the input data in XML form.</p>
+        </section>
+        <section>
+            <h3>Simple solution</h3>
+            <p>Here is one possible solution. It isn’t easy to follow because we’ve used a lot of
+                hard-coded numbers, and we provide a more legible version below:</p>
+            <pre class="language-xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;
+    version=&quot;3.0&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; exclude-result-prefixes=&quot;#all&quot;&gt;
+    &lt;xsl:output method=&quot;xml&quot; indent=&quot;yes&quot;/&gt;
+    &lt;xsl:template match=&quot;/&quot;&gt;
+        &lt;svg height=&quot;375&quot; viewBox=&quot;-75 -300 1750 400&quot;&gt;
+            &lt;g&gt;
+                &lt;line x1=&quot;20&quot; x2=&quot;20&quot; y1=&quot;0&quot; y2=&quot;-320&quot; stroke=&quot;black&quot; stroke-width=&quot;1&quot;/&gt;
+                &lt;line x1=&quot;20&quot; x2=&quot;1550&quot; y1=&quot;0&quot; y2=&quot;0&quot; stroke=&quot;black&quot; stroke-width=&quot;1&quot;/&gt;
+                &lt;line x1=&quot;20&quot; x2=&quot;1550&quot; y1=&quot;-150&quot; y2=&quot;-150&quot; stroke=&quot;black&quot; opacity=&quot;0.5&quot;
+                    stroke-dasharray=&quot;8 4&quot; stroke-width=&quot;1&quot;/&gt;
+                &lt;text x=&quot;10&quot; y=&quot;5&quot; text-anchor=&quot;end&quot;&gt;0%&lt;/text&gt;
+                &lt;text x=&quot;10&quot; y=&quot;-145&quot; text-anchor=&quot;end&quot;&gt;50%&lt;/text&gt;
+                &lt;text x=&quot;10&quot; y=&quot;-295&quot; text-anchor=&quot;end&quot;&gt;100%&lt;/text&gt;
+                &lt;xsl:apply-templates select=&quot;//state&quot;/&gt;
+            &lt;/g&gt;
+        &lt;/svg&gt;
+    &lt;/xsl:template&gt;
+    &lt;xsl:template match=&quot;state&quot;&gt;
+        &lt;xsl:variable name=&quot;xPosition&quot; select=&quot;(position() - 1) * 30&quot;/&gt;
+        &lt;xsl:variable name=&quot;totalVotes&quot; select=&quot;sum(candidate)&quot;/&gt;
+        &lt;xsl:variable name=&quot;demVotes&quot; select=&quot;candidate[@party = &apos;Democrat&apos;]&quot;/&gt;
+        &lt;xsl:variable name=&quot;demPer&quot; select=&quot;$demVotes div $totalVotes&quot;/&gt;
+        &lt;xsl:variable name=&quot;acro&quot; select=&quot;@acro&quot;/&gt;
+        &lt;rect x=&quot;{$xPosition + 22}&quot; y=&quot;-{$demPer * 300}&quot; stroke=&quot;black&quot; stroke-width=&quot;.5&quot;
+            fill=&quot;blue&quot; width=&quot;{20}&quot; height=&quot;{$demPer * 300}&quot;/&gt;
+        &lt;text x=&quot;{$xPosition + 20 div 2 + 22}&quot; y=&quot;20&quot; text-anchor=&quot;middle&quot;&gt;
+            &lt;xsl:value-of select=&quot;$acro&quot;/&gt;
+        &lt;/text&gt;
+    &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;
+</code></pre>
+        </section>
+        <section>
+            <h3>Using variables to improve legibility, development, and maintenance</h3>
+            <p>Here we replace a lot of the hard-coded numbers with variables, which we find easier
+                to read. They’re also easier to maintain; should you decide during development to
+                change the width of the bars, for example, it’s easier to change the value you’ve
+                used to declare a variable called <code class="language-xml">$barWidth</code> than
+                to pick apart all of the literal numbers in the code to find the one where you
+                specify that width. We’ve documented the use of variables in XML comments, which is
+                what we’d do in Real Life, as well.</p>
+            <p>We’ve also specified the datatype of the variable, that is, whether it’s supposed to
+                be a string, an integer (whole number), a double (number that may have digits after
+                the decimal point), etc. If you don’t specify the datatype, XSLT will usually figure
+                it out for you, but sometimes it guesses wrong, so in our own work we always specify
+                the type explicitly by using <code class="language-xml">@as</code> variable. The
+                most common datatypes are strings
+                (<code class="language-xml">as="xs:string"</code>), integers
+                (<code class="language-xml">as="xs:integer"</code>), and doubles
+                (<code class="language-xml">as="xs:double"</code>). Here’s our second solution with
+                datatype information added to the variable declarations, and with additional
+                variables and labels:</p>
+            <pre class="language-xml"><code>&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;
+  version=&quot;3.0&quot; xmlns:xs=&quot;http://www.w3.org/2001/XMLSchema&quot; exclude-result-prefixes=&quot;#all&quot;&gt;
+  &lt;!-- ========================================================== --&gt;
+  &lt;!-- SVG is XML, so use the &quot;xml&quot; output method                 --&gt;
+  &lt;!-- ========================================================== --&gt;
+  &lt;xsl:output method=&quot;xml&quot; indent=&quot;yes&quot;/&gt;
+  &lt;!-- ========================================================== --&gt;
+  &lt;!-- Stylesheet variables                                       --&gt;
+  &lt;!--                                                            --&gt;
+  &lt;!-- $barWidth : width of rectangular bar                       --&gt;
+  &lt;!-- $interbarSpacing : space between the right edge of one bar --&gt;
+  &lt;!--    and the left edge of the next                           --&gt;
+  &lt;!-- $barInterval : distance between the left sides of adjacent --&gt;
+  &lt;!--    bars, equal to $barWidth plus $interbarSpacing          --&gt;
+  &lt;!-- $xAaxisLength : sum of $barInterval lengths for all states --&gt;
+  &lt;!--    plus an additional $interbarSpacing to offset bars from --&gt;
+  &lt;!--    left margin.                                            --&gt;
+  &lt;!-- $yScale : multiplier so that bars are not too short        --&gt;
+  &lt;!-- ========================================================== --&gt;
+  &lt;xsl:variable name=&quot;barWidth&quot; select=&quot;20&quot; as=&quot;xs:integer&quot;/&gt;
+  &lt;xsl:variable name=&quot;interbarSpacing&quot; select=&quot;$barWidth div 2&quot; as=&quot;xs:double&quot;/&gt;
+  &lt;xsl:variable name=&quot;barInterval&quot; select=&quot;$barWidth + $interbarSpacing&quot; as=&quot;xs:double&quot;/&gt;
+  &lt;xsl:variable name=&quot;xAxisLength&quot; as=&quot;xs:double&quot;
+    select=&quot;count(//state) * $barInterval + $interbarSpacing&quot;/&gt;
+  &lt;xsl:variable name=&quot;yScale&quot; select=&quot;300&quot; as=&quot;xs:integer&quot;/&gt;
+  &lt;!-- ========================================================== --&gt;
+  &lt;!-- Templates                                                  --&gt;
+  &lt;!-- ========================================================== --&gt;
+  &lt;xsl:template match=&quot;/&quot;&gt;
+    &lt;svg height=&quot;{1.5 * $yScale}&quot; width=&quot;{$xAxisLength + 100}&quot; 
+    viewBox=&quot;-75 -{$yScale + 25} {$xAxisLength + 100} {1.5 * $yScale}&quot;&gt;
+      &lt;g&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- Plot in upper right                            --&gt;
+        &lt;!-- Draw in z-index order:                         --&gt;
+        &lt;!--     ruling, bars, axes and labels              --&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- Dashed line at 50% on the y axis               --&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- Ruling line                                    --&gt;
+        &lt;line x1=&quot;0&quot; x2=&quot;{$xAxisLength}&quot; y1=&quot;-{$yScale div 2}&quot;
+          y2=&quot;-{$yScale div 2}&quot; stroke=&quot;lightgray&quot; stroke-dasharray=&quot;8 4&quot; stroke-width=&quot;1&quot;/&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- Bars for states                                --&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;xsl:apply-templates select=&quot;//state&quot;/&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- Axes and labels                                --&gt;
+        &lt;!-- X axis length computed from number of states   --&gt;
+        &lt;!-- Y axis height computed from $yScale, with      --&gt;
+        &lt;!--     added space for labels                     --&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- Axis lines (X, then Y)                         --&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;line x1=&quot;0&quot; x2=&quot;{$xAxisLength}&quot; y1=&quot;0&quot; y2=&quot;0&quot; stroke=&quot;black&quot; stroke-width=&quot;1&quot;
+          stroke-linecap=&quot;square&quot;/&gt;
+        &lt;line x1=&quot;0&quot; x2=&quot;0&quot; y1=&quot;0&quot; y2=&quot;-{$yScale}&quot; stroke=&quot;black&quot; stroke-width=&quot;1&quot;
+          stroke-linecap=&quot;square&quot;/&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- Y axis interval labels (0%, 50%, 100%)         --&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;text x=&quot;-5&quot; y=&quot;0&quot; text-anchor=&quot;end&quot; dominant-baseline=&quot;middle&quot;&gt;0%&lt;/text&gt;
+        &lt;text x=&quot;-5&quot; y=&quot;-{$yScale div 2}&quot; text-anchor=&quot;end&quot; dominant-baseline=&quot;middle&quot;&gt;50%&lt;/text&gt;
+        &lt;text x=&quot;-5&quot; y=&quot;-{$yScale}&quot; text-anchor=&quot;end&quot; dominant-baseline=&quot;middle&quot;&gt;100%&lt;/text&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;!-- General labels (X, Y, graph)                   --&gt;
+        &lt;!-- ============================================== --&gt;
+        &lt;text x=&quot;{$xAxisLength div 2}&quot; y=&quot;50&quot; text-anchor=&quot;middle&quot; font-size=&quot;x-large&quot;&gt;State&lt;/text&gt;
+        &lt;text x=&quot;-50&quot; y=&quot;-{$yScale div 2}&quot; text-anchor=&quot;middle&quot; writing-mode=&quot;tb&quot;
+          font-size=&quot;x-large&quot;&gt;Democratic percentage&lt;/text&gt;
+        &lt;text x=&quot;{$xAxisLength div 2}&quot; y=&quot;90&quot; text-anchor=&quot;middle&quot; font-size=&quot;xx-large&quot;&gt;Percentage
+          of Democratic votes by state in 2012 US presidential election&lt;/text&gt;
+      &lt;/g&gt;
+    &lt;/svg&gt;
+  &lt;/xsl:template&gt;
+  &lt;xsl:template match=&quot;state&quot;&gt;
+    &lt;!-- ====================================================== --&gt;
+    &lt;!-- Template variables are different for each state        --&gt;
+    &lt;!-- ====================================================== --&gt;
+    &lt;xsl:variable name=&quot;statePos&quot; select=&quot;position() - 1&quot; as=&quot;xs:integer&quot;/&gt;
+    &lt;xsl:variable name=&quot;xPosition&quot; select=&quot;$statePos * $barInterval + $interbarSpacing&quot;
+      as=&quot;xs:double&quot;/&gt;
+    &lt;xsl:variable name=&quot;midBarPostion&quot; as=&quot;xs:double&quot; select=&quot;$xPosition + $barWidth div 2&quot;/&gt;
+    &lt;xsl:variable name=&quot;totalVotes&quot; select=&quot;sum(candidate)&quot; as=&quot;xs:double&quot;/&gt;
+    &lt;xsl:variable name=&quot;demVotes&quot; select=&quot;candidate[@party = &apos;Democrat&apos;]&quot; as=&quot;xs:integer&quot;/&gt;
+    &lt;xsl:variable name=&quot;demPer&quot; select=&quot;$demVotes div $totalVotes&quot; as=&quot;xs:double&quot;/&gt;
+    &lt;xsl:variable name=&quot;barHeight&quot; as=&quot;xs:double&quot; select=&quot;$demPer * $yScale&quot;/&gt;
+    &lt;xsl:variable name=&quot;barFill&quot; select=&quot;if ($demPer gt 0.5) then &apos;blue&apos; else &apos;red&apos;&quot; as=&quot;xs:string&quot;/&gt;
+    &lt;xsl:variable name=&quot;acro&quot; select=&quot;@acro&quot; as=&quot;xs:string&quot;/&gt;
+    &lt;!-- ====================================================== --&gt;
+    &lt;rect x=&quot;{$xPosition}&quot; y=&quot;-{$barHeight}&quot; stroke=&quot;black&quot; stroke-width=&quot;.5&quot; fill=&quot;{$barFill}&quot;
+      width=&quot;{$barWidth}&quot; height=&quot;{$barHeight}&quot;/&gt;
+    &lt;text x=&quot;{$midBarPostion}&quot; y=&quot;20&quot; text-anchor=&quot;middle&quot; fill=&quot;black&quot; font-size=&quot;small&quot;&gt;
+      &lt;xsl:value-of select=&quot;$acro&quot;/&gt;
+    &lt;/text&gt;
+    &lt;text x=&quot;{$midBarPostion}&quot; y=&quot;-{$barHeight + 5}&quot; text-anchor=&quot;middle&quot; fill=&quot;black&quot;
+      font-size=&quot;small&quot;&gt;
+      &lt;xsl:value-of select=&quot;format-number($demPer * 100, &apos;0.0&apos;)&quot;/&gt;
+    &lt;/text&gt;
+  &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</code></pre>
+            <p>The output of our transformation looks like the following. We’ve colored the bars red
+                if the Democrats did not receive a majority of the votes, which is something we
+                wouldn’t do in Real Life because it’s confusing. But we wanted to illustrate how to
+                use XPath to set a variable conditionally (lines 89–95), and this seemed like one
+                place where we could do that, even thought the output isn’t something we can
+                recommend. You can, as an alternative to setting a variable conditionally with
+                XPath, use XSLT:</p>
+            <pre class="language-xml"><code><![CDATA[<xsl:variable name="color" as="xs:string">
+  <xsl:choose>
+    <xsl:when test="$demPer ge 0.5">blue</xsl:when>
+    <xsl:otherwise>red</xsl:otherwise>
+  </xsl:choose>
+</xsl:variable>]]></code></pre>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" height="450" width="{$xAxisLength + 100}"
+                    viewBox="-75 -325 1640 450">
+                    <g>
+                        <line x1="0" x2="1540" y1="-150" y2="-150" stroke="lightgray"
+                            stroke-dasharray="8 4" stroke-width="1"/>
+                        <rect x="10" y="-115.47830034660078" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="115.47830034660078"/>
+                        <text x="20" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >AL</text>
+                        <text x="20" y="-120.47830034660078" text-anchor="middle" fill="black"
+                            font-size="small">38.5</text>
+                        <rect x="40" y="-123.81214063188179" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="123.81214063188179"/>
+                        <text x="50" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >AK</text>
+                        <text x="50" y="-128.8121406318818" text-anchor="middle" fill="black"
+                            font-size="small">41.3</text>
+                        <rect x="70" y="-132.37782879632667" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="132.37782879632667"/>
+                        <text x="80" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >AZ</text>
+                        <text x="80" y="-137.37782879632667" text-anchor="middle" fill="black"
+                            font-size="small">44.1</text>
+                        <rect x="100" y="-110.77560463701055" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="110.77560463701055"/>
+                        <text x="110" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >AR</text>
+                        <text x="110" y="-115.77560463701055" text-anchor="middle" fill="black"
+                            font-size="small">36.9</text>
+                        <rect x="130" y="-179.2771366515304" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="179.2771366515304"/>
+                        <text x="140" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >CA</text>
+                        <text x="140" y="-184.2771366515304" text-anchor="middle" fill="black"
+                            font-size="small">59.8</text>
+                        <rect x="160" y="-154.92079146436924" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="154.92079146436924"/>
+                        <text x="170" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >CO</text>
+                        <text x="170" y="-159.92079146436924" text-anchor="middle" fill="black"
+                            font-size="small">51.6</text>
+                        <rect x="190" y="-175.88122333361815" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="175.88122333361815"/>
+                        <text x="200" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >CT</text>
+                        <text x="200" y="-180.88122333361815" text-anchor="middle" fill="black"
+                            font-size="small">58.6</text>
+                        <rect x="220" y="-175.83222595375585" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="175.83222595375585"/>
+                        <text x="230" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >DE</text>
+                        <text x="230" y="-180.83222595375585" text-anchor="middle" fill="black"
+                            font-size="small">58.6</text>
+                        <rect x="250" y="-274.0914246264609" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="274.0914246264609"/>
+                        <text x="260" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >DC</text>
+                        <text x="260" y="-279.0914246264609" text-anchor="middle" fill="black"
+                            font-size="small">91.4</text>
+                        <rect x="280" y="-150.34744552841008" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="150.34744552841008"/>
+                        <text x="290" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >FL</text>
+                        <text x="290" y="-155.34744552841008" text-anchor="middle" fill="black"
+                            font-size="small">50.1</text>
+                        <rect x="310" y="-136.52387900064625" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="136.52387900064625"/>
+                        <text x="320" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >GA</text>
+                        <text x="320" y="-141.52387900064625" text-anchor="middle" fill="black"
+                            font-size="small">45.5</text>
+                        <rect x="340" y="-211.63462888256288" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="211.63462888256288"/>
+                        <text x="350" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >HI</text>
+                        <text x="350" y="-216.63462888256288" text-anchor="middle" fill="black"
+                            font-size="small">70.5</text>
+                        <rect x="370" y="-98.63249369342633" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="98.63249369342633"/>
+                        <text x="380" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >ID</text>
+                        <text x="380" y="-103.63249369342633" text-anchor="middle" fill="black"
+                            font-size="small">32.9</text>
+                        <rect x="400" y="-171.8783766291545" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="171.8783766291545"/>
+                        <text x="410" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >IL</text>
+                        <text x="410" y="-176.8783766291545" text-anchor="middle" fill="black"
+                            font-size="small">57.3</text>
+                        <rect x="430" y="-132.04406462965193" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="132.04406462965193"/>
+                        <text x="440" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >IN</text>
+                        <text x="440" y="-137.04406462965193" text-anchor="middle" fill="black"
+                            font-size="small">44.0</text>
+                        <rect x="460" y="-156.9129379385632" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="156.9129379385632"/>
+                        <text x="470" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >IA</text>
+                        <text x="470" y="-161.9129379385632" text-anchor="middle" fill="black"
+                            font-size="small">52.3</text>
+                        <rect x="490" y="-113.95881250626937" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="113.95881250626937"/>
+                        <text x="500" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >KS</text>
+                        <text x="500" y="-118.95881250626937" text-anchor="middle" fill="black"
+                            font-size="small">38.0</text>
+                        <rect x="520" y="-113.86558518614531" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="113.86558518614531"/>
+                        <text x="530" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >KY</text>
+                        <text x="530" y="-118.86558518614531" text-anchor="middle" fill="black"
+                            font-size="small">38.0</text>
+                        <rect x="550" y="-122.19363535960551" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="122.19363535960551"/>
+                        <text x="560" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >LA</text>
+                        <text x="560" y="-127.19363535960551" text-anchor="middle" fill="black"
+                            font-size="small">40.7</text>
+                        <rect x="580" y="-167.89055882758484" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="167.89055882758484"/>
+                        <text x="590" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >ME</text>
+                        <text x="590" y="-172.89055882758484" text-anchor="middle" fill="black"
+                            font-size="small">56.0</text>
+                        <rect x="610" y="-185.01687984349007" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="185.01687984349007"/>
+                        <text x="620" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >MD</text>
+                        <text x="620" y="-190.01687984349007" text-anchor="middle" fill="black"
+                            font-size="small">61.7</text>
+                        <rect x="640" y="-182.27240265282754" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="182.27240265282754"/>
+                        <text x="650" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >MA</text>
+                        <text x="650" y="-187.27240265282754" text-anchor="middle" fill="black"
+                            font-size="small">60.8</text>
+                        <rect x="670" y="-163.6494276141341" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="163.6494276141341"/>
+                        <text x="680" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >MI</text>
+                        <text x="680" y="-168.6494276141341" text-anchor="middle" fill="black"
+                            font-size="small">54.5</text>
+                        <rect x="700" y="-157.9582386976081" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="157.9582386976081"/>
+                        <text x="710" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >MN</text>
+                        <text x="710" y="-162.9582386976081" text-anchor="middle" fill="black"
+                            font-size="small">52.7</text>
+                        <rect x="730" y="-130.91902215936503" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="130.91902215936503"/>
+                        <text x="740" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >MS</text>
+                        <text x="740" y="-135.91902215936503" text-anchor="middle" fill="black"
+                            font-size="small">43.6</text>
+                        <rect x="760" y="-133.56773733267522" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="133.56773733267522"/>
+                        <text x="770" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >MO</text>
+                        <text x="770" y="-138.56773733267522" text-anchor="middle" fill="black"
+                            font-size="small">44.5</text>
+                        <rect x="790" y="-125.09271062097007" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="125.09271062097007"/>
+                        <text x="800" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >MT</text>
+                        <text x="800" y="-130.09271062097008" text-anchor="middle" fill="black"
+                            font-size="small">41.7</text>
+                        <rect x="820" y="-113.95255811785907" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="113.95255811785907"/>
+                        <text x="830" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >NE</text>
+                        <text x="830" y="-118.95255811785907" text-anchor="middle" fill="black"
+                            font-size="small">38.0</text>
+                        <rect x="850" y="-158.3025775046882" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="158.3025775046882"/>
+                        <text x="860" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >NV</text>
+                        <text x="860" y="-163.3025775046882" text-anchor="middle" fill="black"
+                            font-size="small">52.8</text>
+                        <rect x="880" y="-156.88360450563204" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="156.88360450563204"/>
+                        <text x="890" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >NH</text>
+                        <text x="890" y="-161.88360450563204" text-anchor="middle" fill="black"
+                            font-size="small">52.3</text>
+                        <rect x="910" y="-174.4177606140971" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="174.4177606140971"/>
+                        <text x="920" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >NJ</text>
+                        <text x="920" y="-179.4177606140971" text-anchor="middle" fill="black"
+                            font-size="small">58.1</text>
+                        <rect x="940" y="-159.13942067738492" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="159.13942067738492"/>
+                        <text x="950" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >NM</text>
+                        <text x="950" y="-164.13942067738492" text-anchor="middle" fill="black"
+                            font-size="small">53.0</text>
+                        <rect x="970" y="-188.1313677997447" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="188.1313677997447"/>
+                        <text x="980" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >NY</text>
+                        <text x="980" y="-193.1313677997447" text-anchor="middle" fill="black"
+                            font-size="small">62.7</text>
+                        <rect x="1000" y="-145.2568870818857" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="145.2568870818857"/>
+                        <text x="1010" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >NC</text>
+                        <text x="1010" y="-150.2568870818857" text-anchor="middle" fill="black"
+                            font-size="small">48.4</text>
+                        <rect x="1030" y="-117.18124204687925" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="117.18124204687925"/>
+                        <text x="1040" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >ND</text>
+                        <text x="1040" y="-122.18124204687925" text-anchor="middle" fill="black"
+                            font-size="small">39.1</text>
+                        <rect x="1060" y="-151.07437788169858" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="151.07437788169858"/>
+                        <text x="1070" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >OH</text>
+                        <text x="1070" y="-156.07437788169858" text-anchor="middle" fill="black"
+                            font-size="small">50.4</text>
+                        <rect x="1090" y="-99.68304077095031" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="99.68304077095031"/>
+                        <text x="1100" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >OK</text>
+                        <text x="1100" y="-104.68304077095031" text-anchor="middle" fill="black"
+                            font-size="small">33.2</text>
+                        <rect x="1120" y="-164.66109864500294" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="164.66109864500294"/>
+                        <text x="1130" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >OR</text>
+                        <text x="1130" y="-169.66109864500294" text-anchor="middle" fill="black"
+                            font-size="small">54.9</text>
+                        <rect x="1150" y="-155.7065350438061" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="155.7065350438061"/>
+                        <text x="1160" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >PA</text>
+                        <text x="1160" y="-160.7065350438061" text-anchor="middle" fill="black"
+                            font-size="small">51.9</text>
+                        <rect x="1180" y="-189.04966510805005" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="189.04966510805005"/>
+                        <text x="1190" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >RI</text>
+                        <text x="1190" y="-194.04966510805005" text-anchor="middle" fill="black"
+                            font-size="small">63.0</text>
+                        <rect x="1210" y="-132.5665017485946" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="132.5665017485946"/>
+                        <text x="1220" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >SC</text>
+                        <text x="1220" y="-137.5665017485946" text-anchor="middle" fill="black"
+                            font-size="small">44.2</text>
+                        <rect x="1240" y="-120.34876965045568" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="120.34876965045568"/>
+                        <text x="1250" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >SD</text>
+                        <text x="1250" y="-125.34876965045568" text-anchor="middle" fill="black"
+                            font-size="small">40.1</text>
+                        <rect x="1270" y="-117.71934375467966" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="117.71934375467966"/>
+                        <text x="1280" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >TN</text>
+                        <text x="1280" y="-122.71934375467966" text-anchor="middle" fill="black"
+                            font-size="small">39.2</text>
+                        <rect x="1300" y="-124.11867535696794" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="124.11867535696794"/>
+                        <text x="1310" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >TX</text>
+                        <text x="1310" y="-129.11867535696794" text-anchor="middle" fill="black"
+                            font-size="small">41.4</text>
+                        <rect x="1330" y="-75.17962472929332" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="75.17962472929332"/>
+                        <text x="1340" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >UT</text>
+                        <text x="1340" y="-80.17962472929332" text-anchor="middle" fill="black"
+                            font-size="small">25.1</text>
+                        <rect x="1360" y="-202.32513269064125" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="202.32513269064125"/>
+                        <text x="1370" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >VT</text>
+                        <text x="1370" y="-207.32513269064125" text-anchor="middle" fill="black"
+                            font-size="small">67.4</text>
+                        <rect x="1390" y="-154.28133663175225" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="154.28133663175225"/>
+                        <text x="1400" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >VA</text>
+                        <text x="1400" y="-159.28133663175225" text-anchor="middle" fill="black"
+                            font-size="small">51.4</text>
+                        <rect x="1420" y="-168.44534881740935" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="168.44534881740935"/>
+                        <text x="1430" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >WA</text>
+                        <text x="1430" y="-173.44534881740935" text-anchor="middle" fill="black"
+                            font-size="small">56.1</text>
+                        <rect x="1450" y="-107.12885102967732" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="107.12885102967732"/>
+                        <text x="1460" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >WV</text>
+                        <text x="1460" y="-112.12885102967732" text-anchor="middle" fill="black"
+                            font-size="small">35.7</text>
+                        <rect x="1480" y="-158.71946596227397" stroke="black" stroke-width=".5"
+                            fill="blue" width="20" height="158.71946596227397"/>
+                        <text x="1490" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >WI</text>
+                        <text x="1490" y="-163.71946596227397" text-anchor="middle" fill="black"
+                            font-size="small">52.9</text>
+                        <rect x="1510" y="-84.64169659654524" stroke="black" stroke-width=".5"
+                            fill="red" width="20" height="84.64169659654524"/>
+                        <text x="1520" y="20" text-anchor="middle" fill="black" font-size="small"
+                            >WY</text>
+                        <text x="1520" y="-89.64169659654524" text-anchor="middle" fill="black"
+                            font-size="small">28.2</text>
+                        <line x1="0" x2="1540" y1="0" y2="0" stroke="black" stroke-width="1"
+                            stroke-linecap="square"/>
+                        <line x1="0" x2="0" y1="0" y2="-300" stroke="black" stroke-width="1"
+                            stroke-linecap="square"/>
+                        <text x="-5" y="0" text-anchor="end" dominant-baseline="middle">0%</text>
+                        <text x="-5" y="-150" text-anchor="end" dominant-baseline="middle"
+                            >50%</text>
+                        <text x="-5" y="-300" text-anchor="end" dominant-baseline="middle"
+                            >100%</text>
+                        <text x="770" y="50" text-anchor="middle" font-size="x-large">State</text>
+                        <text x="-50" y="-150" text-anchor="middle" writing-mode="tb"
+                            font-size="x-large">Democratic percentage</text>
+                        <text x="770" y="90" text-anchor="middle" font-size="xx-large">Percentage of
+                            Democratic votes by state in 2012 US presidential election</text>
+                    </g>
+                </svg>
+            </div>
+        </section>
+        <section>
+            <h3>A datatyping surprise</h3>
+            <p>When we developed the preceding version, we initially specified the datatype of the
+                <code class="language-xml">$totalVotes</code> variable as an integer because we knew
+                that all of the input values to the <code class="language-xml">sum()</code> function
+                (the votes for all of the candidates in a particular state) were integers, which
+                means that their sum would also be an integer. To our surprise, when we ran the
+                transformation, &lt;oXygen/&gt; reported an error, saying that although the type was
+                supposed to be an integer, it was actually a double. To figure out what was going
+                on, we looked up the <code class="language-xml">sum()</code> function in Michael Kay
+                (p. 889), where we learned that when <code class="language-xml">sum()</code> is
+                applied to values that don’t have an <em>explicit</em> datatype (and the numbers in
+                XML in this case don’t), the <code class="language-xml">sum()</code> function
+                converts them to doubles before adding them.</p>
+            <p>So why doesn’t the XSLT transformation engine know that the vote counts in the XML
+                are integers and convert them to integers instead of doubles? It turns out that
+                although it’s clear to a human that they’re integers because they look like whole
+                numbers, they could have more than one logical datatype (for example, they could be
+                doubles that happen to have nothing but implicit zeroes after an implicit decimal
+                point; they could also be strings of characters to be printed, and not any numeric
+                type), and XSLT deals with that by treating all literal values that don’t have an
+                explicit datatype as untyped (the technical explanation is that, since everything
+                has to have a datatype, it regards their type as
+                <code class="language-xml">xs:untypedAtomic</code>, which means … er … that they
+                don’t have an explicit datatype and have to be converted to something explicit
+                internally before you add them or otherwise process them). If you try to perform
+                arithmetic on them, such as with with <code class="language-xml">sum()</code>
+                function, the XSLT engine has to convert them to a type that’s explicitly numeric
+                first, since you can perform arithmetic only on numbers. So should they be converted
+                to integers or doubles? Since you can treat integers like doubles that happen to
+                have only zeroes after the decimal point and get the right answer, but the reverse
+                isn’t the case, XSLT decided that it would always treat numbers to be added as
+                doubles, whether they could alternatively be regarded as integers or not.</p>
+            <p>To correct our error, we changed the datatype of our
+                <code class="language-xml">$totalVotes</code> to
+                <code class="language-xml">xs:double</code>, since that was the value that the
+                <code class="language-xml">sum()</code> function was going to return. A double is a
+                number that may have digits to the right of the decimal point, but those digits can
+                be zeroes (or, in this case, potential zeroes), and in that case the double has the
+                same numeric value as the corresponding integer. In other words, if the total number
+                of votes in a particular state is equal to, say, the integer <q>100</q>, it’s also
+                equal to the double <q>100.</q>.</p>
+        </section>
+    </body>
+</html>
