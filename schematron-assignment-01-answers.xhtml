@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Schematron assignment #1: answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title><!--#echo var="title" --></title>
+        <link rel="stylesheet" type="text/css" href="http://www.obdurodon.org/css/style.css" />
+        <!--#include virtual="inc/dh-header.html" -->
+        <style type="text/css">
+            .note {
+              text-size: smaller;
+              border: 1px gray solid;
+              margin: 1em;
+              padding: 0 1em;
+            }
+            body * {
+              line-height: 1.5 !important;
+            }</style>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h3>The text</h3>
+            <p>In a three-way election for Best Stooge Ever, each candidate (Curly, Larry, Moe) wins
+                between 0% and 100% of the votes. Assume that all votes are cast for one of the
+                three candidates (no abstentions, write-ins, invalid ballots, etc.), which means
+                that when you add the percentages for the three candidates, the result must be
+                exactly 100%. Assume also that we’re recording percentage of the vote, not raw
+                votes, and that the percentages are all integer values. (In Real Life we’d probably
+                record the raw count and <em>calculate</em> the percentages, but in real life we
+                wouldn’t be voting for Best Stooge Ever in the first place!) Here’s a Relax NG
+                schema for the results of the election:</p>
+            <pre><code class="language-xquery">start = results
+results = element results { election+ }
+election = element election { year, stooge+ }
+year = attribute year { xsd:gYear }
+stooge = element stooge { name, xsd:int }
+name = attribute name { "Curly" | "Larry" | "Moe" }</code></pre>
+            <p>Here’s a sample XML document that is valid against the preceding schema:</p>
+            <pre class="language-xml"><code><![CDATA[<results>
+  <election year="2022">
+    <stooge name="Curly">50</stooge>
+    <stooge name="Larry">35</stooge>
+    <stooge name="Moe">15</stooge>
+  </election>
+  <election year="2021">
+    <stooge name="Curly">53</stooge>
+    <stooge name="Larry">33</stooge>
+    <stooge name="Moe">14</stooge>
+  </election>
+</results>]]></code></pre>
+            <p>We could have written a better Relax NG schema, but we didn’t, and although our
+                sloppy schema works with the results above, it also allows erroneous results like
+                the following: </p>
+            <pre class="language-xml"><code>&lt;results&gt;
+    &lt;stooge name="Curly"&gt;55&lt;/stooge&gt;
+    &lt;stooge name="Larry"&gt;38&lt;/stooge&gt;
+    &lt;stooge name="Moe"&gt;11&lt;/stooge&gt;
+&lt;/results&gt;</code></pre>
+        </section>
+        <section>
+            <h3>The task</h3>
+            <p>The problem here is that the three <q>percentage</q> values total 104%, and no matter
+                how good our coding, it is not possible to prevent this type of error by using Relax
+                NG alone. Your assignment is to write a Schematron schema that verifies that the
+                three percentages always total exactly 100%. Test your results by creating the Relax
+                NG schema, your Schematron schema, and a sample XML document that you can validate
+                against both schemas in &lt;oXygen/&gt;. Enter correct and incorrect values and
+                verify that the Schematron schema is working correctly. For homework, upload only
+                your Schematron schema. </p>
+        </section>
+        <section>
+            <h3>Our solution</h3>
+            <pre class="language-xml"><code>&lt;schema xmlns="http://purl.oclc.org/dsdl/schematron" queryBinding="xslt2"&gt;
+    &lt;pattern&gt;
+        &lt;rule context="election"&gt;
+            &lt;assert test="sum(stooge) eq 100"&gt;
+                The sum of the vote percentages does not equal 100%.
+            &lt;/assert&gt;
+        &lt;/rule&gt;
+    &lt;/pattern&gt;
+&lt;/schema&gt;</code></pre>
+            <section class="note">
+                <h3>A digression about namespaces</h3>
+                <p>We’ve set the Schematron namespace as the default namespace with
+                    <code class="language-xquery">xmlns="http://purl.oclc.org/dsdl/schematron</code>.
+                    Notice that there is no namespace prefix in this statement, and when we set the
+                    value of the <code class="language-xquery">@xmlns</code> attribute equal to a
+                    value, we are declaring a <dfn>default namespace</dfn>, which will apply to the
+                    element on which the declaration occurs (the root
+                    <code class="language-xml">&lt;schema&gt;</code> element) and all of its
+                    descendants. We could, alternatively, have bound the Schematron namespace to the
+                    prefix <code class="language-xquery">sch:</code>, which is what &lt;oXygen/&gt;
+                    does by default. In that case our root element might have looked like:</p>
+                <pre class="language-xml"><code>&lt;sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" queryBinding="xslt2"
+    xmlns:sqf="http://www.schematron-quickfix.com/validator/process"&gt;</code></pre>
+                <p>This version binds the prefix <code class="language-xquery">sch:</code> to the
+                    Schematron namespace, which means that all elements that begin with this prefix
+                    are in that namespace. In this case no default namespace is declared, so every
+                    Schematron instruction will have to be preceded by the
+                    <code class="language-xquery">sch:</code> namespace prefix. It is possible to do
+                    both, that is, to bind a prefix to a namespace and to declare that namespace as
+                    the default, although we don’t find that very useful, since either method alone
+                    will do the job.</p>
+                <p>These two ways of ensuring that Schematron instruction elements are in the
+                    Schematron namespace are equivalent, so you can use either one. They do have
+                    different implications that may matter in other Schematron applications, though,
+                    and we’ll discuss those when they come up. In our sample solution above we
+                    removed the declaration of the Schematron Quick Fix namespace, which
+                    &lt;oXygen/&gt; binds to the prefix <code class="language-xquery">sqf:</code>,
+                    because we aren’t using it. We removed it just to simplify the display, but if
+                    you prefer to leave it in and ignore it, that does no harm, and it will be
+                    available if you later decide to use it. You can learn about SQF, which we have
+                    found useful in real projects, in <a
+                        href="https://www.oxygenxml.com/demo/Schematron_Quick_Fixes.html">a demo
+                        video from the &lt;oXygen/&gt; team</a>.</p>
+            </section>
+            <p>The Schematron file that we wrote uses only one
+                <code class="language-xml">&lt;rule&gt;</code> inside one
+                <code class="language-xml">&lt;pattern&gt;</code>, and we defined the value of the
+                <code class="language-xquery">@context</code> attribute of our
+                <code class="language-xml">&lt;rule&gt;</code> element (equivalent to the
+                <code class="language-xquery">@match</code> attribute in
+                <code class="language-xml">&lt;xsl:template&gt;</code> elements in XSLT) as
+                <code class="language-xquery">election</code>, which is an XPath <dfn>pattern</dfn>
+                (not a full XPath path expression). Any
+                <code class="language-xml">&lt;election&gt;</code> element in our document will be
+                submitted to any tests we define inside this
+                <code class="language-xml">&lt;rule&gt;</code>. The
+                <code class="language-xml">&lt;assert&gt;</code> element inside this
+                <code class="language-xml">&lt;rule&gt;</code> uses the XPath
+                <code class="language-xquery">sum()</code> function to total the values of all
+                <code class="language-xml">&lt;stooge&gt;</code> elements located on the child axis
+                of our current context, a single <code class="language-xml">&lt;election&gt;</code>
+                element, and compare that value to 100. It asserts that the sum will equal 100, and
+                therefore raises an error (using the error message that we wrote as the content of
+                the <code class="language-xml">&lt;assert&gt;</code> element) if it doesn’t.</p>
+            <p>Inside the <code class="language-xml">&lt;assert&gt;</code>, we write an error
+                message that Schematron will generate when this test is failed and the XML document
+                breaks the rules. We put, <q>The sum of the vote percentages does not equal
+                    100%,</q> but you could have written anything that you feel would be informative
+                to someone trying to correct the error.</p>
+        </section>
+        <section>
+            <h3>About XPath path expressions and XPath patterns</h3>
+            <section>
+                <h4>XPath path expressions in our Schematron</h4>
+                <p>The value of the <code class="language-xquery">@context</code> attribute on a
+                    Schematron <code class="language-xml">&lt;rule&gt;</code> element is an
+                        <dfn>XPath pattern</dfn>. Like the value of the
+                    <code class="language-xquery">@match</code> attribute on an
+                    <code class="language-xml">&lt;xsl:template&gt;</code> element, which is also an
+                    XPath pattern, the value of <code class="language-xquery">@context</code> should
+                    be just enough XPath to match the node where we want our Schematron rules to be
+                    applied. We don’t need (= should not write) a full XPath expression because we
+                    don’t have to navigate to the location; we just have to describe how to match
+                    it. This means, among other things, that <em>it is always a mistake to begin the
+                        value of a <code class="language-xquery">@context</code> attribute with a
+                        double slash</em>. A leading double slash won’t prevent your code from
+                    working, but it’s nonetheless a mistake because it makes it harder to read and
+                    harder to understand.</p>
+                <p>Our rule fires once for each <code class="language-xml">&lt;election&gt;</code>
+                    element in the document. There are different elections in different years, each
+                    with its own <code class="language-xml">&lt;election&gt;</code> element, and
+                    they are all inside a single <code class="language-xml">&lt;results&gt;</code>
+                    root element. The XPath pattern that we specify as the value of the
+                    <code class="language-xquery">@context</code> attribute ensures that the rules
+                    fire separately for each election, which is what we want, since if there is an
+                    error in the values for one election, we want the validation to tell us which
+                    election is the source of the error.</p>
+                <p>The <dfn>XPath expressions</dfn> used in the asserts and reports are relative to
+                    the current context, so when we ask for the sum of
+                    <code class="language-xml">&lt;stooge&gt;</code> elements, we mean the sum of
+                    <code class="language-xml">&lt;stooge&gt;</code> element children (because the
+                    child axis is the default XPath axis) of the
+                    <code class="language-xml">&lt;election&gt;</code> element being processed at
+                    the moment. A common mistake is to write
+                    <code class="language-xquery">sum(//stooge)</code> instead of
+                    <code class="language-xquery">sum(stooge)</code>. The reason this is a mistake
+                    is that if you have multiple elections you’ll be summing all of the
+                    <code class="language-xml">&lt;stooge&gt;</code> values in the entire document,
+                    and not just in an individual <code class="language-xml">&lt;election&gt;</code>
+                    element. If you want to sum the <code class="language-xml">&lt;stooge&gt;</code>
+                    values that are children of a specific
+                    <code class="language-xml">&lt;election&gt;</code> element, you want to use the
+                    child axis to restrict yourself to only those
+                    <code class="language-xml">&lt;stooge&gt;</code> elements.</p>
+            </section>
+            <section>
+                <h4>How to read XPath path expressions and XPath patterns</h4>
+                <p>We find it most helpful to read XPath path expressions from the left, path step
+                    by path step, because each step specifies the current context(s) for the next
+                    step. An XPath expression like <code>//body/div</code>, then, means <q>start at
+                        the document node, find all <code class="language-xml">&lt;body&gt;</code>
+                        elements on its descendant axis, and then, for each
+                        <code class="language-xml">&lt;body&gt;</code> element, find all
+                        <code class="language-xml">&lt;div&gt;</code> elements on its child
+                        axis.</q></p>
+                <p>We find it most helpful to read XPath patterns from the right. For example, an
+                    XPath pattern like <code class="language-xquery">body/div</code> means <q>find
+                        all <code class="language-xml">&lt;div&gt;</code> elements that are children
+                        of <code class="language-xml">&lt;body&gt;</code> elements</q>. Reading from
+                    the right helps us avoid thinking that we have to navigate to the leftmost
+                    component of the pattern, and we don’t have to do that because XPath patterns
+                    match, but they don’t traverse.</p>
+            </section>
+            <section>
+                <h4>When to use XPath expressions and when to use XPath patterns</h4>
+                <p>Where we use XPath expressions and where we use XPath patterns is specified by
+                    the languages that use XPath, and is not up to us. In Schematron, the value of
+                    the <code class="language-xquery">@context</code> attribute is defined as an
+                    XPath pattern and the value of the <code class="language-xquery">@test</code>
+                    attribute is defined as an XPath expression, for which the current context is
+                    the node that the <code class="language-xquery">@context</code> attribute
+                    matched. If <code class="language-xquery">@context</code> matches multiple nodes
+                    (for example, if there are multiple
+                    <code class="language-xml">&lt;election&gt;</code> elements in the document, as
+                    is the case here), the rule fires once for each of them, so only one of them
+                    will be the current context at a given moment in the validation process.</p>
+            </section>
+        </section>
+        <section>
+            <h3>The bonus tasks</h3>
+            <p>You can stop here and consider the assignment complete, but for more Schematron
+                practice, you’re welcome to add additional rules to check for additional types of
+                error. The following types of errors could have been controlled by writing a better
+                Relax NG schema, but for the purpose of learning Schematron, let’s do it in
+                Schematron:</p>
+            <ol>
+                <li>There should be exactly three votes, with exactly one for each Stooge. No
+                    duplicate Stooges and no missing Stooges.</li>
+                <li>Each individual Stooge’s vote should range from 0 to 100. No negative integers
+                    and no integers greater than 100. (The Relax NG schema is ensuring that all
+                    values are integers, so you don’t have to worry about that.)</li>
+            </ol>
+        </section>
+        <section>
+            <h3>Our bonus solution</h3>
+            <pre class="language-xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;schema xmlns="http://purl.oclc.org/dsdl/schematron" queryBinding="xslt2"&gt;
+    &lt;pattern&gt;
+        &lt;rule context="election"&gt;
+            &lt;assert test="sum(stooge) eq 100"&gt;
+                The sum of the vote percentages should equal 100%.
+            &lt;/assert&gt;
+            &lt;assert test="count(stooge) eq 3"&gt;
+                There should be exactly 3 stooges.
+            &lt;/assert&gt;
+            &lt;assert test="count(stooge) eq count(distinct-values(stooge/@name))"&gt;
+                No two stooges should have the same name.
+            &lt;/assert&gt;
+        &lt;/rule&gt;
+        &lt;rule context="stooge"&gt;
+            &lt;report test="number(.) lt 0 or number(.) gt 100"&gt;
+                Vote percentages must be between 0 and 100.
+            &lt;/report&gt;
+        &lt;/rule&gt;
+    &lt;/pattern&gt;
+&lt;/schema&gt;</code></pre>
+            <p>To specify that there should be three stooges, we added a second
+                <code class="language-xml">&lt;assert&gt;</code> within the same rule, since the
+                context is the same—that is, we want this new assertion to fire once for each
+                <code class="language-xml">&lt;election&gt;</code> element. This time we use the
+                <code class="language-xquery">count()</code> function to count stooges on the child
+                axis, and compare that value to 3. To test that no stooges are repeated, we take
+                advantage of the <code class="language-xquery">@name</code> attribute and compare
+                the count of all stooges against the count of the distinct values of stooge names.
+                If all of the names are distinct from one another, the count of stooges will be
+                equal to the count of distinct stooge names.</p>
+            <p>Finally, we want to test that for any given stooge, the vote percentage is within the
+                range from 0 to 100. Since this is something that applies separately to each
+                individual <code class="language-xml">&lt;stooge></code>, and not the
+                <code class="language-xml">&lt;election&gt;</code> element as a whole, we created a
+                new <code class="language-xml">&lt;rule&gt;</code> where the value of the
+                <code class="language-xquery">@context</code> attribute is now
+                <code class="language-xquery">stooge</code>. This means that it will fire once for
+                each <code class="language-xml">&lt;stooge&gt;</code> element, and that it will
+                check the value for that individual stooge. Inside that rule, we used a
+                <code class="language-xml">&lt;report&gt;</code>, which outputs its message when the
+                test inside it is true (because it is reporting that the real situation matches what
+                the test requires), as opposed to <code class="language-xml">&lt;assert&gt;</code>,
+                which triggers when false (because it is informing the developer that something
+                asserted has failed to be satisfied). The test here is whether the percentage of
+                votes for the stooge being examined is less than 0 or greater than 100, and we
+                separate these using the XPath <code class="language-xquery">or</code> logical
+                operator.</p>
+            <section>
+                <h4><code class="language-xquery">eq</code>, <code class="language-xquery">=</code>,
+                    and <code class="language-xquery">number()</code></h4>
+                <p>To test the value of each stooge’s content we used the XPath
+                    <code class="language-xquery">number()</code> function, which converts the
+                    content of a <code class="language-xml">&lt;stooge&gt;</code> element (a string
+                    of characters) into a number. The reason we have to do this is that value
+                    comparison (using <code class="language-xquery">eq</code>) requires not only
+                    that there be exactly one item on each side of the comparison operator, but also
+                    that they be of the same datatype. It looks to a human as if the stooge votes in
+                    our XML are numbers, and therefore comparable to numbers in the XPath expression
+                    inside the <code class="language-xquery">@test</code> attribute, but they could
+                    just as easily be understood as strings of characters that happen to be digits.
+                    Since XPath cannot know whether they represent a number or a string in the XML,
+                    if we try to compare one of those values with a number in our XPath, we'll raise
+                    an error about unmatched datatypes: <q>Cannot compare xs:untypedAtomic to
+                        xs:integer</q>. <code class="language-xquery">xs:untypedAtomic</code> means
+                    that our Schematron knows that the value inside a
+                    <code class="language-xml">&lt;stooge&gt;</code> element is an atomic value, but
+                    it cannot know whether it is a string or a number or any other specific type of
+                    atomic value. Using the <code class="language-xquery">number()</code> function
+                    inside our <code class="language-xquery">@test</code> to <dfn>cast</dfn> (the
+                    technical term for <q>convert</q>) the value to a number lets our XPath
+                    comparison proceed.</p>
+                <p>Value comparison (like <code class="language-xquery">eq</code>) requires that the
+                    datatypes on both sides of the comparison operator be the same, but general
+                    comparison (like <code class="language-xquery">=</code>) does not. General
+                    comparison will automatically treat the value in the XML as a number if we are
+                    comparing it to a number, so we don’t have to cast it explicitly. We might think
+                    that it would be better to use general comparison so that we don’t have to fuss
+                    with the datatype ourselves, but because value comparison is stricter, it
+                    provides more protection against coding errors, and our goal is not to reduce
+                    error messages, but to reduce errors. Using general comparison instead of value
+                    comparison here is not a mistake, but using value comparison to compare one
+                    thing to one thing is better because it provides more protection against error,
+                    and we use general comparison primarily when one of the comparands must be a
+                    sequence.</p>
+            </section>
+        </section>
+    </body>
+</html>
