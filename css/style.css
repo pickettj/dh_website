@@ -169,3 +169,10 @@ blockquote {
   border-left: 4px solid #333; /* Left border for emphasis */
   color: #555; /* Text color */
 }
+
+table {
+  padding: 2px;
+  margin-left: 4%;
+  margin-right: 8%;
+  line-height: 1.5;
+}
