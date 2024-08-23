@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+        <title>Digital Humanities</title>
+    </head>
+    <body>
+        <nav>
+            <a href="index.xhtml">Home</a>
+            <a href="syllabus.xhtml">Syllabus</a>
+            <a href="projects.xhtml">Projects</a>
+            <!-- <a href="assignments.xhtml">Assignments</a> -->
+            <a href="http://dh.obdurodon.org/">Resources</a>
+            <a href="https://bactriana.org">Bactriana</a>
+        </nav>
+        <h1>Learning Git: From soup to nuts</h1>
+		<p><em>This tutorial and sequence of assignments is adapted from</em> <a href="https://newtfire.org/">newtFire</a>.</p>
+
+		<h3>Introduction</h3>
+		<p>This course requires all students to learn <a href="https://newtfire.org/courses/tutorials/explainGitShell.html">Git</a>, the field standard for collaborative version control for coding. Git is a powerful tool and knowing how to use it will pay dividends for a wide variety of computing methods even outside this course. However, Git was designed with programmers in mind, which means that it takes some getting used to. If you find the learning curve frustrating at times, do not worry!: you are not alone. By the end of this course, the basic Git workflow will be second nature, and this initial sequence of activities will help you get there.</p>
+		<p>Because many of the challenges and pitfalls that crop up when getting to know Git are specific to indvidual user experiences, we will not devote much class time to Git. But you can use the Slack channel, comments in your homework submissions, and project group meetings to troubleshoot.</p>
+	
+		<h3 id="partone">Part I: The Big Picture</h3>
+		<p>This assignment helps orient you to version control systems and how they work. It's the system we use with git and Github for sharing files and the system you'll be using to publish and share your website for this class.</p>
+		<p>Read the following articles:
+			<ol>
+				<li><a href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control">About Version Control</a></li>
+				<li><a href="https://git-scm.com/book/en/v2/Getting-Started-A-Short-History-of-Git">A Short History of Git</a></li>
+				<li><a href="https://git-scm.com/book/en/v2/Getting-Started-What-is-Git%3F">What is Git?</a></li>
+				<li><a href="https://git-scm.com/book/en/v2/Getting-Started-The-Command-Line">The Command Line</a></li>
+			</ol>
+
+		</p>
+		<p>After reading these brief articles carefully, write a short <em>response paper</em> (by the date indicated on the syllabus, and submitted via Canvas) addressing at least some of the following questions: 
+			<ul>
+				<li>In your own words, what is the "command line"? How does it differ from ways you've interacted with files in the past?</li>
+				<li>As a version control system, how is Git similar and different from other systems you've used in the past?</li>
+			</ul>
+		</p>
+	<h3 id="parttwo">Part II: Setting up your Github account</h3>
+	<p>This assignment is straightforward: set up your Github account and cloud service. (We will leave the command line application from which you will normally interact with your account for the next step in this sequence.) To do so, <a href="https://docs.github.com/en/get-started/start-your-journey/creating-an-account-on-github">follow these steps.</a></p>
+	<p>After you have created your account, submit a comment simply listing your full name to <a href="https://github.com/pickettj/teaching/issues/1"> this issue in the course Git repo</a>. Then, to complete this assignment, submit a link to your comment via the Canvas assignment.</p>
+
+	<h3 id="partthree">Part III: Setting up Git locally on your own machine</h3>
+	<p>The next step is to install Git tools on your personal computer so that you can interact with the remote repository (the one hosted on the website) from your local repository. This is where you might start to run into some challenges.</p>
+	<p>To install Git locally, follow the <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git"> set of instructions</a> that corresponds to your operating system. Note that this will be an "invisible" app / program that you interact with from command line: there is no icon to click on, and it will not appear in your Applications folder.</p>
+	<p>Common pitfalls at this stage:
+		<ul>
+			<li>Mac-users must have developer tools installed as a prerequisite to install Git. Fortunately, if you do not already have them installed, you should receive a prompt to do so when you attempt to install Git.</li>
+			<li>For Windows-users, there are separate Git versions for 32 versus 64-bit configured machines. Assume that you should download the <a href="https://git-scm.com/download/win">64-bit version</a> (which is what most users have), but if this is an issue, <a href="https://support.microsoft.com/en-us/windows/find-information-about-your-device-a66d52c8-3323-44fd-8f34-a9497bb935e1"> consult these instructions</a>.</li>
+		</ul>
+	</p>
+	<h4>Token authorization</h4>
+	<p>Now that you have the application installed on your machine, we need to authorize your machine (home to your <em>local</em> repository) to interact with the <em>remote</em> repository hosted on the Github website. You might assume that you could simply provide the same username and password that you created when you registered for a free Github account (and in the past you indeed you could), but these days Git favors a Token system of authorization because it is more secure. (After all, software developers are using this same infrastructure to develop code worth millions of dollars!) Fortunately, this added step of security is fairly straightforward, and in practice works a bit like a temporary password. (Note that there is another way to authenticate using an <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh>">SSH key</a>, which you are welcome to use, but we will favor the Token for instructional purposes.)</p>
+	<p>To set up your Token and link your local repo with your remote repo, follow these steps:
+		<ol>
+			<li>Make a GitHub repo! Go to your GitHub Profile on the web. Click the + sign next to your profile and Create a new repository and give it a name.</li>
+			<li>Set this repository to be Public (so you can use it to publish your website).</li>
+			<li>Mark the box to Add a README file. (All github repositories should have a README which describes what they're about, and this gives you a starter file in your repo to work with.)</li>
+			<li>You don't have to set a license for your code yet, but if you're okay with sharing your code openly with the GitHub community, you could choose Creative Commons Zero v1.0 Universal.</li>
+			<li>Set up your Personal Access Token and store it on your computer! 
+				Read this: https://www.howtogeek.com/devops/how-to-set-up-https-personal-access-tokens-for-github-authentication/
+				Follow the instructions for your computer (Windows / Linux / Mac) on storing your credentials</li>
+		</ol>
+	</p>
+	<p>To submit this assignment: Upload a screen capture of your new repository with its README file featured to the relevant Canvas assignment.</p>
+
+	<h3 id="partfour">Part IV: Moment of Truth - interacting with your remote repo from the command line</h3>
+	<p>This is where it all comes together. You are ready for this assignment if you have set up your GitHub account, set up your GitHub personal access token/credential storage, and created a public GitHub repo for yourself with a Readme.md file to start.</p>
+	<p>First, watch the following videos carefully for a general orientation:
+		<ul>
+			<li><a href="https://psu.mediaspace.kaltura.com/media/Introduction+to+the+Bash+Command+LineA++Always+find+your+way+%22home%22+in+the+dark/1_ke1k1pxm"> Introduction to the Bash Command Line: Always find your way "home" in the dark</a></li>
+			<li><a href="https://psu.mediaspace.kaltura.com/media/Git+and+GitHubA+Basic+Steps+for+Changing+a+Repo/0_06urxysq"> Git and GitHub: Basic Steps for Changing a Repo</a></li>
+		</ul>
+	</p>
+	<p>Next, follow these steps carefully:</p>
+	<h4>1. Creating your Git directory in an appropriate location</h4>
+	<p>Find the best place on your computer to work on GitHub: Make sure you have just ONE folder ("directory" in computing terminology) where you will store Github repos. Make a directory called github or GitHub in a place on your computer that you can reliably use to find and open files. It needs to be a place that is easy to access when you go to open a file in the oXygen XML Editor.</p>
+	<p>You can make this directory if you have navigated there in the command line (Git Bash or Terminal) with mkdir github, or you can create it in your Windows File Manager or Mac Finder on your computer. You can then right-click on the directory and open (on Windows) a new Git Bash shell or (on Mac, under Services) a new Terminal here. Use your Git Bash Shell (Windows) or the Terminal (Mac) and practice navigating to this space and getting information with command line codes: cd yourDirectoryName, cd .., ls, pwd.</p>
+	<p><em>Note</em>: If the "home" location on your computer is not one you can easily find from your GUI File Manager/ file viewer, it may be easier to right-click and open a Bash shell at a point you can reliably open on your computer to make your GitHub directory.</p>
+<h4>Cloning Time</h4>
+<p>It's time to clone the GitHub repo you created! (You only need to do this once.) Go on a web browser to your profile on GitHub, look at the code view, and click the green "Code" button to copy your repo's clone address with HTTPS: the address should end with .git.</p>
+<p>Next, enter git clone and paste in the address you copied. The command should look something like this: git clone https://github.com/....git  (with your full GitHub repo address showing). Press Return on your keyboard. You should then see the repo being cloned to your directory space on your computer.</p>
+<h4>3. Rinse, Repeat</h4>
+<p>Okay, let's do that again! This time, clone our class's shared GitHub repo at https://github.com/pickettj/teaching. Be careful! You must clone it inside the GitHub folder, not inside your personal repo! If you clone one repo inside another, the .git files start colliding--it's not healthy. If this happens, delete the repo on the inside. (If this happens and you don't notice for a while, it's probably a good idea to trash the double-nested Repo blunder (and empty the trash)! And clone them again properly. Navigate to the outer GitHub folder you created before you clone.)</p>
+<p>Your GitHub folder should now have two directories inside it: GitHub/yourNewRepo and GitHub/teaching. If you do your cloning successfully, when you visit your github or GitHub directory, and enter the ls command you should see your repo, and the introDH-Hub listed.</p>
+<p>To complete this assignment: 
+	Upload a screen capture of your command shell with you navigated to your github directory to the relevant Canvas assignment showing the results of the ls command.</p>
+	</body>
+</html>
