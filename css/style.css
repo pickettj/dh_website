@@ -176,3 +176,14 @@ table {
   margin-right: 8%;
   line-height: 1.5;
 }
+
+.code {
+  background: #f2f2f2;
+  padding: 2px 6px;
+  font-family: 'Assistant', sans-serif; /* Use the 'Assistant' font for consistency */
+  font-size: 95%; /* Slightly larger for better readability */
+  color: #333; /* A subtle color for contrast */
+  border-radius: 3px; /* Smooth the edges */
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Add a slight shadow for a lifted look */
+  line-height: 1.4;
+}
