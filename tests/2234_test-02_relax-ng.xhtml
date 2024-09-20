@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Test #2: Relax NG" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title>XML Test</title>
+        <link rel="stylesheet" type="text/css" href="../css/style_key.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h2>RelaxNG Test</h2>
+            <h3>Preliminary instructions</h3>
+            <p>The goal of this test is to create a well-formed Relax NG schema using a XML document
+                that we will supply for you. Here’s how to get started:</p>
+            <ol>
+                <li><p>Open the XML document at (<a href="lilacs_lyrics.xml">lilacs_lyrics.xml</a>)
+                        in &lt;oXygen/&gt;. You can open it directly from the Internet by hitting
+                        Ctrl+u (Windows) or Cmd+u (Mac) in &lt;oXygen/&gt; and then copying and
+                        pasting the URL into the <q>Open URL</q> dialog box.</p></li>
+                <li><p>The XML document for which you will be creating a schema is the song
+                            <q>Lilacs</q> from Dave Malloy’s musical <cite>Preludes</cite>. You can
+                        hear it performed on <a href="https://www.youtube.com/watch?v=JBLgOBno7AE"
+                            >YouTube</a> (it’s really a very lovely song, so we highly recommend
+                        checking it out!).</p></li>
+                <li><p>Use File → Save As in the &lt;oXygen/&gt; menu to save the XML file locally
+                        to your computer.</p></li>
+                <li><p>Create a new Relax NG compact syntax document and save it to your computer in
+                        the <em>same directory as the XML</em>, making sure that you follow our <a
+                            href="file-naming_conventions.xhtml">file-naming conventions</a>, as you
+                        would for any assignment in this class.</p></li>
+                <li><p>After you’ve saved both the XML song file and the new Relax NG file,
+                            <em>click into the XML file</em> and then use the Document → Schema →
+                        Associate Schema menu options to associate your XML with your Relax NG. The
+                        schema won’t be valid yet, which means that XML will also show a red square,
+                        but after you’re done with this next task, you will have two beautiful green
+                        squares.</p></li>
+            </ol>
+        </section>
+        <section>
+            <h3>Your task</h3>
+            <p>Create a Relax NG schema that validates the XML file that we provide. This test is
+                open book, but you can’t receive help from another person. Here are some more
+                details:</p>
+            <ul>
+                <li><p>You can’t change the XML exceptfor having &lt;oXygen/&gt; add the association
+                        line for the schema.</p></li>
+                <li><p>Your schema should make good use of <em>effective comments</em> that 1) guide
+                        the reader through the structure of the schema file and 2) explain the
+                        reasons behind any design decisions that aren’t self-explanatory. One
+                        guideline for explanatory comments is that although the code itself can
+                        often communicate <em>what</em> it does (by using self-documenting names),
+                        the code can’t explain <em>why</em> you did one thing instead of another.
+                        Documenting what isn’t self-explanatory, then, most often means explaining
+                        the <em>why</em>.</p></li>
+                <li><p>We recommend developing your schema step by step, using placeholders, as we
+                        demonstrated in class. This approach lets you focus on a small part of the
+                        functionality at a time, so that if something doesn’t work, you’ll know
+                        where to look to fix it.</p></li>
+                <li><p>&lt;oXygen/&gt; cannot validate any part of the XML if you have an invalid
+                        schema (that is, if the schema file shows a red square). To work around that
+                        limitation and check at least the parts of your schema that you think are
+                        correct, you can put a placeholder like
+                        <code class="language-xquery">text</code> in the content model for the
+                        statement you’re stuck on so that the schema will be valid and
+                        &lt;oXygen/&gt; can then use it to validate the XML. This is similar to the
+                        use of placeholders for incremental development that we describe above.
+                        &lt;oXygen/&gt; will reports validation errors in the XML for the items with
+                        the placeholder, but at least you’ll be able to verify whether your other
+                        schema statements are doing what you think they should do, and you can then
+                        come back to the problematic bits later. The point is that you don’t want a
+                        single sticking point to keep you from validating at least parts of your
+                        XML.</p></li>
+                <li><p>Your schema should be applicable to multiple documents of the same type, and
+                        whether that means <q>all songs in this musical</q> or, more broadly,
+                            <q>songs from many different musicals</q> is up to you (so document your
+                        decision in a comment in your schema!). For example, if you decide that you
+                        (hypothetically) want to mark up the lyrics of every song from this musical,
+                        Natalya and Rach aren’t the only characters, so consider that when defining
+                        attributes in your schema. And we can’t say this often enough: Whatever
+                        decisions you make, be sure to document them with a comment.</p></li>
+            </ul>
+            <p>If you get stuck, feel free to ask a question in the #relax-ng channel in our Slack.
+                Don’t be shy about doing that; if you have a question, it’s likely that someone else
+                will have the same question. We can’t write the schema rules for you, but there’s a
+                lot we can and will do to point you in the right direction.</p>
+        </section>
+    </body>
+</html>
