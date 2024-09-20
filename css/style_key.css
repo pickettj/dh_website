@@ -157,3 +157,23 @@ img.map {
   color: #888;
   text-align: right;
 }
+
+
+
+/* Unordered and Ordered Lists */
+ul, ol {
+  margin-left: 6%; /* Adjust as needed for proper alignment */
+  margin-right: 8%; /* To match your paragraph styling */
+  padding-left: 0; /* Remove default padding */
+  line-height: 1.5;
+}
+
+/* List items */
+li {
+  margin-bottom: 0.5em; /* Add space between list items */
+}
+
+/* Nested Ordered/Unordered Lists */
+ol ol, ul ul {
+  margin-left: 6%;
+}
