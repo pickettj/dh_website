@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Test #2: Relax NG: Answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title>XML Test</title>
+        <link rel="stylesheet" type="text/css" href="../css/style_key.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <section>
+            <h2>Answer Key: RelaxNG Test</h2>
+            <h3>Sample schema</h3>
+            <p>Your schema does not have to look the same as ours, but one possible schema that
+                could be used for this XML document (and other songs of the same type) could be:</p>
+            <pre class="language-xquery"><code><![CDATA[# Schema for Test 02: Relax NG
+# 
+# Root element
+# Generic root element name because applicable to multiple songs
+start = song
+song = element song { metadata, lyrics }
+# 
+# METADATA SECTION
+# 
+# Songs may have titles for both the song itself and the musical
+metadata = element metadata { title+, characters, artist, source }
+title = element title { type, text }
+type = attribute type { "musical" | "song" }
+# 
+# Characters featured in the song and who they are portrayed by
+# Content is character name, performer is attribute
+characters = element characters { character+ }
+character = element character { actor, text }
+actor = attribute actor { text }
+# 
+# Creator of the musical / source of lyrics
+# Assume that the song is the work of a single artist
+artist = element artist { text }
+source = element source { text }
+# 
+# LYRIC SECTION
+#
+# Sections are groups of stanzas
+lyrics = element lyrics { (section | direction | toneshift)+ }
+toneshift = element toneshift { empty }
+# Stage directions
+direction =
+  element direction {
+    mixed { chara* }
+  }
+# 
+# section elements
+# a change in tone starts a new section
+# a change in speaker, delivery, or action starts a new stanza
+section = element section { tone, stanza+ }
+tone = attribute tone { "positive" | "negative" | "neutral" }
+stanza = element stanza { speaker, delivery, action?, line+ }
+# 
+# speaker element and attributes
+# action (optional) is activity performed while singing the stanza
+# speaker is defined as text, rather or-group fixed values, to accomodate other shows 
+speaker = attribute speaker { text }
+delivery = attribute delivery { "spoken" | "sung" }
+action = attribute action { text }
+# 
+# Line content
+line =
+  element line {
+    mixed { (chara | place)* }
+  }
+# <place> elements have a kind attribute with values like building, nature, etc.
+# <chara> elements have a ref attribute that contains a standardized character name
+# The ref value is defined as text, rather or-group fixed values, to accomodate other shows 
+place = element place { kind, text }
+kind = attribute kind { text }
+chara = element chara { ref, text }
+ref = attribute ref { text }]]></code></pre>
+        </section>
+        <section>
+            <h3>Discussion</h3>
+            <p>The schema tries to use self-documenting names and explanatory comments wherever
+                possible, but here are a few additional details:</p>
+            <ul>
+                <li><p><strong>Repetition in metadata:</strong> For the metadata section, whether
+                        you made items repeatable depends on what you expect XML documents <q>of the
+                            same type</q> to look like. For our sample schema above we thought of
+                        each song in this type of corpus as having exactly two
+                        <code class="language-xml">&lt;title&gt;</code> elements, one for the show
+                        title and one for the song title, so it was important to allow more than
+                        one, which we did with a plus sign. The model above is really too loose,
+                        though, for two related reasons: 1) it allows multiple titles of the same
+                        type and 2) it allows titles of only one type and none of the other type. It
+                        also allows the types of titles to appear in any order, which may not matter
+                        to XML processing, but if different songs put their titles in different
+                        orders it introduces <dfn>cognitive friction</dfn> that can compromise the
+                        developer’s focus. In Real Life we would use a tighter model, requiring
+                        exactly two titles (not the looser <q>one or more</q>) and requiring them in
+                        a specific order. That might look like:</p>
+                    <pre class="language-xquery"><code><![CDATA[metadata = element metadata { show_title, song_title, characters, artist, source }
+show_title = element title { show_title_type, text }
+song_title = element title { song_title_type, text }
+show_title_type = attribute type { "musical" }
+song_title_type = attribute type { "song"} ]]></code></pre>
+                    <p>With this revision the content model for
+                        <code class="language-xml">&lt;metadata&gt;</code> requires exactly two
+                        titles, one of each type, and in a specific order. Because the
+                        <code class="language-xml">&lt;title&gt;</code> elements have different
+                        values for the <code class="language-xquery">type</code> attribute, we use
+                        different labels (<code class="language-xquery">show_title</code>,
+                        <code class="language-xquery">song_title</code>), both of which describes
+                        elements of type <code class="language-xml">&lt;title&gt;</code> but with
+                        different attribute labels
+                        (<code class="language-xquery">show_title_type</code>,
+                        <code class="language-xquery">song_title_type</code>). Those attribute
+                        labels both describe attributes with the name
+                        <code class="language-xml">type</code> but with different single, specific
+                        string values.</p>
+                    <p>This revision is stricter, which is an advantage, since it prevents us from
+                        having more than two <code class="language-xml">&lt;title&gt;</code>
+                        elements, it requires both song and musical titles, and it requires that the
+                        two, which are distinguished by the value of their
+                        <code class="language-xquery">type</code> attributes, occur in a specific
+                        order. At the same time, it’s more difficult to read because of the
+                        indirection, that is, because we have to read through several schema lines
+                        to discover that each of the two <code class="language-xquery">type</code>
+                        attributes has a single allowed value. The specificity of this part of the
+                        model makes this a good opportunity to insert a bit of <dfn>Russian
+                            doll</dfn> Relax NG syntax into our schema:</p>
+                    <pre class="language-xquery"><code><![CDATA[metadata = element metadata { show_title, song_title, characters, artist, source }
+show_title = element title {
+    attribute type { "musical" },
+    text
+}
+song_title = element title {
+    attribute type { "song" },
+    text
+}]]></code></pre>
+                    <p>With Russian doll notation, we don’t use labels for the attributes on the two
+                        types of titles inside the content models. What we do instead is define the
+                        <code class="language-xquery">type</code> attribute right inside the content
+                        model for the element that uses it. We don’t recommend Russian doll notation
+                        in general because deeper nesting becomes difficult to read, but here we
+                        find that because of the simplicity of the attribute declarations the schema
+                        becomes clearer if we define them in place. Your mileage may vary, so any of
+                        the models above are acceptable, but in Real Life we would use this last
+                        one.</p>
+                    <p>As for the artist, you may have allowed more than one, thinking maybe that
+                        different songs would be arranged by different people, or because you want
+                        to include composer, lyricist, arranger, and perhaps others. Our sample
+                        schema, above, assumed that one person was responsible for all of these
+                        creative roles, and if our corpus consisted of songs from this show we’d
+                        leave it as that, so that’s what we’ve done here. If you anticipate using
+                        your schema with other shows that may have different persons in different
+                        artistic roles, it would be better to make
+                        <code class="language-xml">&lt;artist&gt;</code> repeatable. Note that we’ve
+                        used a comment to document the assumption that dictated our specific schema
+                        rule.</p></li>
+                <li><p><strong>Attribute values as or-groups of strings:</strong> In our solution we
+                        chose to write out some attribute values as or-groups of strings so that we
+                        could constrain them to one of two or three options (for example, the value
+                        of the attribute <code class="language-xquery">tone</code> can be
+                        <code class="language-xquery">"positive"</code>,
+                        <code class="language-xquery">"negative"</code>, or
+                        <code class="language-xquery">"neutral"</code>, but it has to be one of
+                        those three exact strings). Whether to specify a value as an or-group of
+                        strings or, more loosely, with the keyword
+                        <code class="language-xquery">text</code>, depends on whether we can
+                        anticipate all possible values in advance, and we hardcoded values only for
+                        items where that was the case. Since for the
+                        <code class="language-xquery">delivery</code> attribute we assumed that
+                        there were two types of line delivery in a musical,
+                        <code class="language-xquery">"spoken"</code> or
+                        <code class="language-xquery">"sung"</code>, we represented that as an
+                        or-group of strings, as well. On the other hand, the
+                        <code class="language-xquery">ref</code> attribute of the
+                        <code class="language-xml">chara</code> element is left open because there
+                        are many characters in this musical besides the three or four mentioned in
+                        the text and we anticipate using the same schema to validate those other
+                        songs. For the same reason we define the
+                        <code class="language-xquery">speaker</code> attribute as
+                        <code class="language-xquery">text</code>, since Natalya and Rach aren’t the
+                        only characters who sing in the musical. As long as the inventory of
+                        possibilities is finite (and not insanely long) it would not be a mistake to
+                        use an or-group of strings that lists all of the character names in the
+                        show, but that would limit the schema to this one show. If you want to be
+                        able to use the same schema for any musical, the list of possible characters
+                        becomes infinite, and therefore not enumerable, so
+                        <code class="language-xquery">text</code> becomes the only option.</p>
+                    <p>Whether you hardcoded specific string values or left them open by using the
+                        keyword <code class="language-xquery">text</code>, it is always best to
+                        leave a comment in your schema explaining why, as we do above.</p></li>
+            </ul>
+        </section>
+        <section>
+            <h3>Common issues</h3>
+            <p><strong>Flexibility:</strong> The element
+                <code class="language-xml">&lt;direction&gt;</code> indicates a stage direction,
+                which will not always appear at the beginning of the lyrics section, and there’s no
+                reason there couldn’t be multiple stage directions within a song. Putting it in a
+                schema without attaching a repetition indicator and without allowing some
+                flexibility to its location risks limiting the schema to just this song.</p>
+            <p><strong>Empty elements:</strong> The element
+                <code class="language-xml">&lt;toneshift/&gt;</code> is an <dfn>empty element</dfn>.
+                Empty elements can be represented in two ways that are syntactically different but
+                have exactly the same meaning:</p>
+            <ul>
+                <li><p><code class="language-xml">&lt;toneshift/&gt;</code> is a self-closing
+                        empty-element tag. Note the slash at the end. This notation does not use
+                        separate start- and end-tags; the single self-closing tag represents the
+                        entire element. Empty elements have no content (nothing between start- and
+                        end-tags, which is why they can get away with just a single tag). They may
+                        have attributes, although
+                        <code class="language-xml">&lt;toneshift&gt;</code> doesn’t.</p></li>
+                <li><p><code class="language-xml">&lt;toneshift&gt;&lt;/toneshift&gt;</code> is a
+                        combination of a regular start-tag followed by regular end-tag with nothing
+                        between them.</p></li>
+            </ul>
+            <p>These notations mean exactly the same thing, but we prefer using the self-closing
+                empty-element single-tag version because it is more self-documenting and easier to
+                understand at a glance.</p>
+            <section class="note">
+                <p>The HTML specification recommends using the single-tag notation only for elements
+                    that must always be empty and the combination of start- and end-tag with nothing
+                    between them for elements that could have content in principle but happen not to
+                    in a particular location. That recommendation is not part of XML, where the two
+                    notations are exactly synonmous and can be used in exactly the same
+                    locations.</p>
+            </section>
+            <p><strong>Content models:</strong> Whatever is listed in the content model of an
+                element is only its attributes plus whatever (elements or text) is <em>directly</em>
+                between its start- and end-tags, that is, its children but not its deeper
+                descendants. For example, if you have a
+                <code class="language-xml">&lt;song&gt;</code> element that contains a
+                <code class="language-xml">&lt;stanza&gt;</code> element that, in turn, contains
+                lines, you wouldn’t model the <code class="language-xml">&lt;song&gt;</code> as:</p>
+            <pre class="language-xquery"><code><![CDATA[song = element song { stanza+, line+ } # Note: bad code
+]]></code></pre>
+            <p>because <code class="language-xml">&lt;song&gt;</code> doesn’t have any child
+                <code class="language-xml">&lt;line&gt;</code> child elements (although it does have
+                <code class="language-xml">&lt;line&gt;</code> descendants).</p>
+        </section>
+    </body>
+</html>
