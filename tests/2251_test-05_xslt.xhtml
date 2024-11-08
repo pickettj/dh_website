@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="Test #5: XSLT" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title>XSLT Test</title>
+        <link rel="stylesheet" type="text/css" href="../css/style_key.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <h2>XSLT Test</h2>
+        <section>
+            <h3>Background</h3>
+            <p>Andrew Lang and his wife, Leonora (Nora) Blanche Alleyne, were the editors of a late
+                Victorian collection of twelve <q>colored</q> books of fairy tales. These volumes
+                were enormously influential in reshaping the cult of fairy tales (originally a type
+                of folk and literary text for adults) into a genre of children’s literature.
+                    <cite>The Yellow Fairy Book</cite> was first published in 1894.</p>
+        </section>
+        <section>
+            <h3>The task</h3>
+            <p>Your task is to write XSLT that will create an XHTML reading view of our XML version
+                of <cite>The Yellow Fairy Book</cite>, which can be found at <a
+                    href="http://dh.obdurodon.org/yellowFairy.xml">yellowFairy.xml</a>. The look and
+                style of the output is up to you except for places where we specify (below) certain
+                elements to include, and with the exception of those features, any valid XHTML
+                output that is consistent with the way a collection of tales might reasonably be
+                rendered is fine.</p>
+            <p>You may find it helpful to download and explore the Relax NG schema that we used to
+                validate the XML, which you can find at <a href="http://dh.obdurodon.org/yellowFairy.rnc"
+                    >http://dh.obdurodon.org/yellowFairy.rnc</a>. You can develop and run your XSLT
+                transformation without the schema, but examining the schema might help you
+                understand the structure of the XML, which could make it easier to plan your
+                transformation.</p>
+            <section class="note">
+                <p>We’ve also used a Schematron schema to validate some aspects of our XML. You can
+                    ignore that for now, and we’ll learn how to work with Schematron—and why it will
+                    be useful for your projects—later in the semester, but you’re welcome to take a
+                    look now if you’re curious.</p>
+            </section>
+            <p>You should upload both your XSLT and the XHTML output created by your transformation.
+                If you undertake the extra-credit CSS option (see below), upload your CSS file, as
+                well.</p>
+        </section>
+        <section>
+            <h4>General guidelines</h4>
+            <ul>
+                <li><p>Perform a sanity check after each step in your development: Does your output
+                        look the way you expect in a browser? Does the angle-bracketed output look
+                        the way you expect in &lt;oXygen/&gt;?</p></li>
+                <li><p>Validate your XHTML output before you submit it. Valid output is a baseline
+                        requirement for any XSLT transformation, and for that reason it is worth a
+                        lot of points on this test. To ensure that your document is valid, save the
+                        output of your transformation, open it in &lt;oXygen/&gt;, and validate it
+                        there. Your document must conform to the type of valid HTML5 with XML syntax
+                        that you’ve been using consistently in other assignments and in your
+                        projects. It must include the correct HTML doctype declaration, it must be
+                        in the correct HTML namespace, and it must make appropriate descriptive use
+                        of HTML elements. For example, use headers hierarchically (e.g., don’t skip
+                        from <code class="language-xml">&lt;h1&gt;</code> to
+                        <code class="language-xml">&lt;h3&gt;</code>), use a meaningful and
+                        appropriate <code class="language-xquery">@alt</code> attribute on all
+                        <code class="language-xml">&lt;img&gt;</code> elements, etc.</p>
+                </li>
+                <li><p>Avoid hard-coding information into your XSLT that is available from the XML.
+                        For example, don’t type out titles that are present in the XML, don’t
+                        require a specific number of stories, etc.</p></li>
+                <li><p>There are multiple ways to complete this task, and your solution doesn’t have
+                        to be the same as ours. With that said, your XSLT must be consistent with
+                        good practice. For example, apply templates to all stories at once instead
+                        of to each one separately, don’t confuse XPath patterns with XPath
+                        expressions, don’t use pull processing
+                        (<code class="language-xml">&lt;xsl:for-each&gt;</code>,
+                        <code class="language-xml">&lt;xsl:value-of&gt;</code>) where push
+                        processing (<code class="language-xml">&lt;xsl:apply-templates&gt;</code>
+                        and <code class="language-xml">&lt;xsl:template&gt;</code>) would be more
+                        appropriate, etc.</p></li>
+                <li><p>Organize your XSLT in a way that makes sense and include comments (comments
+                        in XSLT use the same syntax as in XML) that label sections of your code and
+                        help you find your way around. Comments should not be <q>This is My XSLT
+                            Test</q>; make them insightful not only to help you during your coding
+                        process, but also to help those who will view your code (think of your
+                        hypothetical project teammates were this part of your course project). Good
+                        use of mindful comments is worth points!</p></li>
+                <li><p>Should you have any questions, please ask in the #xslt channel in our Slack
+                        workspace. We can’t give you the answer, but we’ll do whatever we can short
+                        of that to help. Should you get stuck at a particular point in your XSLT in
+                        a way that doesn’t get cleared up over Slack, include a properly formatted
+                        comment that tells us <em>specifically</em> how you tried to debug it, where
+                        by <q>specifically</q> we mean what (<em>exactly</em>) you tried, what you
+                        expected, what you got instead, what you think the source of the problem is,
+                        how you tried to fix it, etc. Not being able to get all the way to a
+                        solution can nonetheless earn credit, but only if you provide a thoughtful
+                        and specific description of your debugging efforts.</p></li>
+            </ul>
+        </section>
+        <section>
+            <h4>Required tasks</h4>
+            <p>At a minimum, the output of your transformation must include the following features
+                that might be expected in any reading view of a book containing a collection of
+                tales:</p>
+            <ul>
+                <li><p>A main title as well as author and editor names that are extracted from the
+                        XML (not typed in as literal values). The title should appear in two places:
+                        in a <code class="language-xml"><![CDATA[<title>]]></code> element inside
+                        the <code class="language-xml"><![CDATA[<head>]]></code> and in an
+                        <code class="language-xml"><![CDATA[<h1>]]></code> inside the
+                        <code class="language-xml"><![CDATA[<body>]]></code>.</p></li>
+                <li><p>A table of contents with the story names.</p></li>
+                <li><p>Each story in its own HTML <code class="language-xml">&lt;section&gt;</code>
+                        with the story name at the start (extracted from the XML, and not supplied
+                        as a literal value).</p></li>
+                <li><p>Story titles and the <code class="language-xml"><![CDATA[<origin>]]></code>
+                        content (if present) formatted in a way that stands out from the rest of the
+                        text.</p></li>
+                <li><p>All paragraphs within each chapter so that your stories retain their original
+                        paragraphed structure and are not rendered as single blocks of continuous
+                        text.</p></li>
+            </ul>
+        </section>
+        <section>
+            <h4>Bonus (optional, extra-credit) tasks</h4>
+            <ul>
+                <li><p>Style your HTML meaningfully with CSS that enhances the overall effect of the
+                        reading view. Your CSS must be in a separate file, which you should upload
+                        to Canvas along with your XSLT and HTML, and it must be linked to the HTML
+                        output of your transformation with an HTML
+                        <code class="language-xml">&lt;link&gt;</code> element that you create as
+                        part of your transformation. Make sure that the filename of your CSS matches
+                        the filename specified in the <code class="language-xquery">@href</code>
+                        attribute on your <code class="language-xml">&lt;link&gt;</code>
+                        element.</p></li>
+                <li>
+                    <p>Enhance the table of contents to create clickable links that scroll the page
+                        to the appropriate location within the main text.</p>
+                </li>
+                <li><p>The tales in this collection originate with different authors and
+                        storytellers, and the <code class="language-xml"><![CDATA[<origin>]]></code>
+                        element is used to denote when someone other than just Andrew Lang or Nora
+                        Alleyne contributed to a story. Instead of rendering that information where
+                        it appears in the XML, create footnotes with raised numbers after the title
+                        within the body and put the sources (that is, the contents of the
+                        <code class="language-xml">&lt;origin&gt;</code> element) at the end of the
+                        entire page, with clickable links that connect them. The HTML for raised
+                        numbers is <code class="language-xml">&lt;sup&gt;</code> (mnemonic:
+                            <q>superscript</q>).</p>
+                    <p>You’ll need to generate the note numbers programmatically and they need to
+                        run consecutively, so that the first note number is 1, the second is 2,
+                        etc.</p>
+                </li>
+            </ul>
+        </section>
+    </body>
+</html>
