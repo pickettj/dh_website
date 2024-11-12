@@ -1,11 +1,5 @@
-
-
-/*
-
-Sans Serif Google fonts
-
-
-font-family: 'Open Sans Condensed', sans-serif;
+/* Sans Serif Google Fonts */
+/*font-family: 'Open Sans Condensed', sans-serif;
 font-family: 'Noto Sans JP', sans-serif;
 font-family: 'Calistoga', cursive;
 font-family: 'Work Sans', sans-serif;
@@ -17,173 +11,193 @@ font-family: 'Assistant', sans-serif;
 font-family: 'Public Sans', sans-serif;
 font-family: 'Asap Condensed', sans-serif;
 font-family: 'Archivo', sans-serif;
-font-family: 'Amaranth', sans-serif;
-
-*/
-
-
+font-family: 'Amaranth', sans-serif;*/
 
 head {
-  font-family: 'Assistant', sans-serif;
+    font-family: 'Assistant', sans-serif;
 }
 
 body {
-
-/*font-family: 'Yrsa', serif;*/
-font-family: 'Assistant', sans-serif;
-background: #f9ffe6;
-margin-left: 4%;
-font-size: 110%;
-
-
+    font-family: 'Assistant', sans-serif;
+    background: #f9ffe6;
+    margin-left: 4%;
+    font-size: 110%;
 }
-
 
 /* Nav Bar */
-
 nav {
-
-/*font-family: 'Cinzel', serif;*/
-font-size: 115%;
-font-variant: small-caps;
-margin: auto;
-width: 500px;
-border: 2px solid #555;
-text-align: center;
-padding: 10px;
-background: #e6e6cc;
+    font-size: 115%;
+    font-variant: small-caps;
+    margin: auto;
+    width: 500px;
+    border: 2px solid #555;
+    text-align: center;
+    padding: 10px;
+    background: #e6e6cc;
 }
 
+a:link {
+    color: #974b00;
+}
 
-
-a:link {color: #974b00;}
-
-a:visited {color: #1a3300;}
+a:visited {
+    color: #1a3300;
+}
 
 .clear {
-  clear: both;
+    clear: both;
 }
-
 
 /* Headers */
-
-
 h1 {
-
-font-weight: bold;
-text-align: center;
-color: #444422;
-background: #e0e0d1;
-margin: 3% auto;
-padding: 10px;
-border-top: 2px solid black;
-border-bottom: 2px solid black;
-text-transform: uppercase;
-font-size: 2.5rem;
-
+    font-weight: bold;
+    text-align: center;
+    color: #444422;
+    background: #e0e0d1;
+    margin: 3% auto;
+    padding: 10px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    text-transform: uppercase;
+    font-size: 2.5rem;
 }
 
-
 h2 {
-
     padding: 5px;
     margin-left: 4%;
     padding-bottom: 10px;
     background: #cad5bb;
     font-variant: small-caps;
-
 }
 
 h3 {
-
     padding: 2px;
     margin-left: 4%;
     border-bottom: 1px solid black;
     margin-top: 4%;
-
 }
 
 h4 {
-
-  padding: 2px;
-  margin-left: 4%;
-  margin-top: 1%;
-  border-bottom: 1px dotted #000;
-  font-style: italic;
-
+    padding: 2px;
+    margin-left: 4%;
+    margin-top: 1%;
+    border-bottom: 1px dotted #000;
+    font-style: italic;
 }
 
 span {
-
     font-weight: bold;
     color: green;
-
 }
 
 main {
-
-
 }
 
-
 img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 80%;
-
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
 }
 
 img.map {
-
-  width: 50%;
-  height: auto;
-
+    width: 50%;
+    height: auto;
 }
 
+/* Paragraphs */
 p {
-  padding: 2px;
-  margin-left: 4%;
-  margin-right: 8%;
-  line-height: 1.5;
+    padding: 2px;
+    margin-left: 4%;
+    margin-right: 8%;
+    line-height: 1.5;
 }
 
+/* Lists */
+ul,
+ol {
+    margin-left: 4%; /* Align lists with paragraphs */
+    padding-left: 1.5rem; /* Create uniform indentation */
+}
+
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+    margin-left: 1.5rem; /* Additional indent for nested lists */
+    padding-left: 1rem;
+}
+
+li {
+    line-height: 1.5;
+}
+
+/* Table of Contents */
 div.toc {
-
-  margin-left: 4%;
-  padding: 20px;
-  line-height: 2.5;
-
-
-  background: url("../images/photographs/samarkand_mosaic_toc.png");
-  background-position: left top;
-  background-attachment: fixed;
-  background-size: cover;
-  background-repeat: no-repeat;
-
+    margin-left: 4%;
+    padding: 20px;
+    line-height: 2.5;
+    background: url("../images/photographs/samarkand_mosaic_toc.png");
+    background-position: left top;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
+/* Blockquote */
 blockquote {
-  margin: 0 0 1em; /* Adjust margin as needed */
-  padding: 0.5em 20px; /* Add padding to the left for better readability */
-  border-left: 4px solid #333; /* Left border for emphasis */
-  color: #555; /* Text color */
+    margin: 0 0 1em;
+    padding: 0.5em 20px;
+    border-left: 4px solid #333;
+    color: #555;
 }
 
+/* Tables */
 table {
-  padding: 2px;
-  margin-left: 4%;
-  margin-right: 8%;
-  line-height: 1.5;
+    padding: 2px;
+    margin-left: 4%;
+    margin-right: 8%;
+    line-height: 1.5;
 }
 
+/* Code Block Styling */
 .code {
-  background: #f2f2f2;
-  padding: 2px 6px;
-  font-family: 'Assistant', sans-serif; /* Use the 'Assistant' font for consistency */
-  font-size: 95%; /* Slightly larger for better readability */
-  color: #333; /* A subtle color for contrast */
-  border-radius: 3px; /* Smooth the edges */
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Add a slight shadow for a lifted look */
-  line-height: 1.4;
+    background: #f2f2f2;
+    padding: 2px 6px;
+    font-family: 'Assistant', sans-serif;
+    font-size: 95%;
+    color: #333;
+    border-radius: 3px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    line-height: 1.4;
+}
+
+/* Code Snippet Styling */
+.code-snippet {
+    background: #e8e8e8; /* Lighter shade for inline visibility */
+    padding: 2px 4px; /* Smaller padding for inline appearance */
+    font-family: 'Assistant', sans-serif;
+    font-size: 90%; /* Slightly smaller to fit inline with text */
+    color: #444; /* Darker for contrast in inline context */
+    border-radius: 3px; /* Smooth edges */
+    border: 1px solid #ccc; /* Subtle border to set it apart */
+    display: inline; /* Ensures the snippet stays inline */
+    line-height: 1.3; /* Keeps text alignment consistent */
+}
+
+/* Preformatted Code Block Styling */
+pre {
+    background: #f4f4f4; /* Light gray background to match code block style */
+    padding: 10px 15px; /* Add padding for a clean, spacious look */
+    font-family: 'Assistant', monospace; /* Use Assistant for consistency with a monospace fallback */
+    font-size: 95%; /* Similar size to `.code` blocks */
+    color: #333; /* Dark text color for readability */
+    border-radius: 5px; /* Slightly rounded edges */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
+    overflow-x: auto; /* Allows horizontal scrolling if code is too wide */
+    line-height: 1.5; /* Match other line-heights */
+    margin-left: 4%; /* Align with paragraph text */
+    margin-right: 4%; /* Additional right margin */
+    margin-top: 1em; /* Space above and below */
+    margin-bottom: 1em;
 }

@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" />
+		<title>Digital Humanities</title>
+	</head>
+	<body>
+		<nav>
+			<a href="../index.xhtml">Home</a>
+			<a href="../syllabus.xhtml">Syllabus</a>
+			<a href="../description.xhtml">Policies</a>
+			<a href="../projects.xhtml">Projects</a>
+			<!-- <a href="assignments.xhtml">Assignments</a> -->
+			<a href="http://dh.obdurodon.org/">Resources</a>
+			<a href="https://bactriana.org">Bactriana</a>
+		</nav>
+		<section>
+			<h1>Geomapping from XML: First Assignment</h1>
+		</section>
+		<section>
+			<h3 id="partone">Part I: The Big Picture</h3>
+			<p>This class focuses on
+				<em>textual</em>
+				 analysis using XML and related technologies. Some courses (such as the <a
+					href="https://www.worldhistory.pitt.edu/education/digital-atlas-design-internship"
+					>Digital Atlas Design Internship</a>) are deficated geospatial methods, such as
+				creating illustrative, interactive, digital maps. Oftentimes digital mappers find
+				some kind of preexisting, tabular data that associates some kind of data with a
+				geographical coordinate as the basis for these projects.</p>
+			<p>However, textual methods, and geospatial ones, are not necessarily as separate as
+				they might seem at first glance. The XML hierarchy of a text provides structure that
+				can be transformed into geographical data. For instance:</p>
+			<ul>
+				<li>If you the textual references to a location are marked up (e.g., <span
+						class="code-snippet">&lt;location
+						uid="pittsburgh"&gt;Pittsburgh&lt;/location&gt;</span>) you could use XSLT
+					to count the number of references to a given place and make a <a
+						href="https://storymaps.arcgis.com/stories/3ef205864b434afe9365dbe3476c646d"
+						>heatmap</a> to visualize the density of occurrences in your text.</li>
+				<li>Perhaps you are working with a travelogue, such as Marco Polo. Connecting the
+					coordinates of locations mentioned in the text would illustrate the travel
+					route.</li>
+			</ul>
+			<p> If we want to extract geographic information from our XML text, we need three
+				ingredients: </p>
+			<ol>
+				<li> Some kind of data to associate with a unique location ID: <ul>
+						<li>Good news: we can already do that using XPath and XSLT!</li>
+					</ul>
+				</li>
+				<li>A way of associating the location unique ID with a set of coordinates. <ul>
+						<li>There are a number of ways to do this: we will learn to use the <a
+								href="https://xsltdev.com/xslt/xsl-map/">XSLT map function</a>,
+							which creates a "dictionary" mapping one-to-one correspondences (no
+							relation to "mapping" in the geographical sense!).</li>
+					</ul>
+				</li>
+				<li>We need to output to a usable format for geospatial purposes.<ul>
+						<li>We will learn to use the GeoJSON format (though tabular data is also
+							viable option).</li>
+					</ul>
+				</li>
+			</ol>
+		</section>
+		<section>
+			<h3 id="parttwo">Part II: Anatomy of a GeoJSON File</h3>
+			<p>As a first step, we need to understand our output format, which brings us to GeoJSON.
+				GeoJSON is a format for encoding a variety of geographic data structures becaus it
+				is (relatively) human-readable, and can associate descriptive and quantitative data
+				with points, lines, and polygons. Read <a
+					href="https://medium.com/@dmitry.sobolevsky/geojson-tutorial-for-beginners-ce810d3ff169"
+					>this tutorial, which explains the basic format and syntax of GeoJSON</a>. Like
+				all coding languages, the format is finicky: slightly messing up commas and spaces
+				can result in an unreadable output file, so pay careful attention.</p>
+			<p>The linked tutorial clearly explains how to format different kinds of shapes using
+				GeoJSON. One additional point to consider is the
+				<em>proprerties</em>
+				 field associated with a GeoJSON file:</p>
+			<pre class="code">
+		{
+		  "type": "Feature",
+		  "geometry": {
+			    "type": "Point",
+			    "coordinates": [-79.91877256652567,40.441063867901882]
+		  			},
+		  "properties": 	{
+			    "name": "Commonplace Coffee",
+			    "type": "coffee_shop",
+			    "occupancy": "15"
+		  				}
+		}
+			</pre>
+			<p>You can create any number of properties to associate with a given object (geographic
+				point or set of points) and assign them any values you wish. For instance, this is
+				where you might assign a numerical value: for instance, number of mentions of a
+				given place, which you could use to make a heat map. This would be the equivalent of
+				an additional column of information associated with the coordinates if your output
+				was in tabular format (e.g., CSV).</p>
+
+		</section>
+		<section>
+			<h3 id="partthree">Part III: The XSLT Map Function</h3>
+			<p>In order to map something, it is not enough to know that we are dealing with a string
+				that refers to a location: we also need to know the lattitude and longitude. In
+				principle, we could simply encode the coordinates as attributes (e.g., <span
+					class="code">&lt;location uid=&quot;pittsburgh&quot; lattitude=&quot;-79&quot;
+					longitude=&quot;40&quot;&gt;Steel City&lt;/location&gt;</span>), but that would
+				be cumbersome and repetitive. Instead, we are going to learn about the <a
+					href="https://xsltdev.com/xslt/xsl-map/">XSLT map function</a>. (Warning: this
+				function is called "map" because it maps one value to another value,
+				<em>not</em>
+				 because it has anything specifically to do with the topic of this assignment!)</p>
+			<p>The XSLT map function essentially translates between key-value pairs. Then you can
+				call upon the map to swap in the new value every time it sees a key value. For
+				instance, in our code for this assignement:</p>
+			<pre class="code">
+    &lt;xsl:variable name=&quot;coordinates&quot; as=&quot;map(xs:string, xs:string)&quot;&gt;
+        &lt;xsl:map&gt;
+            &lt;xsl:map-entry key=&quot;'commonplace'&quot; select=&quot;' -79.91877256652567,40.441063867901882'&quot;/&gt;
+            &lt;xsl:map-entry key=&quot;'ascend'&quot; select=&quot;' -79.8961075427762,40.45097067558358'&quot;/&gt;
+            &lt;xsl:map-entry key=&quot;'posvar'&quot; select=&quot;' -79.95426787957021,40.44125235992703'&quot;/&gt;
+        &lt;/xsl:map&gt;
+    &lt;/xsl:variable&gt;
+</pre>
+
+			<p>This is how we can get from a unique ID (e.g., <span class="code-snippet"
+					>&lt;location uid="pittsburgh"&gt;Pittsburgh&lt;/location&gt;</span>) to the
+				coordinate values without having to encode the coordinates every time the place is
+				mentioned in our text.</p>
+		</section>
+		<section>
+			<h3 id="partfour">Part IV: Points Around Pittsburgh</h3>
+			<p>Now let's experiment with moving from XML input information to XSLT transformation to
+				a GeoJSON output:</p>
+			<ol>
+				<li>Download the sample XML and XSLT files by cloning them from the <a
+						href="https://github.com/pickettj/dh-class-repo/tree/cd60efae1e8664a68921aaea0388358226db9393/geomapping"
+						>class Github repository</a>.</li>
+				<li>Make sure you can run them as-is to produce a viable GeoJSON file: <ul>
+						<li><a href="https://github.blog/news-insights/geojson-previewing/">Github
+								automatically reads and previews GeoJSON files</a>, so if you push
+							the output file to your personal repo, you should see a map with a few
+							points.</li>
+						<li>You can also test your results by <a href="https://geojsonlint.com/"
+								>copying and pasting the GeoJSON code to this website</a>.</li>
+					</ul>
+				</li>
+				<li>Now embellish the code by adding additional stops in your journey, which will
+					require updating your XSLT map with additional coordinates (which you can pull
+					from Google).</li>
+			</ol>
+		</section>
+		<section>
+			<h3 id="partfive">Part V: Chart Your Journey</h3>
+			<p>Now that you have some dots, see if you can write new XSLT code to connect the points
+				on your journey "as the crow flies." </p>
+			<p>The following example illustrates the format for a line in GeoJSON. Think about which
+				parts of this would need to be dynamically produced by an XSLT transformation.</p>
+			<pre class="code">
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-79.91877256652567, 40.441063867901882],
+          [-79.91762256652567, 40.440063867901882],
+          [-79.91662256652567, 40.439063867901882]
+        ]
+      },
+      "properties": {
+        "name": "line_1"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-79.91562256652567, 40.438063867901882],
+          [-79.91462256652567, 40.437063867901882],
+          [-79.91362256652567, 40.436063867901882]
+        ]
+      },
+      "properties": {
+        "name": "line_2"
+      }
+    }
+  ]
+}
+			</pre>
+			<p>Your XML file is organized into days, and for each day you have any number of
+				locations mentioned. For each day you want to give a unique name for the line (one
+				possibility is using the <span class="code">position()</span> function to determine
+				which day you are on).</p>
+			<p>Then for each <span class="code">&lt;location/&gt;</span> element you will need to
+				(a) pull in the unique location ID, and then (b) use your map function to swap it
+				for the coordinates.</p>
+		</section>
+		<section>
+			<h3>Submitting the Assignment</h3>
+			<p>This is an in-class assignment. So long as you have updated at least some part of the
+				XML and XSLT, submit whatever you have completed (even if you were unable to solve
+				Part IV).</p>
+		</section>
+	</body>
+</html>
