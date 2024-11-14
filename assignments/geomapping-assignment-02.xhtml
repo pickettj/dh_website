@@ -74,12 +74,16 @@
 			</pre>
 			<p>So the fields we need to supply dynamically with our transformation are (a) the
 				coordinates, and (b) the count.</p>
-			<p>For the purposes of this exercise, we are providing the coordinates for you in the
-				form of an XSLT map, which you can find at this link. You can use it to swap out the
-				unique location ID for the coordinates themselves.</p>
-			<p>We produced the map by running an XSLT transformation on the Mitford Site Index and
-				then copying in that code into a new stylesheet. You should be able to read and
-				understand the XSLT that produced the provided map.</p>
+			<p>For the purposes of this exercise, we are <a
+					href="https://github.com/pickettj/dh-class-repo/blob/513d0ad930251391859653532255fca18aa62a7a/geomapping/geomapping-assignment-2_map-coordinates_supplied.xsl"
+					>providing the coordinates for you in the form of an XSLT map-function, which
+					you can find at this link</a>. You can use it to swap out the unique location ID
+				for the coordinates themselves.</p>
+			<p>We produced the map by running an XSLT transformation on the <a
+					href="https://digitalmitford.org/si.xml">Mitford Site Index</a> and then copying
+				in that code into a new stylesheet. You should be able to read and understand <a
+					href="https://github.com/pickettj/dh-class-repo/blob/513d0ad930251391859653532255fca18aa62a7a/geomapping/mitford-si_to_key.xsl"
+					>the XSLT that produced the provided map</a>.</p>
 			<p>Now on to the data we wish to extract from the XML: to get a sequence of unique
 				places, you can declare a variable that uses the <span class="code-snippet"
 					>distinct-values()</span> function. Then you can iterate over the unique values
@@ -138,8 +142,10 @@
 					>&lt;xsl:template match=&quot;/&quot;&gt; </span> it will fire once for each
 				document in the collection.)</p>
 		</section>
-		<section><h3 id="partsix">What to Submit</h3>
-		<p>Please submit both your XSLT transformation and a map image file(s) you produced using ArcGIS.</p>
+		<section>
+			<h3 id="partsix">What to Submit</h3>
+			<p>Please submit both your XSLT transformation and a map image file(s) you produced
+				using ArcGIS.</p>
 		</section>
 	</body>
 </html>
