@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" />
+		<title>Digital Humanities</title>
+	</head>
+	<body>
+		<nav>
+			<a href="../index.xhtml">Home</a>
+			<a href="../syllabus.xhtml">Syllabus</a>
+			<a href="../description.xhtml">Policies</a>
+			<a href="../projects.xhtml">Projects</a>
+			<!-- <a href="assignments.xhtml">Assignments</a> -->
+			<a href="http://dh.obdurodon.org/">Resources</a>
+			<a href="https://bactriana.org">Bactriana</a>
+		</nav>
+		<section>
+			<h1>Geomapping from XML: Second Assignment</h1>
+		</section>
+		<section>
+			<h3 id="partone">Overview: "Real Life" XML to GeoJSON to ArcGIS Styling</h3>
+			<p>For this assignment, you will work with an XML corpus that has already been tagged
+				with geographic information - <a href="https://digitalmitford.org/">Digital
+					Mitford</a> - and use XSLT to transform XML into GeoJSON. You will then use the
+				output GeoJSON file as in input into ArcGIS, which you will use to create your own
+				maps. You already know to achieve this from the <a
+					href="geomapping-assignment-01.xhtml">previous assignment</a>. The main
+				differences are that (a) you will be writing your own XSLT transformation, (b) you
+				will be using Real Life data, and (c) you will be learning to style the output data
+				with ArcGIS.</p>
+		</section>
+		<section>
+			<h3 id="parttwo">Step One: Assemble Your Corpus</h3>
+			<p>Head on over to <a href="https://digitalmitford.org/lettersInterface.php">Digital
+					Mitford</a> and you can find an index of the reading views of the encoded
+				letters. For now, your corpus can be a single letter: pick something that looks
+				interesting. Once you click through to the reading view of the letter, you can
+				download the XML from a link at the top that says "TEI encoding of this letter."</p>
+			<p>Now you are going to want to open up your XML document in oXygen and explore the
+				structure: in what element / attribute can you find a suitable unique identifier?
+				Remember, to get the coordinates, you are going to need a UID to use with the map
+				function.</p>
+		</section>
+		<section>
+			<h3 id="partthree">Step Two: Use XSLT to Derive Geographic Data from the XML
+				Document</h3>
+			<p>Next comes the fun part: exploit the power of XML structure for geographic analysis.
+				At a minumum, our goal will be to first determine how many unique locations are
+				mentioned in the corpus, and then count how many times each of those locations are
+				referenced. If we can capture that location count as a GeoJSON property, it will be
+				pretty straightforward to later style our geographic data based on that property
+				value using something like ArcGIS (e.g., how about circles sized based on number
+				references in the corpus?).</p>
+			<p>Our target output is something like this, but with more points:</p>
+			<pre class="code">
+		{ 
+		    "type": "FeatureCollection", 
+		    "features": [
+		        { 
+		            "type": "Feature", 
+		            "geometry": { 
+		                "type": "Point", 
+		                "coordinates": [ -3.716667, 50.716667 ] 
+		            }, 
+		            "properties": {
+		                "name": "Devonshire_county", 
+		                "count": "4"
+		            } 
+		        } 
+		    ] 
+		}	
+			</pre>
+			<p>So the fields we need to supply dynamically with our transformation are (a) the
+				coordinates, and (b) the count.</p>
+			<p>For the purposes of this exercise, we are providing the coordinates for you in the
+				form of an XSLT map, which you can find at this link. You can use it to swap out the
+				unique location ID for the coordinates themselves.</p>
+			<p>We produced the map by running an XSLT transformation on the Mitford Site Index and
+				then copying in that code into a new stylesheet. You should be able to read and
+				understand the XSLT that produced the provided map.</p>
+			<p>Now on to the data we wish to extract from the XML: to get a sequence of unique
+				places, you can declare a variable that uses the <span class="code-snippet"
+					>distinct-values()</span> function. Then you can iterate over the unique values
+				in your variable with a <span class="code-snippet">&lt;xsl:for-each/&gt;</span>
+				loop. Note: once you are inside the for-loop iterating over the set of unique place
+				names, you are effectively disconnected from the XML tree (because you created a
+				variable that is a sequence of strings). One solution is to create a document-node
+				variable, and then call it inside the for-loop: <span class="code-snippet"
+					>&lt;xsl:variable name=&quot;root&quot; as=&quot;document-node()&quot;
+					select=&quot;/&quot;/&gt; </span></p>
+		</section>
+		<section>
+			<h3 id="partfour">Learning Basic ArcGIS</h3>
+			<p>Now that you have a valid GeoJSON file, what to do with it? GeoJSONs contain
+				information about geometry, but do not inherently contain any styling information:
+				for that, you have to decide what application or coding language you want to work
+				with. Coding languages like R and Python have more robust, non-GUI libraries that
+				produce maps and can read GeoJSON. QGIS is an open-source, free GUI alternative.
+				These are all strong options, depending on your needs, and there are others as
+				well.</p>
+			<p>Since Pitt has a licence for the online version (requiring no installation), we are
+				going to work with ArcGIS for this exercise. Please consult these instructions for
+				using your GeoJSON file to design your own map.</p>
+		</section>
+		<section>
+			<h3 id="partfive">Collections: Assembling a Corpus of Multiple XML Documents</h3>
+			<p>What's cooler than deriving geographic data from one XML document? Extracting it from
+				<em>all</em>
+				 the documents.</p>
+			<p>In your assignments so far, you've been taking one single XML document as the input
+				for your XSLT transformation. But you can also use a <span class="code-snippet"
+					>collection()</span> of documents as your input. For our purposes in this
+				assignment, doing so will allow you to derive much more interesting results: one
+				single Mitford letter will generally only reference a handful of locations, but if
+				you consider many of the letters together, you can answer an actual research
+				question (e.g., "what did Mitford's conceptual world look like?").</p>
+			<p>First, in your oXygen debugging view, select "( None ) " for your XML input: we will
+				specify the input in the code itself.</p>
+			<p>Next, create a variable with a collection as the value: <span class="code-snippet"
+					>&lt;xsl:variable name=&quot;mitford-corpus&quot;
+					as=&quot;document-node()+&quot;
+					select=&quot;collection('/Users/YourPath')&quot;/&gt; </span>. This variable is
+				specifying the
+				<em>path</em>
+				 to the directory where you are storying all of the XML files you want to use in
+				this collection. If there are any files in that directory in formats not recognized
+				by your XSLT transformation, your code won't work. To prevent problems, you can add
+				an extra command to the end of your path telling it to ignore anything that is not
+				an XML file: <span class="code-snippet">&lt;xsl:variable
+					name=&quot;mitford-corpus&quot; as=&quot;document-node()+&quot;
+					select=&quot;collection('/Users/YourPath?select=*.xml')&quot;/&gt; </span></p>
+			<p>You are nearly there: all you have to do to make this work is match this collection
+				variable you created instead of the document node: <span class="code-snippet"
+					>&lt;xsl:template name=&quot;xsl:initial-template&quot;&gt; </span>. (Note that
+				if you declare a match for the document node (<span class="code-snippet"
+					>&lt;xsl:template match=&quot;/&quot;&gt; </span> it will fire once for each
+				document in the collection.)</p>
+		</section>
+		<section><h3 id="partsix">What to Submit</h3>
+		<p>Please submit both your XSLT transformation and a map image file(s) you produced using ArcGIS.</p>
+		</section>
+	</body>
+</html>
