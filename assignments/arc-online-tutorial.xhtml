@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <link rel="stylesheet" type="text/css" href="../css/style.css" />
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" />
+        <title>Digital Humanities</title>
+    </head>
+    <body>
+        <h1>ArcGIS Online Tutorial</h1>
+        <h2>Background</h2>
+        <section>
+            <p> For this <a href="geomapping-assignment-02.xhtml">class/assignment</a>, we will be
+                producing GeoJSON file using XSLT. This tutorial will walk you through the steps for
+                making a map from that GeoJSON file using ArcGIS. Note, however, that there are many
+                other applications that can read GeoJSON files as an input: <a
+                    href="https://www.qgis.org/">QGIS</a> (an open-source, free GUI), <a
+                    href="https://maximromanov.github.io/rgis_univie2021/">R</a>, and <a
+                    href="https://leafletjs.com/">Leaflet</a>, to name a few. We are starting with
+                ArgGIS because Pitt has a subsription to an online version that requires no
+                installation.</p>
+            <!--<ul>
+                <li>Open up an Excel Document</li>
+                <li>You need at least 4 "columns:" a unique id (ie: 1, 2, 3, ...); a name (for
+                    example, the location's name); and an x and y coordinates.</li>
+                <li>You can find coordindates by hand by searching the location on Google Maps,
+                    right clicking on the red location icon, and then clicking on the coordinates
+                    that pop up, which will automatically copy them. </li>
+                <li>You can use more columns as needed for your project. For example, in this
+                    tutorial, my CSV has a "count" column, to count the number of classes I had in
+                    each campus building.</li>
+                <li>Save the sheet as a CSV (Comma Separated Value) file.</li>
+            </ul>
+            <p>Your document should look something like: </p>
+            <img src="csv-example.jpg" alt="example" />-->
+        </section>
+        <section>
+            <h2>Creating a Map!</h2>
+            <p>First, grab some sample GeoJSON input data, <a
+                    href="https://github.com/pickettj/dh-class-repo/blob/main/geomapping/central_asia_sample_data.geojson"
+                    >such as this file detailing the geographic origins of Central Asian
+                    scholars</a> in the late nineteenth century.</p>
+            <p> Then log in to your ArcGIS Online account. Pitt pays for the licensing, so <b>you
+                    must login through Pitt.</b> This can be done by going to <a
+                    href="https://www.arcgis.com/index.html">ArcGIS Online</a>, clicking "Sign In"
+                in the upper right hand corner, and choosing to sign in through an organization and
+                finding Pitt. </p>
+            <h3>Creating a Feature Layer from GeoJSON</h3>
+            <p> Once you are logged in, follow the next steps to add data to your content. </p>
+            <ol>
+                <li>Click on Content on the navigation bar.</li>
+                <li>Click on "New item" in the upper left hand corner.</li>
+                <li>From this prompt you can open from th Github URL directly; or drag or uplaod a
+                    file from your harddrive</li>
+                <li>Choose the first (default) item - "Add [file name] and create a hosted feature
+                    layer or table." We want to create a layer. We add layers to create maps! Click
+                    next.</li>
+                <li>Check to make sure that the types are correct and then click next.</li>
+                <!--<li>If your CSV names are "lat" "latitude" "long" or "longitude," ArcGIS normally
+                    recognizes these correctly as the location field types. However, double check
+                    this and then click next.</li>-->
+                <li>Give the item a title (or accept the default title based on the file name).</li>
+                <li>Add a couple tags. This would allow someone else to search for your data.</li>
+                <li>Add a summary, giving credit where it is due.</li>
+                <li>Click Save; ArcGIS will automatically open the overview of the layer you just
+                    created.</li>
+            </ol>
+            <h3>Opening the Feature Layer in a Map</h3>
+            <p>Click on "Open in Map Viewer" to see the layer you just created. Here, you will see
+                that ArcGIS automatically placed all of the items from your CSV on the map. It used
+                points as default. You can click around here to get a feel for the online software.
+                One thing to note is that you can click on a point and a "pop-up" will show up. This
+                will show all of the information you imported about that point from your
+                GeoJSON.</p>
+            <h3>Styling Your Map</h3>
+            <p>There are so many cool things you can do to style a map in ArcGIS online. Just like
+                all of the other things you have used in this course, this is super google-able. If
+                you want to try something else from this tutorial, google it! In this tutorial, I am
+                going to show a couple of important ways to stylize a map: </p>
+            <h4>Adding More Layers</h4>
+            <p>You can continue to upload data to ArcGIS Online, following the steps above.Then, in
+                a map, you can click the "Add" button under the "Layers" Pane and search through
+                your content (or public content in the Living Atlas) to add to your map. You can
+                toggle these layers on and off by clicking on the eye-shaped button. </p>
+            <h4>Styling Point Data</h4>
+            <p>Let's say I am making a map of all of the buildings on campus that I have had class.
+                I don't like the default colors chosen (or, more realistically, I have multiple
+                layers and want to style them with different colors). This can be done by: </p>
+            <ol>
+                <li>Clicking the three dots on the layer you want to style (in the Layer Pane on the
+                    left)</li>
+                <li>Choose "Show Properties", and a new pane should pop up on the right.</li>
+                <li>Click "edit layer style."</li>
+                <li>Choose "style options."</li>
+                <li>Click the little pencil icon to choose a new style.</li>
+                <li>I am going to choose the circle under "Basic Shapes" and then click the back
+                    arrow (next to "Change Symbol").</li>
+                <li>Staying in this pop-up, you can edit the color, size, outline, etc.</li>
+                <li>I am going to make, for example, my circles a light purple, 18 px, 0%
+                    transparency, with a black 1.5px outline.</li>
+            </ol>
+            <p><b>NOTE:</b> Maps don't automatically save! You <b>must save them manually</b>. This
+                can be done on the left-most pane.</p>
+            <p>Here is what my map looks like with this point data:</p>
+            <img src="point-data-map.jpg" alt="map1" />
+            <h4>Aggregation Data</h4>
+            <p>The provided GeoJSON file has an "Origin" property associated with each coordinate:
+                these are the number of scholars in nineteenth century Central Asia who originated
+                from the location in question. Let's size the points on the map based on that number
+                to visualize the geographic origins of Central Asian elites:</p>
+            <ol>
+                <li>Clicking the three dots on the layer you want to style (in the Layer Pane on the
+                    left): select "Show properties.</li>
+                <li>Select "Edit layer style.</li>
+                <li>Select "+ Field"</li>
+                <li>Select "Origins" and then "Add"</li>
+            </ol>
+            <p>That will get you to some basic circles proportionately sized to a Property of your
+                GeoJSON: which is exactly what you need to do for this assignment (but using your
+                own data derived from Digital Mitford).</p>
+        </section>
+        <h3>Next Steps With GIS Beyond This Class</h3>
+        <section>
+            <p>recommendations here - internship, ArcGIS Pro through library, further courses
+                (online and at Pitt) </p>
+        </section>
+        <section>
+            <em>special thanks to Maddie Franz for designing this tutorial.</em>
+        </section>
+    </body>
+</html>
