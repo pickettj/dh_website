@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<link rel="stylesheet" type="text/css" href="../css/style.css" />
+		<link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" />
+		<title>Digital Humanities</title>
+	</head>
+	<body>
+		<nav>
+			<a href="../index.xhtml">Home</a>
+			<a href="../syllabus.xhtml">Syllabus</a>
+			<a href="../description.xhtml">Policies</a>
+			<a href="../projects.xhtml">Projects</a>
+			<!-- <a href="assignments.xhtml">Assignments</a> -->
+			<a href="http://dh.obdurodon.org/">Resources</a>
+			<a href="https://bactriana.org">Bactriana</a>
+		</nav>
+		<section>
+			<h1>Geomapping from XML: Second Assignment</h1>
+		</section>
+		<section>
+			<h3 id="partone">The Task</h3>
+			<p><a href="../assignments/geomapping-assignment-02.xhtml">This assignment</a> required
+				you to work with an XML corpus that has already been tagged with geographic
+				information - <a href="https://digitalmitford.org/">Digital Mitford</a> - and use
+				XSLT to transform XML into GeoJSON. You then used the output GeoJSON file as in
+				input into ArcGIS, which you will use to create your own maps. Much of the code will
+				be similar to the <a href="geomapping-assignment-01.xhtml">previous assignment</a>,
+				but with a few twists, as detailed below.</p>
+		</section>
+		<section>
+			<h3>The Simplest Solution: One Input XML</h3>
+			<p> One solution for deriving geospatial data from a single XML file is as follows: </p>
+
+			<pre class="code">
+&lt;xsl:stylesheet xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+    exclude-result-prefixes="#all"
+    version="3.0"&gt;
+
+    &lt;xsl:output method="text" indent="yes"/&gt;
+
+    <!-- Declare stylesheet variable -->
+    &lt;xsl:variable name="root" as="document-node()" select="/" /&gt;
+
+    <!-- Collect distinct location UIDs -->
+    &lt;xsl:variable name="unique_locations_initial" as="xs:string+"
+        select="distinct-values(//placeName/@ref)" /&gt;
+
+    &lt;xsl:variable name="unique_locations" as="xs:string+" select="
+            for $loc in $unique_locations_initial
+            return translate($loc, '#', '')" /&gt;
+
+    &lt;xsl:variable name="loc_count" as="xs:integer" select="count($unique_locations)" /&gt;
+
+    <!-- Main Code: Producing the GeoJSON -->
+    &lt;xsl:template match="/"&gt;
+        { 
+        "type": "FeatureCollection", 
+        "features": [
+        &lt;xsl:for-each select="$unique_locations"&gt;
+            &lt;xsl:variable name="coord" select="map:get($coordinates, .)" /&gt;
+
+            <!-- Only include the feature if coordinates exist -->
+            &lt;xsl:if test="$coord"&gt;
+                { 
+                "type": "Feature", 
+                "geometry": { 
+                "type": "Point", 
+                "coordinates": [ &lt;xsl:value-of select="$coord" /&gt; ] 
+                }, 
+                "properties": {
+                "name": "&lt;xsl:value-of select='.' /&gt;", 
+                "count": "&lt;xsl:value-of select='count($root//placeName[@ref = concat('#', current())])' /&gt;"
+                } 
+                }
+                &lt;xsl:if test="position() != last()"&gt;, &lt;/xsl:if&gt;
+            &lt;/xsl:if&gt;
+        &lt;/xsl:for-each&gt;
+        ] 
+        }
+    &lt;/xsl:template&gt;
+
+    <!-- Location UID to look up coordinates (provided) -->
+    &lt;xsl:variable name="coordinates" as="map(xs:string, xs:string)"&gt;
+        &lt;xsl:map&gt;
+            &lt;xsl:map-entry key="'Abingdon'" select="'-1.2879528999999366,51.67078'" /&gt;
+            &lt;xsl:map-entry key="'Adriatic_Sea'" select="'15,43'" /&gt;
+            &lt;xsl:map-entry key="'Agincourt'" select="'6.236217000000011,48.73204'" /&gt;
+            <!-- (continues) -->
+        &lt;/xsl:map&gt;
+    &lt;/xsl:variable&gt;
+
+&lt;/xsl:stylesheet&gt;
+</pre>
+			<p>Let's go through some of the tricky bits of the above code: </p>
+			<p>One challenge is counting the number of references to all of the
+				<em>unique</em>
+				 place IDs: first, we want to collect a sequence of all the locations mentioned in
+				the document, then we want to know how many times each of those unique locations was
+				mentioned. The first part is straightforward: we already have an XPath function that
+				you are familiar with from previous assignments (<span class="code-snippet"
+					>distinct-values()</span>).</p>
+			<p>Slightly more challenging is how to iterate over the sequence of unique location IDs
+				while accessing information from the XML tree. In principle, we ought to be able to
+				use that sequence of unique values to count instances in the XML document with
+				XPath: <span class="code-snippet">count(placeName[@ref =
+					'Unique_Location_ID')</span>. The problem is that our <span class="code-snippet"
+					>$unique_locations</span> variable is a sequence of strings, which means it has
+				no direct knowledge of the XML tree from whence it was derived in the first place.
+				To work around this issue, we can preserve the context we want to work from - the
+				document node - as a variable: <span class="code-snippet">&lt;xsl:variable
+					name="root" as="document-node()" select="/" /&gt;</span>. Then, when we are
+				inside our for-each loop, we can invoke the root of the XML document explicitly,
+				rather than assume it from the context of the template match (as you are used to
+				doing): <span class="code-snippet">&lt;xsl:value-of
+					select='count($root//placeName[@ref = current()])' /&gt;</span></p>
+			<p>That workaround (declaring the root of the source XML document as a variable) gets us
+				most of the way there. However, there is another, less problematic issue that may
+				nevertheless trip us up: our unique location IDs have a hashtag appended to the
+				front of them (this is a "<a href="https://en.wikipedia.org/wiki/URI_fragment"
+					>fragment identifier</a>), whereas our provided map key for coordinates has the
+				raw unique IDs. There are a number of ways to correct for this. The answer key
+				strips the # from the list of unique IDs (<span class="code-snippet">translate($loc,
+					'#', '')</span>) but then re-appends it for the purpose of counting up the
+				number of references to a given location in the source document (<span
+					class="code-snippet">count($root//placeName[@ref = concat('#',
+					current())])</span>).</p>
+			<p>Finally, the answer key has a few if-statements to protect against possible errors.
+					<span class="code-snippet">&lt;xsl:if test="$coord"&gt;</span> makes sure that
+				if our provided map key of coordinates for each unique location ID does not actually
+				have any data we will not end up with empty coordinates in our GeoJSON file, which
+				would invalidate it. Then we also control for a pesky ending comma, which would also
+				invalidate the GeoJSON file: <span class="code-snippet">&lt;xsl:if test="position()
+					!= last()"&gt;, &lt;/xsl:if&gt;</span></p>
+		</section>
+		<section>
+			<p>The answer key above gets us to a valid GeoJSON file. But, with only a few locations
+				mentioned in a single document, does that really make for a very interesting map? In
+				Real Life, we would want to produce a GeoJSON from a whole corpus of many input XML
+				documents. This brings us to XSLT <span class="code-snippet">collection()</span>
+				(which has applications far beyond geospatial analysis!).</p>
+			<p>The following answer key will produce a similar GeoJSON file to the one produced by
+				the initial answer key, but with multiple input XML files. Note that you will need
+				to select "( None ) " for your XML input within the oXygen window, and supply your
+				own directory path.</p>
+
+
+			<pre class="code">
+&lt;xsl:stylesheet xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:math="http://www.w3.org/2005/xpath-functions/math"
+    xmlns:map="http://www.w3.org/2005/xpath-functions/map" exclude-result-prefixes="#all"
+    version="3.0"&gt;
+    
+    &lt;xsl:output method="text" indent="yes"/&gt;
+    
+    &lt;xsl:variable name="mitford-corpus" as="document-node()+"
+        select="collection('./mitford_test_collection?recurse=yes;select=*.xml')"/&gt;
+
+    &lt;xsl:variable name="root" as="document-node()" select="/"/&gt;
+
+    &lt;xsl:variable name="unique_locations_initial" as="xs:string+"
+        select="distinct-values($mitford-corpus//placeName/@ref)"/&gt;
+
+    &lt;xsl:variable name="unique_locations" as="xs:string+" select="
+        for $loc in $unique_locations_initial
+        return translate($loc, '#', '')"/&gt;
+
+    &lt;xsl:variable name="loc_count" as="xs:integer" select="count($unique_locations)"/&gt;
+
+    &lt;xsl:template name="xsl:initial-template"&gt;
+        {
+        "type": "FeatureCollection", 
+        "features": [
+        &lt;xsl:for-each select="$unique_locations"&gt;
+            &lt;xsl:variable name="coord" select="map:get($coordinates, .)"/&gt;
+
+            &lt;xsl:if test="$coord"&gt;
+                { 
+                "type": "Feature", 
+                "geometry": { 
+                "type": "Point", 
+                "coordinates": [ &lt;xsl:value-of select="$coord"/&gt; ] 
+                }, 
+                "properties": {
+                "name": "&lt;xsl:value-of select='.'/&gt;", 
+                "count": "&lt;xsl:value-of select='count($mitford-corpus//placeName[@ref = concat('#', current())])'/&gt;"
+                } 
+                }
+                &lt;xsl:if test="position() != last()"&gt;, &lt;/xsl:if&gt;
+            &lt;/xsl:if&gt;
+        &lt;/xsl:for-each&gt;
+        ] 
+        }
+    &lt;/xsl:template&gt;
+
+    &lt;xsl:variable name="coordinates" as="map(xs:string, xs:string)"&gt;
+        &lt;xsl:map&gt;
+            &lt;xsl:map-entry key="'Abingdon'" select="'-1.2879528999999366,51.67078'"/&gt;
+            &lt;xsl:map-entry key="'Adriatic_Sea'" select="'15,43'"/&gt;
+            &lt;xsl:map-entry key="'Agincourt'" select="'6.236217000000011,48.73204'"/&gt;
+            &lt;xsl:map-entry key="'Aldermaston'" select="'-1.150,51.383'"/&gt;
+        &lt;/xsl:map&gt;
+    &lt;/xsl:variable&gt;
+
+&lt;/xsl:stylesheet&gt;
+</pre>
+			<p>To declare the collection, all you need is the path to your directory: <span
+					class="code-snippet">./mitford_test_collection</span>. The dot means that this
+				example is a
+				<em>relative path</em>
+				 , i.e. it will look for the named directory from the context of wherever you have
+				saved your XSLT file. You could also specify the absolute path. <span
+					class="code-snippet">?recurse=yes;select=*.xml</span> are toggles: the first
+				tells it to consider the path "recursively," which means that it will also use all
+				descendant directories nested within the path directory; the second part tells it to
+				ignore anything that isn't an XML file.</p>
+
+
+
+
+
+
+
+
+
+		</section>
+		<section>
+			<h3 id="partthree">Step Two: Use XSLT to Derive Geographic Data from the XML
+				Document</h3>
+			<p>Next comes the fun part: exploit the power of XML structure for geographic analysis.
+				At a minumum, our goal will be to first determine how many unique locations are
+				mentioned in the corpus, and then count how many times each of those locations are
+				referenced. If we can capture that location count as a GeoJSON property, it will be
+				pretty straightforward to later style our geographic data based on that property
+				value using something like ArcGIS (e.g., how about circles sized based on number
+				references in the corpus?).</p>
+			<p>Our target output is something like this, but with more points:</p>
+			<pre class="code">
+		{ 
+		    "type": "FeatureCollection", 
+		    "features": [
+		        { 
+		            "type": "Feature", 
+		            "geometry": { 
+		                "type": "Point", 
+		                "coordinates": [ -3.716667, 50.716667 ] 
+		            }, 
+		            "properties": {
+		                "name": "Devonshire_county", 
+		                "count": "4"
+		            } 
+		        } 
+		    ] 
+		}	
+			</pre>
+			<p>So the fields we need to supply dynamically with our transformation are (a) the
+				coordinates, and (b) the count.</p>
+			<p>For the purposes of this exercise, we are <a
+					href="https://github.com/pickettj/dh-class-repo/blob/main/geomapping/geomapping-assignment-2_map-coordinates_supplied.xsl"
+					>providing the coordinates for you in the form of an XSLT map-function, which
+					you can find at this link</a>. You can use it to swap out the unique location ID
+				for the coordinates themselves.</p>
+			<p>We produced the map by running an XSLT transformation on the <a
+					href="https://digitalmitford.org/si.xml">Mitford Site Index</a> and then copying
+				in that code into a new stylesheet. You should be able to read and understand <a
+					href="https://github.com/pickettj/dh-class-repo/blob/main/geomapping/mitford-si_to_key.xsl"
+					>the XSLT that produced the provided map</a>.</p>
+			<p>Now on to the data we wish to extract from the XML: to get a sequence of unique
+				places, you can declare a variable that uses the <span class="code-snippet"
+					>distinct-values()</span> function. Then you can iterate over the unique values
+				in your variable with a <span class="code-snippet">&lt;xsl:for-each/&gt;</span>
+				loop. Note: once you are inside the for-loop iterating over the set of unique place
+				names, you are effectively disconnected from the XML tree (because you created a
+				variable that is a sequence of strings). One solution is to create a document-node
+				variable, and then call it inside the for-loop: <span class="code-snippet"
+					>&lt;xsl:variable name=&quot;root&quot; as=&quot;document-node()&quot;
+					select=&quot;/&quot;/&gt; </span></p>
+		</section>
+		<section>
+			<h3 id="partfour">Learning Basic ArcGIS</h3>
+			<p>Now that you have a valid GeoJSON file, what to do with it? GeoJSONs contain
+				information about geometry, but do not inherently contain any styling information:
+				for that, you have to decide what application or coding language you want to work
+				with. Coding languages like R and Python have more robust, non-GUI libraries that
+				produce maps and can read GeoJSON. QGIS is an open-source, free GUI alternative.
+				These are all strong options, depending on your needs, and there are others as
+				well.</p>
+			<p>Since Pitt has a licence for the online version (requiring no installation), we are
+				going to work with ArcGIS for this exercise. <a href="arc-online-tutorial.xhtml"
+					>Please consult these instructions for using your GeoJSON file to design your
+					own map</a>.</p>
+		</section>
+		<section>
+			<h3 id="partfive">Collections: Assembling a Corpus of Multiple XML Documents</h3>
+			<p>What's cooler than deriving geographic data from one XML document? Extracting it from
+				<em>all</em>
+				 the documents.</p>
+			<p>In your assignments so far, you've been taking one single XML document as the input
+				for your XSLT transformation. But you can also use a <span class="code-snippet"
+					>collection()</span> of documents as your input. For our purposes in this
+				assignment, doing so will allow you to derive much more interesting results: one
+				single Mitford letter will generally only reference a handful of locations, but if
+				you consider many of the letters together, you can answer an actual research
+				question (e.g., "what did Mitford's conceptual world look like?").</p>
+			<p>First, in your oXygen debugging view, select "( None ) " for your XML input: we will
+				specify the input in the code itself.</p>
+			<p>Next, create a variable with a collection as the value: <span class="code-snippet"
+					>&lt;xsl:variable name=&quot;mitford-corpus&quot;
+					as=&quot;document-node()+&quot;
+					select=&quot;collection('/Users/YourPath')&quot;/&gt; </span>. This variable is
+				specifying the
+				<em>path</em>
+				 to the directory where you are storying all of the XML files you want to use in
+				this collection. If there are any files in that directory in formats not recognized
+				by your XSLT transformation, your code won't work. To prevent problems, you can add
+				an extra command to the end of your path telling it to ignore anything that is not
+				an XML file: <span class="code-snippet">&lt;xsl:variable
+					name=&quot;mitford-corpus&quot; as=&quot;document-node()+&quot;
+					select=&quot;collection('/Users/YourPath?select=*.xml')&quot;/&gt; </span></p>
+			<p>You are nearly there: all you have to do to make this work is match this collection
+				variable you created instead of the document node: <span class="code-snippet"
+					>&lt;xsl:template name=&quot;xsl:initial-template&quot;&gt; </span>. (Note that
+				if you declare a match for the document node (<span class="code-snippet"
+					>&lt;xsl:template match=&quot;/&quot;&gt; </span> it will fire once for each
+				document in the collection.)</p>
+		</section>
+		<section>
+			<h3 id="partsix">What to Submit</h3>
+			<p>Please submit both your XSLT transformation and a map image file(s) you produced
+				using ArcGIS.</p>
+		</section>
+	</body>
+</html>
