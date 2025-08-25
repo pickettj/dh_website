@@ -1,1391 +1,579 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <!-- XPath report on assignment types by date:
-        
-        //tr/td[count(following-sibling::td) eq 1][preceding-sibling::td]/ul 
-            ! string-join((ancestor::tr/td[1] ! substring(., 1, 10), li/@class) => sort(), ', ')
-    -->
-    <!--#set var="title" value="Syllabus: Spring 2023 (2234)" -->
-    <!--#config timefmt="%Y-%m-%dT%X%z" -->
-    <head>
-        <title><!--#echo var="title" --></title>
-        <!--#include virtual="inc/dh-header.html" -->
-        <link href="css/style_syllabus.css" type="text/css" rel="stylesheet" />
-        <style type="text/css">
-            table,
-            tr,
-            thead,
-            tbody,
-            th,
-            td {
-                /* https://stackoverflow.com/questions/50361698/border-style-do-not-work-with-sticky-position-element */
-                border-collapse: separate;
-                border-spacing: 0;
-            }
-            table {
-                position: relative;
-                padding: 0;
-            }
-            thead {
-                position: sticky;
-                top: 0;
-                z-index: 1;
-            }
-            td:first-child {
-                white-space: nowrap;
-            }
-            td {
-                vertical-align: top;
-            }
-            td > ul {
-                margin: 0;
-                padding: 0 1em 0 1em;
-            }
-            td > ul > li > ul {
-                padding-left: 1em;
-            }
-            tr:not(.guest) td[colspan] {
-                text-align: center;
-                vertical-align: middle;
-            }
-            .non-meeting {
-                background-color: lightblue;
-            }
-            .unit-label {
-                background-color: pink;
-            }
-            .guest {
-                background-color: lightgoldenrodyellow;
-            }</style>
-    </head>
-    <body class="line-numbers">
-        <!--#include virtual="inc/dh-boilerplate.html" -->
-        <main>
-            <nav>
-                <a href="index.xhtml">Home</a>
-                <a href="syllabus.xhtml">Syllabus</a>
-                <a href="description.xhtml">Policies</a>
-                <a href="projects.xhtml">Projects</a>
-                <!-- <a href="assignments.xhtml">Assignments</a> -->
-                <a href="http://dh.obdurodon.org/">Resources</a>
-                <a href="https://bactriana.org">Bactriana</a>
-            </nav>
-            <h1>Syllabus</h1>
-            <table>
-                <thead>
-                    <tr class="non-meeting">
-                        <th rowspan="2">Date</th>
-                        <th colspan="2">Session topics</th>
-                        <th colspan="2">Homework due next time</th>
-                    </tr>
-                    <tr class="non-meeting">
-                        <th>Coding</th>
-                        <th>Digital humanities</th>
-                        <th>Coding, response papers, tests (upload to Canvas unless the assignment
-                            says otherwise)</th>
-                        <th>Postings</th>
-                    </tr>
-                </thead>
-                <tr class="unit-label">
-                    <th colspan="5">Unit: XML</th>
-                </tr>
-                <tr>
-                    <td>Mon, 08-26</td>
-                    <td>
-                        <ul>
-                            <li>Introduction to XML: hierarchy, well-formedness, elements and
-                                attributes</li>
-                            <li>Using the &lt;oXygen/&gt; XML editor</li>
-                            <!-- previously said "Using Oxygen and IDE"-->
-                            <li>
-                                <a href="https://www.imdb.com/title/tt0120737/quotes/">Fellowship of the Rings quotes</a>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>What is (computational) Digital Humanities?</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="misc">If you haven’t done so already, install &lt;oXygen/&gt;
-                                and other software on your personal computer (details, links, and
-                                the &lt;oXygen/&gt; license key, are in a Canvas announcement)</li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/what-is-xml.xhtml">An even gentler
-                                    introduction to XML</a></li>
-                            <!--<li class="misc">Read <a href="zoom-suggestions.xhtml">Studying digital humanities
-                                    via Zoom</a></li>-->
-                            <li class="code">XML exercise 1: Copy the text of <em>one</em> letter by
-                                either <a
-                                    href="http://law2.umkc.edu/faculty/projects/ftrials/wilde/lettersfromwilde.html"
-                                    >Oscar Wilde</a> (please close and ignore the pop-up) or <a
-                                    href="http://www.gutenberg.org/cache/epub/6408/pg6408.html"
-                                    >Anton Chekhov</a> and mark it up in XML using &lt;oXygen/&gt;,
-                                employing whatever markup you consider appropriate. In this and all
-                                other assignments, follow our <a
-                                    href="http://dh.obdurodon.org/file-naming_conventions.xhtml">file-naming
-                                conventions</a>.</li>
-                        </ul>
-                    </td>
-                    <td>None.</td>
-                </tr>
-                <tr>
-                    <td>Wed, 08-28</td>
-                    <td>
-                        <ul>
-                            <!--not going to use slack anymore<li>Using our Slack workspace for questions and discussion</li>-->
-                            <li>Types of markup: descriptive, presentational, procedural</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Sample course project:<ul>
-                                    <li><a href="https://reneedubaich.github.io/folklore/index.xhtml">Women in Folklore</a> (Briana's course project)</li>
-                                </ul></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="read">No prior programming experience? You’re in good
-                                company! Read <a href="http://dh.obdurodon.org/nitle.xhtml"><q>Can humanities undergrads
-                                        learn to code?</q></a> by two former undergraduate
-                                instructors in this course</li>
-                            <li class="code">XML exercise 2: Mark up a text of your choice (any
-                                genre, manageable size, foreign languages welcome)</li>
-                            <li class="response">
-                                <p>Write a 300- to 400-word response paper to either <a
-                                        href="http://ft.obdurodon.org/">Exploring speech in Russian
-                                        fairy tales</a> (you do not have to be able to read Russian
-                                    to do this) or <a href="http://vangogh.obdurodon.org/">Van Gogh
-                                        as a <q>tortured genius</q></a>, discussing the site’s 1)
-                                    identification and treatment of specific research questions, 2)
-                                    utility as a tool for exploring the texts, and 3) effectiveness
-                                    of overall user experience (design, interface, interaction,
-                                    etc.). Post on Canvas (for this and all other response
-                                    assignments).</p>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>None.</td>
-                </tr>
-                <tr>
-                    <td>Fri, 08-30</td>
-                    <td>
-                        <ul>
-                            <li>Document analysis: <a
-                                    href="http://www.online-literature.com/coleridge/640/"><q>Kubla
-                                        Khan</q></a></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Sample course projects: <ul>
-                                    <li><a href="https://taishanahan.github.io/Former-Soviet/"><cite>Constitutions of the Soviet Union</cite></a> (Cole and Maddie’s course project)</li>
-                                    <!-- <li><a href="http://natasha.obdurodon.org/"><cite>War and
-                                                peace</cite> in adaptation</a> (Ella’s course
-                                        project)</li> -->
-                                </ul></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="code">XML exercise 3: Mark up a different text of your choice
-                                (any genre; manageable but reasonable size; foreign languages
-                                welcome)</li>
-                            <li class="read">Read our <a href="http://dh.obdurodon.org/project-checklist.xhtml">Project
-                                    checklist</a> to learn about general course project goals</li>
-                            <li class="response">Read the linked articles in <a href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#partone">"Learning Git: Part One"</a> and complete the associated response essay.</li>
-                            <!-- <li class="response">Write a 300- to 400-word response paper to <a
-                                    href="http://grimm-tales.obdurodon.org"><cite>Grimm</cite></a>
-                                or <a href="http://natasha.obdurodon.org/"><cite>War and
-                                        peace</cite></a>, following the same guidelines as for the
-                                previous response paper</li> -->
-                        </ul>
-                    </td>
-                    <td>None.</td>
-                </tr>
-                <!-- <tr class="non-meeting">
-                    <td>Mon, 09-02</td>
-                    <td colspan="4">
-                        <strong>No class (Dr. Martin Luther King birthday observance)</strong>
-                    </td>
-                </tr> -->
-                <tr class="unit-label">
-                    <th colspan="5">Unit: Project organization (GitHub and markdown)</th>
-                </tr>
-                <tr class="non-meeting">
-                    <td>Mon, 09-02</td>
-                    <td colspan="4">
-                        <strong>No class (Labor Day)</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Wed, 09-04</td>
-                    <td>
-                        <ul>
-                            <li>Project guidelines</li>
-                            <li>XML review</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Sample course projects:
-                                <a href="https://c-arthur-mcs.github.io/Sevdah/index.html"><cite>Sevdah: The influence of Turkish language on Bosnian literature</cite></a> (Cody’s course project)</li>
-                            <li>Sample archive/portal projects:
-                                    <ul><li><a
-                                            href="https://scaife.perseus.org/reader/urn:cts:greekLit:tlg0012.tlg001.perseus-grc2:1.1-1.7/"
-                                            >Perseus digital library</a></li>
-                                    <li><a href="http://melvillesmarginalia.org/">Melville’s
-                                            marginalia</a></li>
-                                    </ul>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="response">Write a 300- to 400-word response paper to <a
-                                    href="https://scaife.perseus.org/reader/urn:cts:greekLit:tlg0012.tlg001.perseus-grc2:1.1-1.7/"
-                                    >the Perseus digital library</a> (this link is to the
-                                    <em>Iliad</em> inside the library; you do not need to be able to
-                                understand Greek to respond to the site) or <a
-                                    href="http://melvillesmarginalia.org/">Melville’s
-                                marginalia</a>, concentrating on the user experience (UX). What
-                                sorts of research does the site support, and how effectively does it
-                                provide that support?</li>
-                            <li class="code">Complete <a href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#parttwo">"Learning Git: Part II,"</a> which teaches you how to set up a GitHub account.</li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/beginner-pitfalls.xhtml">You aren’t a
-                                    beginning XML developer anymore</a> to help prepare for the XML
-                                test</li>
-                        </ul>
-                    </td>
-                    <td><ul>
-                            <li>
-                                <p>Post to the <a href="https://github.com/pickettj/dh-class-repo/issues/2"> <em>project-proposals</em> issue forum on GitHub</a> a 300- to 400-word tentative/exploratory project proposal. Your proposal should identify your 1) text(s), which must
-                                    be free of copyright restrictions, 2) research question(s), 3)
-                                    approach and methods, and 4) potential teammates (if known). All
-                                    course projects must be undertaken by teams of two or more
-                                    persons, but this initial, exploratory proposal is an individual
-                                    assignment. See our <a
-                                        href="projects.xhtml"
-                                        >Course projects</a> page for guidelines and examples of projects past
-                                    students have undertaken. (Note that you must have already set up a Github account in order to complete this assignment, which means that you should complete Part II of the "Learning Git" assignment sequence (assigned for this session) beforehand.)</p>
-                            </li>
-                        </ul></td>
-                </tr>
-                <tr>
-                    <td>Fri, 09-06 <strong>Add/drop<br />deadline</strong></td>
-                    <td>
-                        <ul>
-                            <li>GitHub for project management</li>
-                            <li>Markdown</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Sample GitHub repo: <a
-                                    href="https://github.com/scanney/Grimm-Fairytales"><cite>Grimms’
-                                        fairy tales</cite></a> (Ben’s course project)</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Complete <a href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#partthree">"Learning Git: Part III,"</a> which teaches you how to install Git locally on your personal computer.</li>
-                            <!-- <li class="read">
-                                <p>Read and follow along with Chapter 1 (sections 1.1 through 1.8)
-                                    of the official Git tutorial, which begins at <a
-                                        href="https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control"
-                                        >https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control</a>.
-                                    By Monday’s class aim to have 1) learned how to access the
-                                    command line on your local machine, and 2) installed Git on your
-                                    local machine. If you get stuck, don’t panic (it’s complicated,
-                                    but you’ll become adept quickly as you gain experience), but do
-                                    ask for help on the TopHat forum or in office hours. Post your GitHub userid in that channel.</p>
-                            </li> -->
-                            <li class="read">Read all project proposals on the relevant Github forum in
-                                preparation for forming project teams on Monday</li>
-                            <li class="read">Read our <a href="http://dh.obdurodon.org/relaxng.xhtml">Introduction to Relax
-                                    NG</a> tutorial</li>
-                            <li class="test">
-                                <strong>Test #1: XML</strong> (note: tests are always assigned on a Friday, and due before class the subsequent Monday)
-                            </li>
-                        </ul>
-                    </td>
-                    <td><ul><li>Post at least one substantive comment on someone else's project proposal on the Github issue forum.</li></ul></td>
-                </tr>
-                <tr class="unit-label">
-                    <th colspan="5">Unit: Relax NG</th>
-                </tr>
-                <tr>
-                    <td>Mon, 09-09</td>
-                    <td>
-                        <ul>
-                            <li>Form project teams, appoint a project owner (typically the proposal
-                                author)</li>
-                            <li>Relax NG: <a href="http://dh.obdurodon.org/recipe_djb.xml">Pasta recipe</a></li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <p>Relax NG exercise 1: Write a Relax NG schema for one of the XML
-                                    documents you created for an earlier assignment (XML exercise 1,
-                                    2, or 3; you may modify your XML if you wish) and upload both
-                                    your XML and your schema file.</p>
-                                <p><strong>Note:</strong> We’ll introduce how to model mixed content
-                                    in Relax NG only next time. For this first assignment you can
-                                    either select XML that doesn’t have any mixed content or peek
-                                    ahead to the reading that will be assigned next time, about
-                                    content models.</p>
-                            </li>
-                            <li>Complete <a href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#partfour">Part IV or "Learning Git,"</a> which teaches you how to interact with your remote repository (hosted on the Github cloud) with your local repository (hosted on your person computer).</li>
-                        </ul>
-                    </td>
-                    <td>None.</td>
-                </tr>
-                <tr>
-                    <td>Wed, 09-11</td>
-                    <td>
-                        <ul>
-                            <li>Relax NG<!-- use homework submissions for discussion --></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Sample composite (literary/visual) archive projects: <ul>
-                                    <li><a href="http://www.blakearchive.org">The Blake
-                                        archive</a></li>
-                                    <li><a href="http://www.rossettiarchive.org">The Rossetti
-                                            archive</a></li>
-                                </ul></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="read">Read our <a href="http://dh.obdurodon.org/relaxng_mixed-content.xhtml">Relax NG
-                                    content models</a> tutorial to learn about modeling mixed
-                                content and empty elements</li>
-                            <li class="code">Relax NG exercise 2: Choose a small text, perform
-                                document analysis, write a schema, mark up the text according to the
-                                schema, and upload both your XML and your schema file</li>
-                                <li class="read">Read <a href="http://dh.obdurodon.org/projects_tab.xhtml">GitHub for project
-                                    management</a>.</li>
-                            <li class="misc">The project owner should:<ul>
-                                    <li>Create a GitHub repo for the project. From the configuration
-                                        options when you tell GitHub that you want to create a new
-                                        repo: 1) Make the repo public and 2) add a <i>README.md</i>
-                                        file (which you’ll compose using markdown). Skip other
-                                        options for now.</li>
-                                    <li>Add all team members and all instructors as contributors to
-                                        the project (go to Settings → Manage access and invite
-                                        collaborators by using their GitHub userids).</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fri, 09-13<!--<br /><strong>Extended drop<br />deadline</strong>--></td>
-                    <td>
-                        <ul>
-                            <li>Relax NG<!-- use student work --></li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li>
-                            <li class="code">Relax NG exercise 3: Choose a small text <em>of a
-                                    different type or genre than last time</em>, perform document
-                                analysis, write a schema, mark up the text according to the schema,
-                                and upload both your XML and your schema file</li>
-                            <li class="response">Write a 300- to 400-word response paper to <a
-                                    href="http://www.blakearchive.org">Blake</a> or <a
-                                    href="http://www.rossettiarchive.org">Rossetti</a>. These are
-                                primarily archive or portal sites, designed to provide rich access
-                                to materials, and not to support specific research questions. How
-                                well do they achieve their goals?</li>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>Reminder: make sure you are consistently engaging the course discussion / troubleshooting forum on Slack (<a href="standing-assignments.xhtml">one of our Standing Assignments</a>).</td>
-                </tr>
-                <tr>
-                    <td>Mon, 09-16</td>
-                    <td>
-                        <ul>
-                            <li>Relax NG<!-- use student work--></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Text analysis and data mining</li>
-                            <li>Sample projects:<ul>
-                                    <li><a href="http://who.obdurodon.org">The UNIT <q>dating</q>
-                                            crisis</a> (course project)</li>
-                                    <li><a href="http://hip-hop.obdurodon.org">Hip-hop
-                                            humanities</a> (Camryn’s course project)</li>
-                                </ul></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="read">Read the regex mini-tutorial at <a
-                                    href="http://www.regular-expressions.info/quickstart.html"
-                                    >http://www.regular-expressions.info/quickstart.html</a>.</li>
-                        </ul>
-                    </td>
-                    <td>Reminder: make sure someone from your project group posts updates most weeks (<a href="standing-assignments.xhtml">one of our Standing Assignments</a>).</td>
-                </tr>
-                <tr class="unit-label">
-                    <th colspan="5">Unit: Regular expressions</th>
-                </tr>
-                <tr>
-                    <td>Wed, 09-18</td>
-                    <td>
-                        <ul>
-                            <li>Regular expressions (<a
-                                    href="https://www.simplyrecipes.com/recipes/peanut_butter_cookies/print/"
-                                    >Recipe</a>)</li>
-                                    <li>Regular expressions (<a
-                                        href="https://nosweatshakespeare.com/sonnets/60/"
-                                        >Sonnet 60</a>)</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Multipurposing</li>
-                            <li>Sample project:<ul>
-                                    <li>
-                                        <a href="http://imm.dh.obdurodon.org"><cite>My
-                                                immortal</cite></a> (course project)</li>
-                                </ul></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/regex-assignment-01.xhtml">Regex exercise 1</a>
-                            </li>
-                            <li>Complete <a href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#partfive"></a>Part V of "Learning Git," which helps you get used to the push-pull workflow.</li>
-                            <li class="prep">Prepare for the Relax NG test</li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fri, 09-20</td>
-                    <td>
-                        <ul>
-                            <li>Regular expressions <!-- flag dead link-->(<a
-                                    href="https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt"
-                                    >word list</a>)</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/regex-tips.xhtml">Regex tips</a> (Read
-                                the first half, before the <q>Using regex in XSLT</q> section, to
-                                acquaint yourself with what’s there, but don’t try to memorize it
-                                all at once. You can skip the second half, about regex in
-                                XSLT.)</li>
-                                <li class="test">
-                                    <strong>Test #2: Relax NG (see Canvas)</strong>
-                                </li>
-                        </ul>
-                    </td>
-                    <td>Single topic: What is a Regex method <em>not</em> covered in the homework or class exercises that you have figured out on your own? How might it be useful for the technologies we cover in this course? (Post a new item on the Slack channel, or comment on someone else's, as part of our <a href="standing-assignments.xhtml">Standing Assignments</a>.)<!--
-                        <a href="standing-assignments.xhtml">Discussion posting (TopHat)</a> Single topic:
-                        Since your first encounter with the command line and GitHub, how has your
-                        understanding of these technologies changed? What obstacles still affect
-                        your understanding of its use? On GitHub specifically, which features stand
-                        out as useful tools for your project team? How would you plan to implement
-                        them? Which features do you want to learn more about?--></td>
-                </tr>
-                <tr>
-                    <td>Mon, 09-23</td>
-                    <td>
-                        <ul>
-                            <li>Regular expressions</li>
-                            <li>
-                                <a href="http://dh.obdurodon.org/scarlet-letter.txt">Nathaniel Hawthorne, <cite>The scarlet
-                                        letter</cite></a>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Upconversion with regex</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/regex-assignment-02.xhtml">Regex exercise 2</a>
-                            </li>
-                            <li class="response">Read the <q><a
-                                        href="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/HD.html"
-                                        >TEI header</a></q> section (Chapter 2) of TEI P5 and submit
-                                a 300- to 400-word response paper. The TEI header is about
-                                    <dfn>metadata</dfn>, that is, information about the document.
-                                How will you handle metadata (what type of information, how will be
-                                it be encoded or represented) in your project?</li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr class="unit-label">
-                    <th colspan="5">Unit: TEI</th>
-                </tr>
-                <tr>
-                    <td>Wed, 09-25</td>
-                    <td>
-                        <ul>
-                            <li>Digitization</li>
-                            <li>TEI <!-- flag dead link-->(<a
-                                    href="https://www.wwp.northeastern.edu/outreach/seminars/_current/presentations/basic_encoding/basic_encoding_tutorial_00.xhtml"
-                                    >https://bit.ly/3aBFNMG</a>)</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>
-                                <a href="http://www.tei-c.org">The Text Encoding Initiative</a>
-                            </li>
-                            <li>
-                                <a
-                                    href="https://github.com/zme1/toscana/blob/master/xml/meetingMinutes/volume1.xml"
-                                    >Toscana raw XML</a>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="response">Read one chapter from the <a
-                                    href="http://www.tei-c.org/release/doc/tei-p5-doc/en/html/index.html"
-                                    >TEI guidelines</a> (except Chapter 2, <q>TEI header</q>) and
-                                submit a 300- to 400-word response paper. Even if you don’t use TEI
-                                in your own project, focus on whether there are TEI features that
-                                you might want to adopt or adapt.</li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/html_basics.xhtml">HTML basics</a></li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr class="unit-label">
-                    <th colspan="5">Unit: Web technologies</th>
-                </tr>
-                <tr>
-                    <td>Fri, 09-27</td>
-                    <td>
-                        <ul>
-                            <li>The Web: (X)HTML5, CSS, Unicode</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Metadata</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/regex-assignment-03.xhtml">Regex exercise 3</a>
-                            </li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/css-intro.xhtml">Introduction to
-                                    cascading stylesheets (CSS)</a></li>
-                            <!-- <li class="read">Read <a href="http://dh.obdurodon.org/mounting-projects.xhtml">Putting content
-                                    on line</a></li> -->
-                        </ul>
-                    </td>
-                    <td>
-                        Single topic: as part of one of your <a href="standing-assignments.xhtml">regular project updates</a>, report on your group's discussion of TEI: do you plan to use it? Do you plan to incorporate certain elements and attributes from TEI, but not others? What do you see as the pros and cons?
-                    </td>
-                </tr>
-                <tr>
-                    <td>Mon, 09-30</td>
-                    <td>
-                        <ul>
-                            <li>Viewing HTML and CSS on the Web</li>
-                            <li>Web developer tools</li>
-                            <li>Sample HTML page with CSS: <a
-                                    href="http://dev.obdurodon.org/~djb/elephants.xhtml"
-                                    >http://dev.obdurodon.org/~djb/elephants.xhtml</a></li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="read">Read <a href="http://learnlayout.com/">Learn CSS
-                                    layout</a></li>
-                            <li class="code">HTML/CSS exercise 1: Create and upload your first HTML
-                                and CSS pages Github Pages (see "Getting started with Git Pages" page on Canvas). The content
-                                and look of your webpage is up to you, but should demonstrate usage of several XHTML element types as well as CSS styling. Please submit the URL of your page to Canvas.</li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Wed, 10-02</td>
-                    <td>
-                        <ul>
-                            <li>CSS: Flexbox and Grid</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li> Sample project: <a href="http://alice-jpn.obdurodon.org">Alice in
-                                    translation</a> (course project)</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="read">Read <a
-                                    href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">A
-                                    complete guide to Flexbox</a></li>
-                            <li class="code">HTML/CSS exercise 2: Enhance and expand your HTML web
-                                page and associated CSS from the last assignment (focus this time on
-                                structural elements) and upload them as new files with new names
-                                (see the <a href="http://dh.obdurodon.org/html-css_assignments.xhtml">additional
-                                    instructions about formatting, naming, and uploading your
-                                    files</a>). <em>Do not overwrite your files from the first HTML
-                                    assignment.</em></li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <!-- <tr>
-                    <td>Fri, 10-04</td>
-                    <td>
-                        <ul>
-                            <li>TBD: Additional HTML / CSS Unit</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>TBD</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="test">
-                                <strong><a href="2234_test-03_regex.xhtml">Test #3:
-                                    Regex</a></strong>
-                            </li>
-                             <li class="response">Read the first chapter of Don Norman’s <a
-                                href="https://ia902800.us.archive.org/3/items/thedesignofeverydaythingsbydonnorman/The%20Design%20of%20Everyday%20Things%20by%20Don%20Norman.pdf"
-                                >The design of everyday things</a> (<q>The psychopathology of
-                                    everyday things</q>), with particular attention to
-                                <dfn>affordances</dfn> and <dfn>signifiers</dfn>. Submit a 300-
-                                to 400-word response paper that discusses how these concepts might
-                                inform the interface design for your course project.</li> 
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr> -->
-                <!--<tr class="guest">
-                    <td>Fri, 02-16</td>
-                    <td colspan="2">
-                        <ul>
-                            <li><strong>Guest lecture</strong> by Shea Higgins (International
-                                Parkinson and Movement Disorder Society) on web design and user
-                                experience (UX)</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <!-\-<li>Read one chapter from either Part I or Part II of <cite>Visual
-                                    usability: principles and practices for designing digital
-                                    applications</cite> by Tania Schlatter and Deborah Levinson (<a
-                                    href="http://site.ebrary.com.pitt.idm.oclc.org/lib/pitt/detail.action?docID=10684890"
-                                    >available on-line through the Pitt library</a>) and submit a
-                                300- to 400-word response paper. Concentrate in your response paper
-                                on how you might apply what you’ve read to the design of your own
-                                project site.</li>-\->
-                            <li class="response">Read the first chapter of Don Norman’s <a
-                                    href="https://ia902800.us.archive.org/3/items/thedesignofeverydaythingsbydonnorman/The%20Design%20of%20Everyday%20Things%20by%20Don%20Norman.pdf"
-                                    >The design of everyday things</a> (<q>The psychopathology of
-                                    everyday things</q>), with particular attention to
-                                    <dfn>affordances</dfn> and <dfn>signifiers</dfn>. Submit a 300-
-                                to 400-word response paper that discusses how these concepts might
-                                inform the interface design for your course project.</li>
-                            <li class="test">
-                                <strong><a href="2234_test-03_regex.xhtml">Test #3:
-                                    Regex</a></strong>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        <a href="standing-assignments.xhtml">Monthly project response (GitHub)</a>
-                    </td>
-                </tr>-->
-                <tr>
-                    <td>Fri, 10-04</td>
-                    <td>
-                        <ul>
-                            <li>JavaScript: <a href="http://aal.obdurodon.org">The annotated
-                                    Afanas′ev library</a></li>
-                            <li>Topic modeling with Mallet: <a
-                                    href="http://milton.obdurodon.org/milton-svg-sample.xhtml">The
-                                    Milton project</a></li>
-                            <!-- <li><strong>Take-home midterm instructions</strong> (take-home midterm is due Wed, 03-06)</li> -->
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="read">Read the W3Schools <a
-                                    href="https://www.w3schools.com/css/css_grid.asp">CSS Grid
-                                    layout module</a> (three linked pages: intro, container,
-                                item)</li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/introduction-xpath.xhtml">What can XPath
-                                    do for me?</a></li>
-                            <!--<li class="read">Read <a href="javascript.xhtml">JavaScript overview</a> (you do not have to perform any of the coding; the goal is just to acquaint yourself, in a general way, with what JavaScript does and how it does it)</li>-->
-                            <li class="test">
-                                <strong>Test #3:
-                                    Regex</strong>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>Single topic: briefly introduce a CSS style you discovered on your own, providing a link and example in code blocks on the <a href="standing-assignments.xhtml">Slack discussion / troubleshooting channel</a>.
-                        <!--<a href="standing-assignments.xhtml">Discussion posting (TopHat)</a> Single topic:
-                        Explore <a href="http://orbis.stanford.edu/">Orbis</a>, a site designed to
-                        support research into the economic geography of the ancient Roman world. How
-                        does this project make effective use of mapping, and what limitations do you
-                        see?--></td>
-                </tr>
-                <tr class="unit-label">
-                    <th colspan="5">Unit: XPath</th>
-                </tr>
-                <tr>
-                    <td>Mon, 10-07</td>
-                    <td>
-                        <ul>
-                            <li>XPath: overview, paths, axes (<a href="http://dh.obdurodon.org/fables.xml"
-                                >fables.xml</a>)</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xpath-assignment-01.xhtml">XPath exercise 1</a>
-                            </li>
-                            <li class="response">Read <a
-                                    href="http://dsl.richmond.edu/dispatch/pages/intro">Mining the
-                                        <cite>Dispatch</cite>: introduction</a> (the whole page
-                                under the <q>Introduction</q> tab; not just the few paragraphs
-                                headed <q>Introduction</q>) and submit a 300- to 400-word response
-                                paper. Topic modeling is a tool that operates on plain text to
-                                provide descriptive statistical information. How might it play a
-                                role in your project?</li>
-                        </ul>
-                    </td>
-                    <td>None.</td>
-                </tr>
-                <tr>
-                    <td>Wed, 10-09</td>
-                    <td>
-                        <ul>
-                            <li>XPath: predicates and functions</li>
-                            <li>Namespaces</li>
-                            <li>Develop and test (!) path expressions one step at a time</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Digital Humanities associations and conferences (<a
-                                    href="http://dh.obdurodon.org/organizations.xhtml">The digital humanities
-                                profession</a>)</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/functions.xhtml">The XPath functions we
-                                    use most</a></li>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xpath-assignment-02.xhtml">XPath exercise 2</a>
-                            </li>
-                            <!--Perhaps do this as an in-class exercise.
-                                
-                                <li class="response">Read just the first part (<q>Background</q>) of <a
-                                    href="https://ebeshero.github.io/thalaba/cytosc.html">An
-                                    introduction to network analysis and Cytoscape for XML
-                                    coders</a> and submit a 300- to 400-word response paper. In your
-                                response, reflect on whether network analysis might be useful for
-                                your own project and, if so, the research questions it might help
-                                you explore.</li> -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Course syllabus for Computational Methods in the Humanities - Digital Humanities at University of Pittsburgh" />
+    <title>Syllabus - Digital Humanities</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/syllabus.css" />
+    <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" />
+    <script src="javascript/syllabus-interactive.js" defer="defer"></script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-                        </ul>
-                    </td>
-                    <td>
-                        Single topic: XPath is a language for specifying the <em>path</em> to different nodes on an XML tree. But "path" is a key term you have seen before within the context of navigating your computer hard drive using command line. Both conceptually and in terms of syntax, what are some of the similarities and differences between file paths on your operating system and XPath? <a href="standing-assignments.xhtml">Discuss on the Slack channel</a>.
-                        </td>
-                </tr>
-                <tr>
-                    <td>Fri, 10-11</td>
-                    <td>
-                        <ul>
-                            <li>Four features of XPath:<ol>
-                                    <li>XPath proceeds step by step</li>
-                                    <li>The last step is special</li>
-                                    <li>Asking for something that does not exist is not an
-                                        error</li>
-                                    <li>Path steps are like <code class="language-xquery">for</code>
-                                        or <code class="language-xquery">for-each</code> expressions
-                                        in other languages</li>
-                                </ol></li>
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="index.xhtml">Home</a>
+            <a href="syllabus.xhtml" aria-current="page">Syllabus</a>
+            <a href="description.xhtml">Policies</a>
+            <a href="projects.xhtml">Projects</a>
+            <!-- <a href="assignments.xhtml">Assignments</a> -->
+            <a href="http://dh.obdurodon.org/" target="_blank" rel="noopener">Resources</a>
+            <a href="https://bactriana.org" target="_blank" rel="noopener">Bactriana</a>
+        </nav>
+    </header>
 
-                        </ul>
-                    </td>
-                    <td><ul>
-                            <li>Sample course projects:<ul>
-                                    <li><a href="http://dickinson.obdurodon.org/">Emily Dickinson
-                                            and ellipsis</a></li>
-                                    <li><a href="http://seuss.obdurodon.org/">The nonsensical
-                                            Seuss</a></li>
-                                </ul></li>
-                        </ul></td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xpath-assignment-03.xhtml">XPath exercise 3</a>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        Reminder: you should be <a href="standing-assignments.xhtml"> commenting on <em>other</em> teams' Github project updates</a> once every month or so.
-                    </td>
-                </tr>
-                <tr class="non-meeting">
-                    <td>Mon, 10-14</td>
-                    <td colspan="4">
-                        <strong>No class (Fall break)</strong>
-                    </td>
-                </tr>
-                
-                
-                <!--<tr class="guest">
-                    <td>Mon, 02-27</td>
-                    <td colspan="2">
-                        <ul>
-                            <li><strong>Guest lecture</strong> by Elisa Beshero-Bondar (Penn State
-                                Erie, The Behrend College) on network analysis</li>
-                        </ul>
-                    </td>
-                    <td>
-                        
-                    </td>
-                    <td>
-                        <a href="standing-assignments.xhtml">Weekly discussion posting (TopHat) </a>
-                    </td>
-                </tr>-->
-
-
-                <tr>
-                    <td>Wed, 10-16</td>
-                    <td>
-                        <ul>
-                            <li>XPath: predicates and functions</li>
-                            <li>The simple map (<code class="language-xquery">!</code>) and arrow
-                                    (<code class="language-xquery">=></code>) operators</li>
-
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                             <li class="code">
-                                <a href="http://dh.obdurodon.org/xpath-assignment-04.xhtml">XPath exercise 4</a>
-                            </li>
-                            <li class="prep">Prepare for the XPath test</li>
-                            <!-- <li class="response">Read Erin Davis’s <a
-                                    href="https://pudding.cool/2020/07/gendered-descriptions/">Sweet
-                                    &amp; slim, greasy &amp; grim: the physical traits that define
-                                    men &amp; women in literature</a> and submit a 300– 400-word
-                                response paper. In what ways did the use of computational methods
-                                contribute to this research?
-                            
-                            </li> -->
-                        </ul>
-                    </td>
-                    <td>Reminder: make sure you are consistently engaging the course discussion / troubleshooting forum on Slack (<a href="standing-assignments.xhtml">one of our Standing Assignments</a>).</td>
-                </tr>
-                
-                <tr class="unit-label">
-                    <th colspan="5">Unit: XSLT</th>
-                </tr>
-                <tr>
-                    <td>Fri, 10-18</td>
-                    <td>
-                        <ul>
-                            <li>XSLT and XPath Overview</li>
-                            <li>How to Look Stuff Up</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li><strong>Test #4: XPath</strong></li>
-                        </ul>
-                        <ul>
-                            <li>Read <a href="http://dh.obdurodon.org/xslt-basics.xhtml">"XSLT Basics"</a></li>
-                        </ul>
-                        
-                    </td>
-                    <td>
-                        XSLT is one of the more challenging languages for many students, so we expect to questions and responses on the <a href="standing-assignments.xhtml">Slack discussion / troubleshooting channel</a> at least 3-4 times per student over the course of this unit.
-
-                    </td>
-                </tr>
-                <tr>
-                    <td>Mon, 10-21<br/></td>
-                    <td>
-                        <ul>
-                            <li>XSLT templates</li>
-                            <li>XPath expressions and XPath patterns</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>The digital workstation</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/algorithms.xhtml">Thinking in
-                                algorithms</a></li>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xslt-assignment-01.xhtml">XSLT exercise 1</a>
-                            </li>
-                            
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                
-                <tr>
-                    <td>Wed, 10-23</td>
-                    <td>
-                        <!-- <li>
-                            <strong>Midterm due</strong>
-                        </li> -->
-                        <ul>
-                            <li>XSLT program structure and design</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xslt-assignment-02.xhtml">XSLT exercise 2</a>
-                            </li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/xslt-basics-2.xhtml">XSLT, part 2:
-                                conditionals and push and pull</a></li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/developing-xslt.xhtml">Developing an XSLT
-                                stylesheet</a></li>
-                            
-                        </ul>
-                    </td>
-                    <td>
-                        
-                        Single topic: Read <a
-                            href="https://web.archive.org/web/20140604085234/http://www.playingwithhistory.com/wp-content/uploads/2010/04/hermeneutics.pdf"
-                            ><q>The hermeneutics of screwing around</q></a> or <a
-                                href="https://texttechnology.mcmaster.ca/pdf/vol14_2/ramsay14-2.pdf"
-                                ><q>In praise of pattern</q></a>. These essays describe how research
-                        methods in a digital environment may differ from research methods elsewhere
-                        in humanities scholarship. How do these arguments make you think differently about your research project? Discuss as part of a <a href="standing-assignments.xhtml"> project update</a>.</td>
-                </tr>
-                
-
-                
-                <!-- <tr class="non-meeting">
-                    <td>Mon, 03-11<br />Wed, 03-13<br />Fri, 03-15</td>
-                    <td colspan="4">
-                        <strong>No class (Spring recess)</strong>
-                    </td>
-                </tr> -->
-                
-                
-                <!--<tr class="guest">
-                    <td>Mon, 03-13</td>
-                    <td colspan="2"><ul>
-                            <li><strong>Guest lecture</strong> by Gabi Kirilloff (Washington
-                                University) on distant reading</li>
-                        </ul></td>
-                    <td><ul>
-                            <li class="read">Read <a href="xslt-basics.xhtml">XSLT basics</a></li>
-                        </ul></td>
-                    <td>Weekly discussion posting (TopHat)</td>
-                </tr>-->
-                
-                
-                <tr>
-                    <td>Fri, 10-25<br/><a
-                        href="https://www.asundergrad.pitt.edu/student-toolkit/forms"
-                        ><strong>Monitored <br/> withdrawal<br />deadline</strong></a></td>
-                    <td>
-                        <ul>
-                            <li>XSLT Review Workshop</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xslt-assignment-03.xhtml">XSLT exercise 3</a>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                
-
-                <tr>
-                    <td>Mon, 10-28</td>
-                    <td>
-                        <ul>
-                            <li>XSLT push and pull</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/avt.xhtml">Attribute value
-                                templates</a></li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/modal-xslt.xhtml">Modal XSLT</a></li>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xslt-assignment-04.xhtml">XSLT exercise 4</a>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Wed, 10-30</td>
-                    <td>
-                        <ul>
-                            <li>XSLT</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="read">Read <a href="https://www.mathsisfun.com/median.html">"Read How to Find the Median Value"</a> (in preparation for guest lecture)</li>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/xslt-assignment-05.xhtml">XSLT exercise 5</a>
-                            </li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr class="guest">
-                    <td>Fri, 11-01</td>
-                    <td colspan="2">
-                        <ul>
-                            <li><strong>Guest lecture</strong> by David Birnbaum on user-defined functions in XSLT</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="code">Work through (write the code; don’t just skim) the <a
-                                href="https://www.w3schools.com/graphics/svg_intro.asp"
-                                >w3schools SVG tutorial</a> to complete the <q>SVG basic</q> and
-                                <q>SVG shapes</q> pages. Filters, gradients, examples, and
-                                reference are optional.</li>
-                            <li class="prep">Prepare for the XSLT test</li>
-                        </ul>
-                    </td>
-                    <td>Single topic: post your own idea for a user-defined function to the <a href="standing-assignments.xhtml">discussion / troubleshooting Slack channel</a>. You do not need to have a working function, but try to post at least some speculative code (as a code block, as a Github link, or both).
-                    </td>
-                </tr>
-                <tr>
-                    <td>Mon, 11-04</td>
-                    <td>
-                        <ul>
-                            <li>XSLT</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <!-- "I assigned Binongo (now listed the day before me) as preparation for Patrick’s guest lecture about authorship attribution. Since you mention that you probably won’t be able to invite other guest lecturers (including Patrick) this coming spring, you may want to remove the topic, and therefore the Binongo reading" (<li class="response">Read José Nilo G. Binongo’s <a
-                                    href="http://dh.obdurodon.org/Binongo-Chance.pdf"><q>Who wrote the 15th book of Oz? An
-                                        application of multivariate analysis to authorship
-                                        attribution</q></a> and submit a 300- to 400-word response
-                                paper. Learning about stylometric analysis helps many people to
-                                broaden their understanding of how writing styles can be
-                                distinctive. What are the potential benefits and limitations of the
-                                methods?</li> -->
-                            <li class="read">Read about <code class="language-xml"
-                                    >&lt;xsl:analyze-string&gt;</code> and the XPath <code
-                                    class="language-xquery">tokenize()</code> function in Michael
-                                Kay and <a href="http://dh.obdurodon.org/analyze-string.xhtml">Using <code
-                                        class="language-xml"
-                                >&lt;xsl:analyze-string&gt;</code></a></li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                        </td>
-                </tr>
-                <!--<tr class="guest">
-                    <td>Wed, 03-27</td>
-                    <td colspan="2">
-                        <ul>
-                            <li><strong>Guest lecture</strong> by Patrick Juola (Duquesne
-                                University) on stylometry and authorship attribution</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li class="code">Work through (write the code; don’t just skim) the <a
-                                    href="https://www.w3schools.com/graphics/svg_intro.asp"
-                                    >w3schools SVG tutorial</a> to complete the <q>SVG basic</q> and
-                                    <q>SVG shapes</q> pages. Filters, gradients, examples, and
-                                reference are optional.</li>
-                            <li class="prep">Prepare for the XSLT test (assigned Fri, 03-31, due
-                                Mon, 04-03)</li>
-                        </ul>
-                    </td>
-                    <td><a href="standing-assignments.xhtml">Weekly project update (TopHat)</a></td>
-                </tr>-->
-                <tr class="unit-label">
-                    <th colspan="5">Unit: SVG</th>
-                </tr>
-                <tr>
-                    <td>Wed, 11-06</td>
-                    <td>
-                        <ul>
-                            <li>SVG</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/svg-assignment-01.xhtml">SVG exercise 1</a>
-                            </li>
-                            <li class="read">Read <a href="http://dh.obdurodon.org/coordinate-tutorial.xhtml">Viewbox
-                                    tutorial: an introduction to the SVG coordinate space</a></li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fri, 11-08</td>
-                    <td>
-                        <ul>
-                            <li>SVG</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code"><a href="http://dh.obdurodon.org/svg-assignment-02.xhtml">SVG exercise 2</a>
-                                (Remember that you should upload the XSLT stylesheet that you used
-                                to transform your document, not the SVG output of the
-                                transformation)</li>
-                                <li>
-                                    <strong>Test #5: XSLT</strong></li>
-                        </ul>
-                    </td>
-                    <td>
-                        Single topic: Watch Hans Rosling’s <a
-                            href="https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen?language=en"
-                            >The best stats you’ve ever seen</a> and, as part of your <a href="standing-assignments.xhtml">project update</a>, report on project team discussion about what graphic visualizations you might feature on your project website. </td>
-                </tr>
-                <tr>
-                    <td>Mon, 11-11</td>
-                    <td>
-                        <ul>
-                            <li>SVG</li>
-                            <li><a href="https://github.com/pickettj/dh-class-repo/blob/main/7.3_svg-assignment-03_blank_starting_point.xsl">"Bubble Exercise" starting point</a></li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="http://dh.obdurodon.org/svg-assignment-03.xhtml">SVG exercise 3</a>
-                            </li>
-                            <li class="prep">Prepare for the SVG test</li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.</td>
-                </tr>
-                <tr>
-                    <td>Wed, 11-13</td>
-                    <td>
-                        <ul>
-                            <li>SVG</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li>Read through the <a href="https://dh.bactriana.org/assignments/geomapping-assignment-01.xhtml">first geomapping exercise</a> (to be completed in class)</li>
-                            <!-- <li class="read">Read <a href="http://dh.obdurodon.org/schematron-intro.xhtml">Schematron
-                                    tutorial</a></li> -->
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <!--><tr class="unit-label">
-                    <th colspan="5">Unit: Schematron</th>
-                </tr></-->
-                <tr class="unit-label">
-                    <th colspan="5">Unit: Geospatial analysis</th>
-                </tr>
-                <tr>
-                    <td>Fri, 11-15</td>
-                    <td>
-                        <ul>
-                            <li>Using Textual Data for Digital Mapping</li>
-                            <li><a href="https://dh.bactriana.org/assignments/geomapping-assignment-01.xhtml">In-class GeoJSON exercise</a></li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            
-                            <!-- <li class="code">
-                                <a href="http://dh.obdurodon.org/schematron-assignment-01.xhtml">Schematron exercise 1</a>
-                            </li> -->
-                            <li class="test"><strong>Test #6: SVG</strong></li>
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Mon, 11-18</td>
-                    <td>
-                        <ul>
-                            <li>XML for geo-spatial analysis</li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <li class="code">
-                                <a href="https://dh.bactriana.org/assignments/geomapping-assignment-02.xhtml">Geomapping exercise 2</a>
-                               <!-- <a href="http://dh.obdurodon.org/schematron-assignment-02.xhtml">Schematron exercise 2</a>-->
-                            </li>
-                            <!--<li class="prep">Prepare for the Schematron test (assigned Fri, 04-14,
-                                due Mon, 04-17)</li></-->
-                        </ul>
-                    </td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr class="unit-label">
-                    <th colspan="5">Unit: Project sprint</th>
-                </tr>
-                <tr>
-                    <td>Wed, 11-20</td>
-                    <td>
-                        <ul><li>
-                            Project workshop (in-class, extra credit, attendance optional)
-                        </li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td>
-                        <ul>
-                            <!--<li class="test"><strong>Test
-                                        #7: Schematron</strong></li></-->
-                        </ul>
-                    </td>
-                    <td>
-                       None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fri, 11-22</td>
-                    <td>
-                        <ul>
-                            <li>Project lab session</li>
-                        </ul>
-                    </td>
-                    <td>The XML family of standards</td>
-                    <td class="none">None</td>
-
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr class="non-meeting">
-                    <td>Mon, 11-25<br />Wed, 11-27<br />Fri, 11-29</td>
-                    <td colspan="4">
-                        <strong>No class (Thanksgiving recess)</strong>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Mon, 12-02</td>
-                    <td>
-                        <ul>
-                            <li><a href="http://dh.obdurodon.org/showcase.xhtml">Project Showcase</a></li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td class="none">None</td>
-                    <td>
-                        None.
-                    </td>
-                </tr>
-                <tr>
-                    <td>Wed, 12-04<br /><strong>Last class<br />meeting</strong></td>
-                    <td>
-                        <ul>
-                            <li><a href="http://dh.obdurodon.org/showcase.xhtml">Project Showcase</a></li>
-                        </ul>
-                    </td>
-                    <td>&#xa0;</td>
-                    <td class="none">None</td>
-                    <td>None.</td>
-                </tr>
-                <tr class="non-meeting">
-                    <td>Fri, 12-13,<br />11:59 p.m.</td>
-                    <td colspan="4">
-                        <strong>Projects due</strong>
-                    </td>
-                </tr>
-            </table>
-        </main>
-    </body>
+    <main id="main-content">
+<section id="digital-methods-in-humanistic-research" class="level1">
+<h1>Digital Methods in Humanistic Research</h1>
+<section id="schedule" class="level2">
+<h2>Schedule</h2>
+<section id="text-encoding-basics-extensible-markup-language-xml"
+class="level3">
+<h3>Text Encoding Basics: eXtensible Markup Language (XML)</h3>
+<section id="tuesday-august-26" class="level4">
+<h4>Tuesday, August 26</h4>
+<p>Class:</p>
+<ul>
+<li>What is (computational) Digital Humanities?</li>
+<li>Introduction to XML: hierarchy, well-formedness, elements and
+attributes</li>
+<li>Using oXygen to mark up <a
+href="https://www.imdb.com/title/tt0120737/quotes/">Lord of the Rings
+quotes</a>.</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a
+href="https://www.oxygenxml.com/xml_editor/download_oxygenxml_editor.html">Install
+oXygen</a> on your personal computer (licence key provided on
+Canvas)</li>
+<li><a href="https://code.visualstudio.com/">Install Visual Studios
+Code</a></li>
+<li>Read <a href="http://dh.obdurodon.org/what-is-xml.xhtml">An even
+gentler introduction to XML</a></li>
+<li>XML exercise 1: Copy the text of <em>one</em> letter by either <a
+href="http://law2.umkc.edu/faculty/projects/ftrials/wilde/lettersfromwilde.html">Oscar
+Wilde</a> (please close and ignore the pop-up) or <a
+href="http://www.gutenberg.org/cache/epub/6408/pg6408.html">Anton
+Chekhov</a> and mark it up in XML using <oXygen/>, employing whatever
+markup you consider appropriate. In this and all other assignments,
+follow our <a
+href="http://dh.obdurodon.org/file-naming_conventions.xhtml">file-naming
+conventions</a>.</li>
+</ul>
+</section>
+<section id="thursday-august-28" class="level4">
+<h4>Thursday, August 28</h4>
+<p>Class:</p>
+<ul>
+<li>Types of XML markup: descriptive, presentational, procedural</li>
+<li>AI and coding</li>
+<li>Project guidelines</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Submit questionnaire on research interests</li>
+<li>XML exercise 2: Mark up a text of your choice (any genre, manageable
+size, foreign languages welcome)</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday" class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Sample course project</li>
+<li>Homework workshop</li>
+</ul>
+</section>
+</section>
+<section id="tuesday-september-2" class="level4">
+<h4>Tuesday, September 2</h4>
+<p>Class:</p>
+<ul>
+<li>Conceptual introduction to Git</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read the linked articles in <a
+href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#partone">“Learning
+Git: Part One”</a>.</li>
+<li>Complete <a
+href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#parttwo">“Learning
+Git: Part II,”</a> which teaches you how to set up a GitHub
+account.</li>
+<li>Read <a href="http://dh.obdurodon.org/beginner-pitfalls.xhtml">You
+aren’t a beginning XML developer anymore</a> to help prepare for the XML
+test.</li>
+</ul>
+</section>
+</section>
+<section id="schemas-relaxng" class="level3">
+<h3>Schemas: RelaxNG</h3>
+<section id="thursday-september-4" class="level4">
+<h4>Thursday, September 4</h4>
+<p>Class:</p>
+<ul>
+<li>Command line: Friend, not foe</li>
+<li>What is a “schema”?</li>
+<li>Relax NG (<a href="http://dh.obdurodon.org/recipe_djb.xml">Pasta
+recipe</a>)</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>XML test (all tests completed over the weekend, due before next
+class)</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-1"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Form project teams</li>
+<li>Go over project team norms: weekly meeting times, communication
+format, etc.</li>
+</ul>
+</section>
+</section>
+<section id="tuesday-september-9" class="level4">
+<h4>Tuesday, September 9</h4>
+<p>Class:</p>
+<ul>
+<li>Relax NG, cont.</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Relax NG exercise 1: Write a Relax NG schema for one of the XML
+documents you created for an earlier assignment (XML exercise 1, 2, or
+3; you may modify your XML if you wish) and upload both your XML and
+your schema file.</li>
+<li>Complete <a
+href="https://dh.bactriana.org/assignments/learn-git-sequence.xhtml#partthree">“Learning
+Git: Part III,”</a> which teaches you how to install Git locally on your
+personal computer.</li>
+</ul>
+</section>
+<section id="thursday-september-11" class="level4">
+<h4>Thursday, September 11</h4>
+<p>Class:</p>
+<ul>
+<li>Relax NG, cont.</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read our <a
+href="http://dh.obdurodon.org/relaxng_mixed-content.xhtml">Relax NG
+content models</a> tutorial to learn about modeling mixed content and
+empty elements.</li>
+<li>Relax NG exercise 2: Choose a small text, perform document analysis,
+write a schema, mark up the text according to the schema, and upload
+both your XML and your schema file.</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-2"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Git: practice and troubleshooting</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="string-matching-regular-expressions-regex" class="level3">
+<h3>String Matching: Regular Expressions (Regex)</h3>
+<section id="tuesday-september-16" class="level4">
+<h4>Tuesday, September 16</h4>
+<p>Class:</p>
+<ul>
+<li>Lecture: Regex, the superpowered search /replace language</li>
+<li>Lecture: “language” versus “program / app”</li>
+<li>Walkthrough: Regular expressions (<a
+href="https://nosweatshakespeare.com/sonnets/60/">Sonnet 60</a>)</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read the regex mini-tutorial at
+http://www.regular-expressions.info/quickstart.html.</li>
+<li><a href="http://dh.obdurodon.org/regex-assignment-01.xhtml">Regex
+exercise 1</a></li>
+</ul>
+</section>
+<section id="thursday-september-18" class="level4">
+<h4>Thursday, September 18</h4>
+<p>Class:</p>
+<ul>
+<li>AI-assisted regular expressions</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Complete RelaxNG test over the weekend</li>
+<li>Read <a href="http://dh.obdurodon.org/regex-tips.xhtml">Regex
+tips</a> (Read the first half, before the Using regex in XSLT section,
+to acquaint yourself with what’s there, but don’t try to memorize it all
+at once. You can skip the second half, about regex in XSLT.)</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-3"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Project workshop: centering our research questions</li>
+</ul>
+</section>
+</section>
+<section id="tuesday-september-23" class="level4">
+<h4>Tuesday, September 23</h4>
+<p>Class:</p>
+<ul>
+<li>Advanced Regex</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/regex-assignment-02.xhtml">Regex
+exercise 2</a></li>
+</ul>
+</section>
+</section>
+<section id="web-technologies-html-css-javascript" class="level3">
+<h3>Web Technologies: HTML, CSS, Javascript</h3>
+<section id="thursday-september-25" class="level4">
+<h4>Thursday, September 25</h4>
+<p>Class:</p>
+<ul>
+<li>Lecture: XML versus its subsets (HTML, TEI)</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read <a href="http://learnlayout.com/">Learn CSS layout</a></li>
+<li>HTML/CSS exercise 1: Create and upload your first HTML and CSS pages
+Github Pages (see “Getting started with Git Pages” page on Canvas). The
+content and look of your webpage is up to you, but should demonstrate
+usage of several XHTML element types as well as CSS styling. Please
+submit the URL of your page to Canvas.</li>
+</ul>
+</section>
+<section id="tuesday-september-30" class="level4">
+<h4>Tuesday, September 30</h4>
+<p>Class:</p>
+<ul>
+<li>Lecture: Do’s and don’ts of AI assistance for web design</li>
+<li>Walkthrough: CSS</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>HTML/CSS exercise 2: Enhance and expand your HTML web page and
+associated CSS from the last assignment (focus this time on structural
+elements) and upload them as new files with new names (see the <a
+href="http://dh.obdurodon.org/html-css_assignments.xhtml">additional
+instructions about formatting, naming, and uploading your files</a>).
+<em>Do not overwrite your files from the first HTML
+assignment.</em></li>
+<li>Read <a href="http://dh.obdurodon.org/introduction-xpath.xhtml">What
+can XPath do for me?</a></li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-4"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>The Text Encoding Initiative</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="navigating-textual-markup-xpath" class="level3">
+<h3>Navigating Textual Markup: XPath</h3>
+<section id="thursday-october-2" class="level4">
+<h4>Thursday, October 2</h4>
+<p>Class:</p>
+<ul>
+<li>Lecture: Hierarchical “paths”</li>
+<li>Walkthrough: XPath: overview, paths, axes (<a
+href="http://dh.obdurodon.org/fables.xml">fables.xml</a>)</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/xpath-assignment-01.xhtml">XPath
+exercise 1</a></li>
+</ul>
+</section>
+<section id="tuesday-october-7" class="level4">
+<h4>Tuesday, October 7</h4>
+<p>Class:</p>
+<ul>
+<li>Lecture: XPath predicates and functions</li>
+<li>Walkthrough: Develop and test (!) path expressions one step at a
+time</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read <a href="http://dh.obdurodon.org/functions.xhtml">The XPath
+functions we use most</a></li>
+<li><a href="http://dh.obdurodon.org/xpath-assignment-02.xhtml">XPath
+exercise 2</a></li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-5"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Web design workshop:
+<ul>
+<li><a href="https://css-tricks.com/snippets/css/a-guide-to-flexbox/">A
+complete guide to Flexbox</a></li>
+<li>W3Schools <a href="https://www.w3schools.com/css/css_grid.asp">CSS
+Grid layout module</a></li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="thursday-october-9" class="level4">
+<h4>Thursday, October 9</h4>
+<p>Class:</p>
+<ul>
+<li>Walkthrough: XPath</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/xpath-assignment-03.xhtml">XPath
+exercise 3</a></li>
+</ul>
+</section>
+<section id="tuesday-october-14" class="level4">
+<h4>Tuesday, October 14</h4>
+<p>Class:</p>
+<ul>
+<li>Walkthrough: XPath</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Complete XPath test</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-6"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Advanced XPath: work through <a
+href="http://dh.obdurodon.org/xpath-assignment-04.xhtml">XPath exercise
+4</a></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="textual-transformation-xslt" class="level3">
+<h3>Textual Transformation: XSLT</h3>
+<section id="thursday-october-16" class="level4">
+<h4>Thursday, October 16</h4>
+<p>Class:</p>
+<ul>
+<li>Lecture: How to look stuff up</li>
+<li>Lecture: XSLT and XPath Overview</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read <a href="http://dh.obdurodon.org/xslt-basics.xhtml">“XSLT
+Basics”</a></li>
+</ul>
+</section>
+<section id="tuesday-october-21" class="level4">
+<h4>Tuesday, October 21</h4>
+<p>Class:</p>
+<ul>
+<li>XSLT templates</li>
+<li>XPath expressions and XPath patterns</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read <a href="http://dh.obdurodon.org/algorithms.xhtml">Thinking in
+algorithms</a></li>
+<li><a href="http://dh.obdurodon.org/xslt-assignment-01.xhtml">XSLT
+exercise 1</a></li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-7"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>First XSLT homework troubleshooting workshop</li>
+</ul>
+</section>
+</section>
+<section id="thursday-october-23" class="level4">
+<h4>Thursday, October 23</h4>
+<p>Class:</p>
+<ul>
+<li>Lecture: XSLT program structure and design</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/xslt-assignment-02.xhtml">XSLT
+exercise 2</a></li>
+<li>Read <a href="http://dh.obdurodon.org/xslt-basics-2.xhtml">XSLT,
+part 2: conditionals and push and pull</a></li>
+<li>Read <a
+href="http://dh.obdurodon.org/developing-xslt.xhtml">Developing an XSLT
+stylesheet</a></li>
+</ul>
+</section>
+<section id="tuesday-october-28" class="level4">
+<h4>Tuesday, October 28</h4>
+<p>Class:</p>
+<ul>
+<li>Walkthrough: XSLT homework</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/xslt-assignment-03.xhtml">XSLT
+exercise 3</a></li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-8"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Project workshop: from XML to your project website using XSLT</li>
+</ul>
+</section>
+</section>
+<section id="thursday-october-30" class="level4">
+<h4>Thursday, October 30</h4>
+<p>Class:</p>
+<ul>
+<li>Walkthrough: XSLT push and pull</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Read <a href="http://dh.obdurodon.org/avt.xhtml">Attribute value
+templates</a></li>
+<li>Read <a href="http://dh.obdurodon.org/modal-xslt.xhtml">Modal
+XSLT</a></li>
+<li><a href="http://dh.obdurodon.org/xslt-assignment-04.xhtml">XSLT
+exercise 4</a></li>
+</ul>
+</section>
+<section id="tuesday-november-4" class="level4">
+<h4>Tuesday, November 4</h4>
+<p>Class:</p>
+<ul>
+<li>XSLT review workshop</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/xslt-assignment-05.xhtml">XSLT
+exercise 5</a></li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-9"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>XSLT for projects</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="text-to-images-scalable-vector-graphics-svg"
+class="level3">
+<h3>Text to Images: Scalable Vector Graphics (SVG)</h3>
+<section id="thursday-november-6" class="level4">
+<h4>Thursday, November 6</h4>
+<p>Class:</p>
+<ul>
+<li>XSLT review</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>XSLT Test</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-10"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+</section>
+</section>
+<section id="tuesday-november-11" class="level4">
+<h4>Tuesday, November 11</h4>
+<p>Class:</p>
+<ul>
+<li>SVG</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/svg-assignment-01.xhtml">SVG
+exercise 1</a></li>
+<li>Read <a
+href="http://dh.obdurodon.org/coordinate-tutorial.xhtml">Viewbox
+tutorial: an introduction to the SVG coordinate space</a></li>
+</ul>
+</section>
+<section id="thursday-november-13" class="level4">
+<h4>Thursday, November 13</h4>
+<p>Class:</p>
+<ul>
+<li>SVG</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/svg-assignment-02.xhtml">SVG
+exercise 2</a> (Remember that you should upload the XSLT stylesheet that
+you used to transform your document, not the SVG output of the
+transformation)</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-11"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>SVG for projects workshop</li>
+</ul>
+</section>
+</section>
+<section id="tuesday-november-18" class="level4">
+<h4>Tuesday, November 18</h4>
+<p>Class:</p>
+<ul>
+<li>SVG</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li><a href="http://dh.obdurodon.org/svg-assignment-03.xhtml">SVG
+exercise 3</a></li>
+</ul>
+</section>
+<section id="thursday-november-20" class="level4">
+<h4>Thursday, November 20</h4>
+<p>Class:</p>
+<ul>
+<li>Crash course on XML for geospatial mapping</li>
+</ul>
+<p>Homework:</p>
+<ul>
+<li>Project sprint</li>
+<li>SVG test</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-12"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li>Project Workshop</li>
+</ul>
+<p><strong>November 24-28: Thanksgiving Break (no class)</strong></p>
+</section>
+</section>
+<section id="tuesday-december-2" class="level4">
+<h4>Tuesday, December 2</h4>
+<p>Class:</p>
+<ul>
+<li>Project Showcase</li>
+</ul>
+</section>
+<section id="thursday-december-4" class="level4">
+<h4>Thursday, December 4</h4>
+<p>Class:</p>
+<ul>
+<li>Project Showcase</li>
+</ul>
+<section id="associated-recitation-tuesday-or-thursday-13"
+class="level5">
+<h5 class="recitation-section">Associated Recitation (Tuesday or Thursday)</h5>
+<ul>
+<li><em>does not meet</em></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+</section>
+    </main>
+</body>
 </html>
