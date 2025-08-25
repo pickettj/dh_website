@@ -1,3 +1,10 @@
+/* Updated CSS for semantic HTML structure with new color palette:
+   #FE7743 (coral/orange-red)
+   #273F4F (dark blue-gray) 
+   #447D9B (medium blue)
+   #D7D7D7 (light gray)
+*/
+
 /* Sans Serif Google Fonts */
 /*font-family: 'Open Sans Condensed', sans-serif;
 font-family: 'Noto Sans JP', sans-serif;
@@ -19,30 +26,98 @@ head {
 
 body {
     font-family: 'Assistant', sans-serif;
-    background: #f9ffe6;
+    background: white; /* Clean white background */
     margin-left: 4%;
     font-size: 110%;
     padding-bottom: 50px; /* Adds extra space at the bottom */
+    color: #273F4F; /* Dark blue-gray text */
 }
 
-/* Nav Bar */
+/* Skip Link for Accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #273F4F;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 0 0 4px 4px;
+    font-size: 14px;
+    z-index: 1000;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Hidden content for screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Header and Navigation */
+header {
+    margin-bottom: 2rem;
+}
+
 nav {
-    font-size: 115%;
+    font-size: 100%; /* Reduced from 115% */
     font-variant: small-caps;
     margin: auto;
-    width: 500px;
-    border: 2px solid #555;
+    max-width: 700px; /* Increased from 500px */
+    width: 95%; /* Make responsive */
+    border: 2px solid #273F4F; /* Dark blue-gray border */
     text-align: center;
-    padding: 10px;
-    background: #e6e6cc;
+    padding: 8px 5px; /* Reduced vertical padding */
+    background: #D7D7D7; /* Light gray background */
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: space-around;
+    align-items: center;
 }
 
+nav a {
+    margin: 0 2px; /* Minimal horizontal spacing */
+    text-decoration: none;
+    padding: 4px 6px; /* Small padding for click targets */
+    border-radius: 3px;
+    white-space: nowrap; /* Prevent text wrapping */
+    flex-shrink: 0; /* Don't shrink links */
+    font-size: 90%; /* Slightly smaller text */
+    color: #273F4F; /* Dark blue-gray text */
+}
+
+nav a:hover {
+    background: #447D9B; /* Medium blue highlight on hover */
+    color: white;
+}
+
+nav a[aria-current="page"] {
+    font-weight: bold;
+    background: #FE7743; /* Coral highlight for current page */
+    color: white;
+}
+
+/* Link Colors */
 a:link {
-    color: #974b00;
+    color: #447D9B; /* Medium blue for links */
 }
 
 a:visited {
-    color: #1a3300;
+    color: #273F4F; /* Dark blue-gray for visited */
+}
+
+a:hover {
+    color: #FE7743; /* Coral on hover */
 }
 
 .clear {
@@ -53,45 +128,60 @@ a:visited {
 h1 {
     font-weight: bold;
     text-align: center;
-    color: #444422;
-    background: #e0e0d1;
+    color: white; /* White text */
+    background: #273F4F; /* Dark blue-gray background */
     margin: 3% auto;
-    padding: 10px;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
+    padding: 15px;
+    border-top: 3px solid #FE7743;
+    border-bottom: 3px solid #FE7743;
     text-transform: uppercase;
     font-size: 2.5rem;
 }
 
 h2 {
-    padding: 5px;
+    padding: 8px;
     margin-left: 4%;
     padding-bottom: 10px;
-    background: #cad5bb;
+    background: #D7D7D7; /* Light gray background */
     font-variant: small-caps;
+    color: #273F4F; /* Dark blue-gray text */
+    border-left: 4px solid #FE7743; /* Coral left border */
 }
 
 h3 {
     padding: 2px;
     margin-left: 4%;
-    border-bottom: 1px solid black;
+    border-bottom: 2px solid #447D9B; /* Medium blue border */
     margin-top: 4%;
+    color: #273F4F;
 }
 
 h4 {
     padding: 2px;
     margin-left: 4%;
     margin-top: 1%;
-    border-bottom: 1px dotted #000;
+    border-bottom: 1px dotted #447D9B; /* Medium blue dotted border */
     font-style: italic;
+    color: #273F4F;
+}
+
+/* Main Content Area */
+main {
+    margin-top: 1rem;
+}
+
+/* Section spacing */
+section {
+    margin-bottom: 2rem;
+}
+
+section section {
+    margin-bottom: 1rem; /* Less space for nested sections */
 }
 
 span {
     font-weight: bold;
-    color: green;
-}
-
-main {
+    color: #FE7743; /* Coral for emphasis */
 }
 
 img {
@@ -133,6 +223,31 @@ li {
     line-height: 1.5;
 }
 
+/* Page Contents Navigation */
+nav[aria-label="Page contents"] {
+    width: auto;
+    border: 2px solid #447D9B;
+    background: #D7D7D7;
+    margin-left: 4%;
+    margin-right: 8%;
+    padding: 15px;
+    font-size: 100%;
+    display: block; /* Override flex from main nav */
+    max-width: none;
+}
+
+nav[aria-label="Page contents"] ul {
+    margin: 0;
+    padding-left: 1rem;
+}
+
+nav[aria-label="Page contents"] a {
+    color: #273F4F;
+    margin: 0;
+    padding: 2px 0;
+    font-size: 100%;
+}
+
 /* Table of Contents */
 div.toc {
     margin-left: 4%;
@@ -148,9 +263,21 @@ div.toc {
 /* Blockquote */
 blockquote {
     margin: 0 0 1em;
+    margin-left: 4%;
+    margin-right: 8%;
     padding: 0.5em 20px;
-    border-left: 4px solid #333;
-    color: #555;
+    border-left: 4px solid #FE7743; /* Coral border */
+    background: #D7D7D7; /* Light gray background */
+    color: #273F4F;
+    font-style: italic;
+}
+
+blockquote cite {
+    display: block;
+    margin-top: 10px;
+    font-style: normal;
+    color: #447D9B;
+    font-weight: bold;
 }
 
 /* Tables */
@@ -159,46 +286,120 @@ table {
     margin-left: 4%;
     margin-right: 8%;
     line-height: 1.5;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    border: 1px solid #D7D7D7;
+    padding: 8px;
+}
+
+table th {
+    background: #273F4F;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background: #D7D7D7;
 }
 
 /* Code Block Styling */
 .code {
-    background: #f2f2f2;
-    padding: 2px 6px;
+    background: #D7D7D7; /* Light gray background */
+    padding: 4px 8px;
     font-family: 'Assistant', sans-serif;
     font-size: 95%;
-    color: #333;
+    color: #273F4F;
     border-radius: 3px;
+    border: 1px solid #447D9B; /* Medium blue border */
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
     line-height: 1.4;
 }
 
 /* Code Snippet Styling */
 .code-snippet {
-    background: #e8e8e8; /* Lighter shade for inline visibility */
+    background: #D7D7D7; /* Light gray background */
     padding: 2px 4px; /* Smaller padding for inline appearance */
     font-family: 'Assistant', sans-serif;
     font-size: 90%; /* Slightly smaller to fit inline with text */
-    color: #444; /* Darker for contrast in inline context */
+    color: #273F4F; /* Dark blue-gray for contrast */
     border-radius: 3px; /* Smooth edges */
-    border: 1px solid #ccc; /* Subtle border to set it apart */
+    border: 1px solid #447D9B; /* Medium blue border */
     display: inline; /* Ensures the snippet stays inline */
     line-height: 1.3; /* Keeps text alignment consistent */
 }
 
 /* Preformatted Code Block Styling */
 pre {
-    background: #f4f4f4; /* Light gray background to match code block style */
+    background: #D7D7D7; /* Light gray background */
     padding: 10px 15px; /* Add padding for a clean, spacious look */
     font-family: 'Assistant', monospace; /* Use Assistant for consistency with a monospace fallback */
     font-size: 95%; /* Similar size to `.code` blocks */
-    color: #333; /* Dark text color for readability */
+    color: #273F4F; /* Dark blue-gray text color for readability */
     border-radius: 5px; /* Slightly rounded edges */
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
+    border: 2px solid #447D9B; /* Medium blue border */
+    box-shadow: 2px 2px 5px rgba(68, 125, 155, 0.2); /* Blue-tinted shadow */
     overflow-x: auto; /* Allows horizontal scrolling if code is too wide */
     line-height: 1.5; /* Match other line-heights */
     margin-left: 4%; /* Align with paragraph text */
     margin-right: 4%; /* Additional right margin */
     margin-top: 1em; /* Space above and below */
     margin-bottom: 1em;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 900px) {
+    nav {
+        font-size: 85%; /* Even smaller on medium screens */
+    }
+    
+    nav a {
+        font-size: 85%;
+        padding: 3px 4px;
+    }
+}
+
+@media (max-width: 768px) {
+    nav {
+        width: 98%;
+        font-size: 80%;
+        flex-direction: column; /* Stack vertically on small screens */
+        padding: 5px;
+    }
+    
+    nav a {
+        margin: 2px 0;
+        padding: 5px 8px;
+        font-size: 90%;
+    }
+    
+    body {
+        margin-left: 2%;
+        font-size: 105%;
+    }
+    
+    p, ul, ol {
+        margin-left: 2%;
+        margin-right: 4%;
+    }
+    
+    h2, h3, h4 {
+        margin-left: 2%;
+    }
+    
+    nav[aria-label="Page contents"] {
+        margin-left: 2%;
+        margin-right: 4%;
+    }
+    
+    blockquote {
+        margin-left: 2%;
+        margin-right: 4%;
+    }
+    
+    table, pre {
+        margin-left: 2%;
+        margin-right: 2%;
+    }
 }

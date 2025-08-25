@@ -1,26 +1,55 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <link rel="stylesheet" type="text/css" href="css/style.css"/>
-        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
-        <title>Digital Humanities</title>
-    </head>
-    <body>
-        <nav>
-            <a href="index.xhtml">Home</a>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Computational Methods in the Humanities - A course introducing students to the role of computational methods in humanities research and scholarship." />
+    <title>Digital Humanities - Computational Methods in the Humanities</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" />
+</head>
+<body>
+    <!-- 
+ARIA Attributes for Accessibility:
+- aria-labelledby: connects sections to their headings for screen readers
+- aria-current="page": marks the current page in navigation
+- role="navigation" + aria-label: identifies different navigation areas
+- These improve accessibility for users with disabilities without affecting visual design
+-->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="index.xhtml" aria-current="page">Home</a>
             <a href="syllabus.xhtml">Syllabus</a>
             <a href="description.xhtml">Policies</a>
             <a href="projects.xhtml">Projects</a>
             <!-- <a href="assignments.xhtml">Assignments</a> -->
-            <a href="http://dh.obdurodon.org/">Resources</a>
-            <a href="https://bactriana.org">Bactriana</a>
+            <a href="http://dh.obdurodon.org/" target="_blank" rel="noopener">Resources</a>
+            <a href="https://bactriana.org" target="_blank" rel="noopener">Bactriana</a>
         </nav>
-        <h1>Computational Methods in the Humanities</h1>
-        <h3><a href="description.xhtml">Course Description</a></h3>
-        <p>This course is modeled very closely on one pioneered by emeritus Pitt Professor <a href="https://www.slavic.pitt.edu/people/david-j-birnbaum">David Birnbaum</a>, and we will be using much of the material available on his website: Obdurodon. (What is an "Obdurodon," you ask? An <a href="https://en.wikipedia.org/wiki/Obdurodon">extinct platypus with molars</a>, apparently... don't worry about it.) For our purposes, <a href="http://dh.obdurodon.org/">Obdurodon functions as an encylcopedia of information</a> essential for this course, and many of the links to coding assignments on the <a href="syllabus.xhtml">syllabus</a> redirect there as well. Just bear in mind that specific course information on Obdurodon (e.g., due dates, classroom assignments) may relate to a previous semester. For a more detailed description of assignments and policies, <a href="description.xhtml">follow this link</a>. 
-        </p>
-        <p>Dr. Birnbaum summed up the impetus for this course as follows: <blockquote>"Humanities students often do not realize (or even imagine) that 1) they are capable of learning to write useful and practical computer programs within the course of a semester even if they have no prior background in programming; 2) the ability to write one’s own programs can be valuable for scholars in the humanities, especially because commercial software often does not address research needs in the humanities; and 3) practical computer programming, no less than reading, writing, and arithmetic, is a useful skill that is within the reach of any educated person regardless of academic specialization."</blockquote></p>
+    </header>
 
-    </body>
+    <main id="main-content">
+        <h1>Digital Methods in Humanistic Research</h1>
+        
+        <section>
+            <h2 id="course-description-link"><a href="description.xhtml">Course Description</a></h2>
+            <p>This is a course about using <em>computational methods</em> to unlock new insights in humanistic research: how can coding help you see things in a (historical, literary, philosophical, linguistic) text that might otherwise be invisible? By the end of one semester, students with <em>no prior coding experience</em> (our target constituency) will be seasoned researchers in the digital humanities.</p>
+            <p>"Digital humanities" is a capacious rubric, and "coding" does not narrow it down much either. Humanists tend to be especially interested in texts, and so this course focuse on coding languages (especially XML and related methods) that allow the computer to better understand a text and endow it with new meanings.</p>
+            <p>Even though students will spend a lot of their time coding, this is a humanities research course before it is a coding course: the computer is the means, not the ends. It is therefore fitting that the centerpiece of this course is a <a href="projects.xhtml">research project</a>, the topic of which is entirely driven by student interests, and to which students will begin applying their newly-learned coding skills immediately.</p>
+        </section>
+
+        
+        <section>
+            <h2>Legacy</h2>
+            <p>This course is modeled very closely on one pioneered by emeritus Pitt Professor <a href="https://www.slavic.pitt.edu/people/david-j-birnbaum" target="_blank" rel="noopener">David Birnbaum</a>, and we will be using much of the material available on his website: Obdurodon. (What is an "Obdurodon," you ask? An <a href="https://en.wikipedia.org/wiki/Obdurodon" target="_blank" rel="noopener">extinct platypus with molars</a>, apparently... don't worry about it.) For our purposes, <a href="http://dh.obdurodon.org/" target="_blank" rel="noopener">Obdurodon functions as an encylcopedia of information</a> essential for this course, and many of the links to coding assignments on the <a href="syllabus.xhtml">syllabus</a> redirect there as well. Just bear in mind that specific course information on Obdurodon (e.g., due dates, classroom assignments) may relate to a previous semester. For a more detailed description of assignments and policies, <a href="description.xhtml">follow this link</a>.</p>
+        
+        
+            <p>Dr. Birnbaum summed up the impetus for this course as follows: 
+                <blockquote cite="https://www.slavic.pitt.edu/people/david-j-birnbaum">"Humanities students often do not realize (or even imagine) that 1) they are capable of learning to write useful and practical computer programs within the course of a semester even if they have no prior background in programming; 2) the ability to write one's own programs can be valuable for scholars in the humanities, especially because commercial software often does not address research needs in the humanities; and 3) practical computer programming, no less than reading, writing, and arithmetic, is a useful skill that is within the reach of any educated person regardless of academic specialization."</blockquote>
+            </p>
+        </section>
+    </main>
+</body>
 </html>
