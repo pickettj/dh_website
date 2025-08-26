@@ -1,0 +1,901 @@
+/* ===== DH.CSS - MODERN SYLLABUS THEME =====
+   Compatible with syllabus-interactive.js collapsible structure
+
+   Color Palette:
+   - #FE7743 (coral/orange-red) - Primary accent, highlights
+   - #273F4F (dark blue-gray) - Main text, headers
+   - #447D9B (medium blue) - Secondary elements, links
+   - #D7D7D7 (light gray) - Backgrounds, subtle accents
+
+   Font: 'Assistant', sans-serif throughout
+*/
+
+/* ===== IMPORTS & RESET ===== */
+@import url("https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700;800&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    font-family: "Assistant", sans-serif;
+}
+
+/* ===== BODY & MAIN CONTAINER ===== */
+body {
+    font-family: "Assistant", sans-serif;
+    line-height: 1.65;
+    color: #273f4f;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== NAVIGATION STYLES ===== */
+/* Skip link for accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #000000;
+    color: #ffffff;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+    font-weight: 600;
+    border-radius: 0 0 4px 4px;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Header navigation */
+header {
+    background: linear-gradient(135deg, #273f4f 0%, #447d9b 70%, #fe7743 100%);
+    padding: 0;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Navigation container */
+nav[role="navigation"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem;
+    gap: 0;
+}
+
+/* Navigation links */
+nav[role="navigation"] a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    margin: 0 0.25rem;
+    position: relative;
+}
+
+nav[role="navigation"] a:hover {
+    background: rgba(254, 119, 67, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Current page indicator */
+nav[role="navigation"] a[aria-current="page"] {
+    background: rgba(254, 119, 67, 0.3);
+    font-weight: 600;
+    border: 1px solid rgba(254, 119, 67, 0.5);
+}
+
+nav[role="navigation"] a[aria-current="page"]:hover {
+    background: rgba(254, 119, 67, 0.4);
+}
+
+/* External link styling */
+nav[role="navigation"] a[target="_blank"] {
+    opacity: 0.9;
+}
+
+nav[role="navigation"] a[target="_blank"]:hover {
+    opacity: 1;
+}
+
+/* Main content area adjustments */
+main {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 0 30px rgba(39, 63, 79, 0.08);
+    position: relative;
+    min-height: calc(100vh - 80px);
+}
+
+/* Main heading style (matching projects page) */
+main h1 {
+    font-size: 2.2rem;
+    color: #273f4f;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid #fe7743;
+    text-align: left;
+}
+
+/* Container from template (for backward compatibility) */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 0 30px rgba(39, 63, 79, 0.08);
+    position: relative;
+    min-height: 100vh;
+}
+
+/* ===== LAST UPDATED WRAPPER ===== */
+.last-updated-wrapper {
+    padding: 1rem 0;
+    background: rgba(215, 215, 215, 0.1);
+    border-bottom: 1px solid #d7d7d7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.download-link {
+    margin-right: 1rem;
+}
+
+.pdf-download {
+    background: #fe7743;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pdf-download:hover {
+    background: #447d9b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(254, 119, 67, 0.3);
+}
+
+.last-updated {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #447d9b;
+    margin: 0;
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.content {
+    padding: 0;
+}
+
+/* ===== MAIN COLLAPSIBLE SECTIONS (## headings) ===== */
+.section {
+    margin-bottom: 2rem;
+    border: 2px solid #d7d7d7;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(39, 63, 79, 0.08);
+    transition: all 0.3s ease;
+}
+
+.section:hover {
+    box-shadow: 0 6px 16px rgba(39, 63, 79, 0.12);
+    border-color: #fe7743;
+}
+
+/* Section headers - clickable to expand/collapse */
+.section-header {
+    background: linear-gradient(135deg, #273f4f 0%, #447d9b 100%);
+    color: #ffffff;
+    padding: 1.25rem 1.75rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.section-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #fe7743, #447d9b);
+}
+
+.section-header:hover {
+    background: linear-gradient(135deg, #447d9b 0%, #fe7743 100%);
+    transform: translateY(-1px);
+}
+
+.section-header.active {
+    background: linear-gradient(135deg, #fe7743 0%, #273f4f 100%);
+}
+
+/* Toggle icon (▼/▲) in section headers */
+.toggle-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+    font-weight: bold;
+}
+
+.section-header.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* Collapsible content area for sections */
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+    background: #ffffff;
+}
+
+.section-content.active {
+    transition: max-height 0.5s ease-in;
+}
+
+.section-inner {
+    padding: 2rem;
+    background: linear-gradient(
+        to bottom,
+        #ffffff 0%,
+        rgba(247, 249, 250, 0.3) 100%
+    );
+}
+
+/* ===== NESTED COLLAPSIBLE SUBSECTIONS (### headings) ===== */
+.subsection {
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #447d9b;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(215, 215, 215, 0.1);
+    box-shadow: 0 2px 6px rgba(68, 125, 155, 0.1);
+}
+
+/* Subsection headers */
+.subsection-header {
+    background: linear-gradient(
+        135deg,
+        rgba(68, 125, 155, 0.1) 0%,
+        rgba(215, 215, 215, 0.2) 100%
+    );
+    color: #273f4f;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(68, 125, 155, 0.2);
+}
+
+.subsection-header:hover {
+    background: linear-gradient(135deg, #447d9b 0%, #fe7743 100%);
+    color: #ffffff;
+    transform: translateX(8px);
+    border-left: 4px solid #fe7743;
+}
+
+.subsection-header.active {
+    background: linear-gradient(135deg, #273f4f 0%, #447d9b 100%);
+    color: #ffffff;
+    border-bottom: 2px solid #fe7743;
+}
+
+/* Collapsible content for subsections */
+.subsection-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #ffffff;
+}
+
+.subsection-content.active {
+    transition: max-height 0.4s ease-in;
+}
+
+.subsection-inner {
+    padding: 1.5rem;
+    background: #ffffff;
+    border-left: 3px solid rgba(254, 119, 67, 0.3);
+    margin-left: 1rem;
+    border-radius: 0 0 6px 0;
+}
+
+/* ===== SUB-SUBSECTION STYLES (#### headings) ===== */
+.subsubsection {
+    margin-bottom: 1rem;
+    border-left: 3px solid #fe7743;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-left: 1rem;
+    background: rgba(254, 119, 67, 0.05);
+}
+
+/* Sub-subsection headers */
+.subsubsection-header {
+    background: rgba(254, 119, 67, 0.1);
+    color: #273f4f;
+    padding: 0.8rem 1.2rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(254, 119, 67, 0.2);
+}
+
+.subsubsection-header:hover {
+    background: #fe7743;
+    color: #ffffff;
+    border-bottom-color: #273f4f;
+}
+
+.subsubsection-header.active {
+    background: linear-gradient(135deg, #273f4f 0%, #fe7743 100%);
+    color: #ffffff;
+    border-bottom: 2px solid #447d9b;
+}
+
+/* Collapsible content for sub-subsections */
+.subsubsection-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    background: #ffffff;
+}
+
+.subsubsection-content.active {
+    transition: max-height 0.3s ease-in;
+}
+
+.subsubsection-inner {
+    padding: 1rem 1.5rem;
+    background: #ffffff;
+    border-left: 2px solid rgba(68, 125, 155, 0.2);
+    margin-left: 0.5rem;
+}
+
+/* ===== SESSION STYLES (##### headings) ===== */
+.session {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(215, 215, 215, 0.1);
+    border-left: 2px solid #d7d7d7;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.session:hover {
+    background: rgba(68, 125, 155, 0.05);
+    border-left-color: #447d9b;
+    transform: translateX(5px);
+}
+
+.session h5 {
+    color: #447d9b;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #d7d7d7;
+}
+
+/* ===== TYPOGRAPHY WITHIN COLLAPSIBLE CONTENT ===== */
+
+/* Regular headings that aren't part of the collapsible structure */
+.section-inner h1,
+.subsection-inner h1,
+.subsubsection-inner h1 {
+    color: #273f4f;
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin: 1.5rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #fe7743;
+}
+
+.section-inner h2,
+.subsection-inner h2,
+.subsubsection-inner h2 {
+    color: #447d9b;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.75rem 0;
+}
+
+.section-inner h3,
+.subsection-inner h3,
+.subsubsection-inner h3 {
+    color: #fe7743;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 1.25rem 0 0.5rem 0;
+}
+
+.section-inner h4,
+.subsection-inner h4,
+.subsubsection-inner h4 {
+    color: #273f4f;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1rem 0 0.5rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 1rem;
+}
+
+.section-inner h5,
+.subsection-inner h5,
+.subsubsection-inner h5 {
+    color: #447d9b;
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.section-inner h6,
+.subsection-inner h6,
+.subsubsection-inner h6 {
+    color: #273f4f;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0.75rem 0 0.25rem 0;
+}
+
+/* ===== PARAGRAPHS & TEXT CONTENT ===== */
+.section-inner p,
+.subsection-inner p,
+.subsubsection-inner p,
+.session p {
+    margin-bottom: 1.1rem;
+    line-height: 1.7;
+    text-align: justify;
+    hyphens: auto;
+    color: #273f4f;
+}
+
+/* First paragraph after headings */
+.section-inner h1 + p,
+.section-inner h2 + p,
+.section-inner h3 + p,
+.section-inner h4 + p,
+.section-inner h5 + p,
+.section-inner h6 + p,
+.subsection-inner h1 + p,
+.subsection-inner h2 + p,
+.subsection-inner h3 + p,
+.subsection-inner h4 + p,
+.subsection-inner h5 + p,
+.subsection-inner h6 + p,
+.subsubsection-inner h1 + p,
+.subsubsection-inner h2 + p,
+.subsubsection-inner h3 + p,
+.subsubsection-inner h4 + p,
+.subsubsection-inner h5 + p,
+.subsubsection-inner h6 + p {
+    margin-top: 0.5rem;
+}
+
+/* ===== LISTS ===== */
+.section-inner ul,
+.section-inner ol,
+.subsection-inner ul,
+.subsection-inner ol,
+.subsubsection-inner ul,
+.subsubsection-inner ol,
+.session ul,
+.session ol {
+    margin: 1rem 0 1.5rem 1.5rem;
+    line-height: 1.6;
+}
+
+.section-inner li,
+.subsection-inner li,
+.subsubsection-inner li,
+.session li {
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+}
+
+.section-inner ul li::marker,
+.subsection-inner ul li::marker,
+.subsubsection-inner ul li::marker,
+.session ul li::marker {
+    color: #fe7743;
+    font-size: 1.2em;
+}
+
+.section-inner ol li::marker,
+.subsection-inner ol li::marker,
+.subsubsection-inner ol li::marker,
+.session ol li::marker {
+    color: #447d9b;
+    font-weight: 600;
+}
+
+/* Nested lists */
+.section-inner ul ul,
+.section-inner ol ol,
+.section-inner ul ol,
+.section-inner ol ul,
+.subsection-inner ul ul,
+.subsection-inner ol ol,
+.subsection-inner ul ol,
+.subsection-inner ol ul,
+.subsubsection-inner ul ul,
+.subsubsection-inner ol ol,
+.subsubsection-inner ul ol,
+.subsubsection-inner ol ul {
+    margin: 0.5rem 0 0.5rem 1.5rem;
+}
+
+/* ===== LINKS ===== */
+.section-inner a,
+.subsection-inner a,
+.subsubsection-inner a,
+.session a,
+.last-updated-wrapper a {
+    color: #447d9b;
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.section-inner a:hover,
+.subsection-inner a:hover,
+.subsubsection-inner a:hover,
+.session a:hover {
+    color: #fe7743;
+    border-bottom-color: #fe7743;
+}
+
+.section-inner a:visited,
+.subsection-inner a:visited,
+.subsubsection-inner a:visited,
+.session a:visited {
+    color: #273f4f;
+}
+
+/* External link indicator */
+.section-inner a[href^="http"]:not([href*="localhost"])::after,
+.subsection-inner a[href^="http"]:not([href*="localhost"])::after,
+.subsubsection-inner a[href^="http"]:not([href*="localhost"])::after,
+.session a[href^="http"]:not([href*="localhost"])::after {
+    content: " ↗";
+    font-size: 0.8em;
+    color: #447d9b;
+    margin-left: 2px;
+}
+
+/* ===== EMPHASIS & INLINE FORMATTING ===== */
+.section-inner strong,
+.section-inner b,
+.subsection-inner strong,
+.subsection-inner b,
+.subsubsection-inner strong,
+.subsubsection-inner b,
+.session strong,
+.session b {
+    color: #fe7743;
+    font-weight: 600;
+}
+
+.section-inner em,
+.section-inner i,
+.subsection-inner em,
+.subsection-inner i,
+.subsubsection-inner em,
+.subsubsection-inner i,
+.session em,
+.session i {
+    color: #447d9b;
+    font-style: italic;
+}
+
+.section-inner mark,
+.subsection-inner mark,
+.subsubsection-inner mark,
+.session mark {
+    background: rgba(254, 119, 67, 0.2);
+    color: #273f4f;
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+}
+
+/* ===== CODE & PREFORMATTED TEXT ===== */
+.section-inner code,
+.subsection-inner code,
+.subsubsection-inner code,
+.session code {
+    background: #d7d7d7;
+    color: #273f4f;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: "Assistant", Monaco, Consolas, monospace;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(68, 125, 155, 0.2);
+}
+
+.section-inner pre,
+.subsection-inner pre,
+.subsubsection-inner pre,
+.session pre {
+    background: linear-gradient(
+        135deg,
+        #d7d7d7 0%,
+        rgba(215, 215, 215, 0.7) 100%
+    );
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+    border: 2px solid #447d9b;
+    box-shadow: 0 4px 8px rgba(39, 63, 79, 0.1);
+}
+
+.section-inner pre code,
+.subsection-inner pre code,
+.subsubsection-inner pre code,
+.session pre code {
+    background: none;
+    padding: 0;
+    border: none;
+    font-family: "Assistant", Monaco, Consolas, monospace;
+}
+
+/* ===== BLOCKQUOTES ===== */
+.section-inner blockquote,
+.subsection-inner blockquote,
+.subsubsection-inner blockquote,
+.session blockquote {
+    background: linear-gradient(
+        135deg,
+        rgba(215, 215, 215, 0.3) 0%,
+        rgba(68, 125, 155, 0.05) 100%
+    );
+    border-left: 6px solid #447d9b;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    border-radius: 0 12px 12px 0;
+    position: relative;
+    font-style: italic;
+    color: #273f4f;
+}
+
+.section-inner blockquote::before,
+.subsection-inner blockquote::before,
+.subsubsection-inner blockquote::before,
+.session blockquote::before {
+    content: '"';
+    font-size: 4rem;
+    color: #fe7743;
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    opacity: 0.3;
+    font-family: serif;
+    line-height: 1;
+}
+
+.section-inner blockquote p,
+.subsection-inner blockquote p,
+.subsubsection-inner blockquote p,
+.session blockquote p {
+    margin-bottom: 0.8rem;
+    padding-left: 2rem;
+}
+
+.section-inner blockquote p:last-child,
+.subsection-inner blockquote p:last-child,
+.subsubsection-inner blockquote p:last-child,
+.session blockquote p:last-child {
+    margin-bottom: 0;
+}
+
+/* ===== TABLES ===== */
+.section-inner table,
+.subsection-inner table,
+.subsubsection-inner table,
+.session table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    background: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(39, 63, 79, 0.1);
+}
+
+.section-inner th,
+.subsection-inner th,
+.subsubsection-inner th,
+.session th {
+    background: linear-gradient(135deg, #447d9b 0%, #fe7743 100%);
+    color: #ffffff;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-inner td,
+.subsection-inner td,
+.subsubsection-inner td,
+.session td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid rgba(215, 215, 215, 0.5);
+    transition: background-color 0.2s ease;
+}
+
+.section-inner tr:nth-child(even) td,
+.subsection-inner tr:nth-child(even) td,
+.subsubsection-inner tr:nth-child(even) td,
+.session tr:nth-child(even) td {
+    background: rgba(215, 215, 215, 0.1);
+}
+
+.section-inner tr:hover td,
+.subsection-inner tr:hover td,
+.subsubsection-inner tr:hover td,
+.session tr:hover td {
+    background: rgba(254, 119, 67, 0.05);
+}
+
+/* ===== HORIZONTAL RULES ===== */
+.section-inner hr,
+.subsection-inner hr,
+.subsubsection-inner hr,
+.session hr {
+    border: none;
+    height: 3px;
+    background: linear-gradient(90deg, #fe7743 0%, #447d9b 50%, #273f4f 100%);
+    margin: 2rem 0;
+    border-radius: 2px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    nav[role="navigation"] {
+        flex-wrap: wrap;
+        padding: 1rem;
+        gap: 0.5rem;
+    }
+
+    nav[role="navigation"] a {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    main h1 {
+        font-size: 1.8rem;
+    }
+
+    .container {
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .last-updated-wrapper {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .section-header {
+        font-size: 1.2rem;
+        padding: 1rem 1.25rem;
+    }
+
+    .subsection-header {
+        font-size: 1.1rem;
+        padding: 0.875rem 1.25rem;
+    }
+
+    .subsubsection-header {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .section-inner,
+    .subsection-inner,
+    .subsubsection-inner {
+        padding: 1rem;
+    }
+
+    .subsection-header:hover,
+    .subsubsection-header:hover {
+        transform: translateX(4px);
+    }
+}
+
+@media (max-width: 480px) {
+    nav[role="navigation"] {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    nav[role="navigation"] a {
+        text-align: center;
+        margin: 0.25rem 0;
+    }
+
+    main h1 {
+        font-size: 1.6rem;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+    }
+
+    .section-header {
+        font-size: 1.1rem;
+        padding: 0.875rem 1rem;
+    }
+
+    .subsection-header {
+        font-size: 1rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .subsubsection-header {
+        font-size: 0.95rem;
+        padding: 0.625rem 0.875rem;
+    }
+
+    .section-inner,
+    .subsection-inner,
+    .subsubsection-inner {
+        padding: 0.75rem;
+    }
+}
