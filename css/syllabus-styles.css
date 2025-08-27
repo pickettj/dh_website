@@ -337,6 +337,10 @@ main h1 {
     border-bottom: 1px solid rgba(254, 119, 67, 0.2);
 }
 
+.subsubsection-header span {
+    color: #447d9b !important;
+}
+
 .subsubsection-header:hover {
     background: #fe7743; /* Solid coral on hover */
     color: #ffffff;
