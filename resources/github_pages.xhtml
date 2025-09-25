@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A comprehensive guide to getting started with GitHub Pages for hosting websites and collaborative coding projects." />
+    <title>Getting Started with GitHub Pages - Digital Humanities</title>
+    <style>
+/* Updated CSS for semantic HTML structure with new color palette:
+   #FE7743 (coral/orange-red)
+   #273F4F (dark blue-gray) 
+   #447D9B (medium blue)
+   #D7D7D7 (light gray)
+*/
+
+head {
+    font-family: 'Assistant', sans-serif;
+}
+
+body {
+    font-family: 'Assistant', sans-serif;
+    background: white; /* Clean white background */
+    margin-left: 4%;
+    font-size: 110%;
+    padding-bottom: 50px; /* Adds extra space at the bottom */
+    color: #273F4F; /* Dark blue-gray text */
+}
+
+/* Skip Link for Accessibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #273F4F;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 0 0 4px 4px;
+    font-size: 14px;
+    z-index: 1000;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Hidden content for screen readers */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Header and Navigation */
+header {
+    margin-bottom: 2rem;
+}
+
+nav {
+    font-size: 100%; /* Reduced from 115% */
+    font-variant: small-caps;
+    margin: auto;
+    max-width: 700px; /* Increased from 500px */
+    width: 95%; /* Make responsive */
+    border: 2px solid #273F4F; /* Dark blue-gray border */
+    text-align: center;
+    padding: 8px 5px; /* Reduced vertical padding */
+    background: #D7D7D7; /* Light gray background */
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping */
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav a {
+    margin: 0 2px; /* Minimal horizontal spacing */
+    text-decoration: none;
+    padding: 4px 6px; /* Small padding for click targets */
+    border-radius: 3px;
+    white-space: nowrap; /* Prevent text wrapping */
+    flex-shrink: 0; /* Don't shrink links */
+    font-size: 90%; /* Slightly smaller text */
+    color: #273F4F; /* Dark blue-gray text */
+}
+
+nav a:hover {
+    background: #447D9B; /* Medium blue highlight on hover */
+    color: white;
+}
+
+nav a[aria-current="page"] {
+    font-weight: bold;
+    background: #FE7743; /* Coral highlight for current page */
+    color: white;
+}
+
+/* Link Colors */
+a:link {
+    color: #447D9B; /* Medium blue for links */
+}
+
+a:visited {
+    color: #273F4F; /* Dark blue-gray for visited */
+}
+
+a:hover {
+    color: #FE7743; /* Coral on hover */
+}
+
+.clear {
+    clear: both;
+}
+
+/* Headers */
+h1 {
+    font-weight: bold;
+    text-align: center;
+    color: white; /* White text */
+    background: #273F4F; /* Dark blue-gray background */
+    margin: 3% auto;
+    padding: 15px;
+    border-top: 3px solid #FE7743;
+    border-bottom: 3px solid #FE7743;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+}
+
+h2 {
+    padding: 8px;
+    margin-left: 4%;
+    padding-bottom: 10px;
+    background: #D7D7D7; /* Light gray background */
+    font-variant: small-caps;
+    color: #273F4F; /* Dark blue-gray text */
+    border-left: 4px solid #FE7743; /* Coral left border */
+}
+
+h3 {
+    padding: 2px;
+    margin-left: 4%;
+    border-bottom: 2px solid #447D9B; /* Medium blue border */
+    margin-top: 4%;
+    color: #273F4F;
+}
+
+h4 {
+    padding: 2px;
+    margin-left: 4%;
+    margin-top: 1%;
+    border-bottom: 1px dotted #447D9B; /* Medium blue dotted border */
+    font-style: italic;
+    color: #273F4F;
+}
+
+/* Main Content Area */
+main {
+    margin-top: 1rem;
+}
+
+/* Section spacing */
+section {
+    margin-bottom: 2rem;
+}
+
+section section {
+    margin-bottom: 1rem; /* Less space for nested sections */
+}
+
+span {
+    font-weight: bold;
+    color: #FE7743; /* Coral for emphasis */
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+img.map {
+    width: 50%;
+    height: auto;
+}
+
+/* Paragraphs */
+p {
+    padding: 2px;
+    margin-left: 4%;
+    margin-right: 8%;
+    line-height: 1.5;
+}
+
+/* Lists */
+ul,
+ol {
+    margin-left: 4%; /* Align lists with paragraphs */
+    padding-left: 1.5rem; /* Create uniform indentation */
+}
+
+ul ul,
+ol ul,
+ul ol,
+ol ol {
+    margin-left: 1.5rem; /* Additional indent for nested lists */
+    padding-left: 1rem;
+}
+
+li {
+    line-height: 1.5;
+}
+
+/* Page Contents Navigation */
+nav[aria-label="Page contents"] {
+    width: auto;
+    border: 2px solid #447D9B;
+    background: #D7D7D7;
+    margin-left: 4%;
+    margin-right: 8%;
+    padding: 15px;
+    font-size: 100%;
+    display: block; /* Override flex from main nav */
+    max-width: none;
+}
+
+nav[aria-label="Page contents"] ul {
+    margin: 0;
+    padding-left: 1rem;
+}
+
+nav[aria-label="Page contents"] a {
+    color: #273F4F;
+    margin: 0;
+    padding: 2px 0;
+    font-size: 100%;
+}
+
+/* Table of Contents */
+div.toc {
+    margin-left: 4%;
+    padding: 20px;
+    line-height: 2.5;
+    background: url("../images/photographs/samarkand_mosaic_toc.png");
+    background-position: left top;
+    background-attachment: fixed;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+/* Blockquote */
+blockquote {
+    margin: 0 0 1em;
+    margin-left: 4%;
+    margin-right: 8%;
+    padding: 0.5em 20px;
+    border-left: 4px solid #FE7743; /* Coral border */
+    background: #D7D7D7; /* Light gray background */
+    color: #273F4F;
+    font-style: italic;
+}
+
+blockquote cite {
+    display: block;
+    margin-top: 10px;
+    font-style: normal;
+    color: #447D9B;
+    font-weight: bold;
+}
+
+/* Tables */
+table {
+    padding: 2px;
+    margin-left: 4%;
+    margin-right: 8%;
+    line-height: 1.5;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    border: 1px solid #D7D7D7;
+    padding: 8px;
+}
+
+table th {
+    background: #273F4F;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background: #D7D7D7;
+}
+
+/* Code Block Styling */
+.code {
+    background: #D7D7D7; /* Light gray background */
+    padding: 4px 8px;
+    font-family: 'Assistant', sans-serif;
+    font-size: 95%;
+    color: #273F4F;
+    border-radius: 3px;
+    border: 1px solid #447D9B; /* Medium blue border */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    line-height: 1.4;
+}
+
+/* Code Snippet Styling */
+.code-snippet {
+    background: #D7D7D7; /* Light gray background */
+    padding: 2px 4px; /* Smaller padding for inline appearance */
+    font-family: 'Assistant', sans-serif;
+    font-size: 90%; /* Slightly smaller to fit inline with text */
+    color: #273F4F; /* Dark blue-gray for contrast */
+    border-radius: 3px; /* Smooth edges */
+    border: 1px solid #447D9B; /* Medium blue border */
+    display: inline; /* Ensures the snippet stays inline */
+    line-height: 1.3; /* Keeps text alignment consistent */
+}
+
+/* Preformatted Code Block Styling */
+pre {
+    background: #D7D7D7; /* Light gray background */
+    padding: 10px 15px; /* Add padding for a clean, spacious look */
+    font-family: 'Assistant', monospace; /* Use Assistant for consistency with a monospace fallback */
+    font-size: 95%; /* Similar size to `.code` blocks */
+    color: #273F4F; /* Dark blue-gray text color for readability */
+    border-radius: 5px; /* Slightly rounded edges */
+    border: 2px solid #447D9B; /* Medium blue border */
+    box-shadow: 2px 2px 5px rgba(68, 125, 155, 0.2); /* Blue-tinted shadow */
+    overflow-x: auto; /* Allows horizontal scrolling if code is too wide */
+    line-height: 1.5; /* Match other line-heights */
+    margin-left: 4%; /* Align with paragraph text */
+    margin-right: 4%; /* Additional right margin */
+    margin-top: 1em; /* Space above and below */
+    margin-bottom: 1em;
+}
+
+/* Warning/Note boxes */
+.warning {
+    background: #FE7743;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 4% 20px 4%;
+    border-left: 4px solid #273F4F;
+}
+
+.info-box {
+    background: rgba(68, 125, 155, 0.1);
+    border: 1px solid #447D9B;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 4% 20px 4%;
+}
+
+/* Responsive Design Enhancements */
+@media (max-width: 900px) {
+    nav {
+        font-size: 85%; /* Even smaller on medium screens */
+    }
+    
+    nav a {
+        font-size: 85%;
+        padding: 3px 4px;
+    }
+}
+
+@media (max-width: 768px) {
+    nav {
+        width: 98%;
+        font-size: 80%;
+        flex-direction: column; /* Stack vertically on small screens */
+        padding: 5px;
+    }
+    
+    nav a {
+        margin: 2px 0;
+        padding: 5px 8px;
+        font-size: 90%;
+    }
+    
+    body {
+        margin-left: 2%;
+        font-size: 105%;
+    }
+    
+    p, ul, ol {
+        margin-left: 2%;
+        margin-right: 4%;
+    }
+    
+    h2, h3, h4 {
+        margin-left: 2%;
+    }
+    
+    nav[aria-label="Page contents"] {
+        margin-left: 2%;
+        margin-right: 4%;
+    }
+    
+    blockquote {
+        margin-left: 2%;
+        margin-right: 4%;
+    }
+    
+    table, pre {
+        margin-left: 2%;
+        margin-right: 2%;
+    }
+    
+    .warning, .info-box {
+        margin: 20px 2% 20px 2%;
+    }
+}
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet" />
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="syllabus.html">Syllabus</a>
+            <a href="description.html">Policies</a>
+            <a href="projects.html">Projects</a>
+            <a href="github-pages.html" aria-current="page">GitHub Pages</a>
+            <a href="http://dh.obdurodon.org/" target="_blank" rel="noopener">Resources</a>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <h1>Getting Started with GitHub Pages</h1>
+
+        <section aria-labelledby="intro">
+            <p>GitHub is a great resource for collaborative coding. It can also be used to create and host webpages. This way, you do not have to own and run your own server, pay an annual subscription, or be subject to the limitations of (say) the Pitt webspace. You can create websites by yourself or in teams, and you can continue to do so after you have graduated from Pitt.</p>
+        </section>
+
+        <section aria-labelledby="how-it-works">
+            <h2 id="how-it-works">How It Works</h2>
+            <p>Here's the general idea. Git allows you to have multiple versions of your repo, called <a href="https://guides.github.com/introduction/flow/" target="_blank" rel="noopener">branches</a>. This is so you can be working independently on different parts of a project. You can merge branches together to sort out any discrepancies, and you can pull from different branches.</p>
+            
+            <p>You can tell Git to create a branch called <span class="code-snippet">gh-pages</span>, which will be separate from the "main" (<a href="https://www.zdnet.com/article/github-to-replace-master-with-main-starting-next-month/" target="_blank" rel="noopener">formerly called "master"</a>) branch in which you are doing your work. You will normally do your work in the main branch alone, and then when things are ready for prime time, you merge them into the gh-pages branch.</p>
+            
+            <div class="info-box">
+                <strong>Alternative Approach:</strong> You can also work directly in the gh-pages branch, using a simplified language called <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener">Markdown</a>. This is a way to avoid having to learn any HTML at all. However, basic HTML is not that hard, and we will be learning it anyway in this course.
+            </div>
+        </section>
+
+        <section aria-labelledby="getting-started">
+            <h2 id="getting-started">Getting Started</h2>
+            <p>The following tutorial from GitHub assumes that you'll be working in Markdown. This is why you will be asked to choose a "Theme", which is a visual template so you don't have to learn CSS (which we are also learning in this course anyway!). Go ahead and follow it nonetheless if you are creating a repo either for yourself or for a team. The Markdown and Theme are useful as placeholders until you get some real content to post.</p>
+            
+            <p><strong>GitHub Pages Tutorial:</strong> <a href="https://guides.github.com/features/pages/" target="_blank" rel="noopener">https://guides.github.com/features/pages/</a></p>
+        </section>
+
+        <section aria-labelledby="group-projects">
+            <h2 id="group-projects">Working on Group Projects</h2>
+            <p>If you are going to be working on a group project and the repo has already been created, then you can skip those setup steps. Instead, make sure that the repo owner has made you a collaborator, and then <strong>clone the repo</strong> onto your own machine.</p>
+            
+            <div class="warning">
+                <strong>Important Note:</strong> The following page is not from our class, but from a similar one; and so while it is a useful resource, it will not correspond in every way to what we are doing.
+            </div>
+            
+            <p><strong>Additional Resource:</strong> <a href="https://newtfire.github.io/textEncoding-Hub/htmlGpEx1.html" target="_blank" rel="noopener">HTML and GitHub Pages Tutorial</a></p>
+        </section>
+
+        <section aria-labelledby="key-concepts">
+            <h2 id="key-concepts">Key Concepts to Remember</h2>
+            <ul>
+                <li><strong>Branches:</strong> Separate versions of your repository for different purposes</li>
+                <li><strong>gh-pages branch:</strong> Special branch that GitHub uses to serve your website</li>
+                <li><strong>Markdown:</strong> Simple markup language for formatting text</li>
+                <li><strong>Themes:</strong> Pre-built visual templates for your site</li>
+                <li><strong>Collaboration:</strong> Multiple people can work on the same repository</li>
+                <li><strong>Cloning:</strong> Creating a local copy of a repository on your machine</li>
+            </ul>
+        </section>
+
+        <section aria-labelledby="next-steps">
+            <h2 id="next-steps">Next Steps</h2>
+            <p>Once you've set up your GitHub Pages site, you can:</p>
+            <ol>
+                <li>Customize your theme and layout</li>
+                <li>Add your own HTML and CSS files</li>
+                <li>Upload images and other media</li>
+                <li>Create multiple pages for your site</li>
+                <li>Use custom domain names (optional)</li>
+            </ol>
+            
+            <p>Remember that GitHub Pages is free for public repositories, making it an excellent choice for academic and personal projects.</p>
+        </section>
+    </main>
+</body>
+</html>
