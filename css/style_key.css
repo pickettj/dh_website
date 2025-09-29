@@ -35,6 +35,18 @@ h3 {
   border-bottom: 1px solid black;
 }
 
+/* Subsection Headers */
+h4 {
+  padding: 2px;
+  margin-left: 6%;
+  margin-right: 8%;
+  font-size: 1.1rem;
+  font-variant: small-caps;
+  color: #555533;
+  border-left: 3px solid #cad5bb;
+  padding-left: 10px;
+}
+
 /* Paragraphs */
 p {
   padding: 2px;
