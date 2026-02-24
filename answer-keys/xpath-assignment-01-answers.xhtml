@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="XPath assignment #1 answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title>Answer Key: XML Test</title>
+        <link rel="stylesheet" type="text/css" href="../css/style_key.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <h2>Answer Key: XPath1</h2>
+        <p>You can find an XML (TEI) version of Shakespeare’s <cite>Hamlet</cite> at <a
+                href="bad-hamlet.xml">http://dh.obdurodon.org/bad-hamlet.xml</a>. We’ve deliberately
+            damaged some of the markup in this edition to introduce some inconsistencies, but the
+            file is well-formed XML, which means that you can use XPath to explore it. You should
+            download this file to your computer (typically that means right-clicking on the link and
+            selecting <q>save as</q>) and open it in &lt;oXygen/&gt;.</p>
+        <p>Prepare your answers to the following questions in a markdown file upload it to Canvas as
+            an attachment. As always, code snippets (including XPath snippets) in markdown must be
+            surrounded with backticks.</p>
+        <p>Some of these tasks are thought-provoking, and even difficult. If you get stuck, do the
+            best you can, and if you can’t get a working answer, give the answers you tried and
+            explain where they failed to get the results you wanted. As always, you are encouraged
+            to ask questions in the <b>#xpath</b> channel in Slack, but because you want to make
+            progress in learning to debug your own code, your questions should tell us what you
+            tried, what you expected, <em>exactly</em> what you got instead (not just <q>didn’t
+                work</q> or <q>got an error</q>), and what you think the source of the problem is.
+            Sometimes writing that sort of request for advice that will help you figure out what’s
+            wrong on your own (see <a href="https://en.wikipedia.org/wiki/Rubber_duck_debugging"
+                >Rubber duck debugging</a>), and even when it doesn’t, it will help us identify the
+            difficult moments.</p>
+        <p>These tasks require the use of path expressions, predicates, and the functions
+            <code class="language-xquery">count()</code> and
+            <code class="language-xquery">not()</code>, but they should not require any other XPath
+            functions. There may be more than one possible answer.</p>
+        <p>Using the <cite>Bad Hamlet</cite> document and the XPath browser window in
+            &lt;oXygen/&gt;, construct XPath expressions that will do the following (give the full
+            XPath expressions in your answers, and not just the results):</p>
+        <ol>
+            <li>Hamlet, like a typical Shakespearean tragedy, contains five acts, each of which
+                contains scenes. Both acts and scenes are encoded as division
+                (<code class="language-xml">&lt;div&gt;</code>) elements. <ol>
+                    <li><p>How can XPath tell them apart?</p>
+                        <p>XPath is able to distinguish between the
+                            <code class="language-xml">&lt;div&gt;</code> elements that are acts and
+                            the <code class="language-xml">&lt;div&gt;</code> elements that are
+                            scenes because they occur at different levels of the document hierarchy.
+                            The <code class="language-xml">&lt;div&gt;</code> elements that are
+                            scenes are children of the <code class="language-xml">&lt;div&gt;</code>
+                            elements that are acts, while the
+                            <code class="language-xml">&lt;div&gt;</code> elements that are acts are
+                            children of the <code class="language-xml">&lt;body&gt;</code> element.
+                            This means that an XPath expression to find all of the immediate
+                            <code class="language-xml">&lt;div&gt;</code> children of the
+                            <code class="language-xml">&lt;body&gt;</code> element will retrieve
+                            only and exactly the five <code class="language-xml">&lt;div&gt;</code>
+                            elements that are acts. Finding the
+                            <code class="language-xml">&lt;div&gt;</code> children of those
+                            <code class="language-xml">&lt;div&gt;</code> elements would return just
+                            the scenes.</p></li>
+                    <li><p>What XPath would find just the acts?</p>
+                        <p>You can click anywhere and then use
+                            <code class="language-xquery">//body/div</code> or
+                            <code class="language-xquery">/TEI/text/body/div</code> or
+                            <code class="language-xquery">/descendant::body/div</code>. Because
+                            XPath expressions that begin with a slash start at the document node,
+                            that is the one location in the document that you can always reach from
+                            anywhere in a single step. If you click inside the document in a
+                            particular location, you can use a more specific path expression. For
+                            example, if you click just inside the
+                            <code class="language-xml">&lt;body&gt;</code> the acts are children of
+                            the current context, so a path expression of just
+                            <code class="language-xquery">div</code> would find the five acts.</p>
+                        <p>If we look at the document, we see that the acts and scenes occur within
+                            the <code class="language-xml">&lt;body&gt;</code> element (that is,
+                            they are descendants of the
+                            <code class="language-xml">&lt;body&gt;</code> element), even though
+                            <code class="language-xml">&lt;div&gt;</code> elements are also found
+                            elsewhere in the document. To find the acts, we first want to navigate
+                            to the <code class="language-xml">&lt;body&gt;</code> element, which we
+                            can do directly with <code class="language-xquery">//body</code> or
+                            <code class="language-xquery">/descendant::body</code> (this finds all
+                            the <code class="language-xml">&lt;body&gt;</code> elements in the
+                            entire document, but we know that there is only one) or by walking down
+                            the tree through all of the steps with
+                            <code class="language-xquery">/TEI/text/body</code>. From there we just
+                            take another step to get down to the
+                            <code class="language-xml">&lt;div&gt;</code> children of the
+                            <code class="language-xml">&lt;body&gt;</code>:
+                            <code class="language-xquery">//body/div</code> or
+                            <code class="language-xquery">/TEI/text/body/div</code>. These two XPath
+                            expressions return exactly the same nodes, so you can use whichever you
+                            find easiest to read and understand. Most XPath developers would favor
+                            the shorter path.</p></li>
+                    <li><p>What XPath would find just the scenes?</p>
+                        <p><code class="language-xquery">//body/div/div</code> or
+                            <code class="language-xquery">/TEI/text/body/div/div</code></p>
+                        <p>All we do here is append another step to the child axis of the acts that
+                            we found in the previous question by using
+                            <code class="language-xquery">/div</code>.</p>
+                        <p>Some XPath developers would prefer
+                            <code class="language-xquery">//div/div</code> as the entire path, which
+                            finds all of the <code class="language-xml">&lt;div&gt;</code> elements
+                            (all acts and scenes, plus any
+                            <code class="language-xml">&lt;div&gt;</code> elements outside the
+                            <code class="language-xml">&lt;body&gt;</code>) and then navigates to
+                            their children that are also
+                            <code class="language-xml">&lt;div&gt;</code> elements. An XPath
+                            expression doesn’t keep the intermediate stages in the path, which is to
+                            say that although it finds acts and scenes and other things at first,
+                            ultimately it keeps only <code class="language-xml">&lt;div&gt;</code>
+                            elements that are children of
+                            <code class="language-xml">&lt;div&gt;</code> elements, and therefore
+                            winds up keeping only the scenes.</p>
+                        <p>By the way, a bottom-up approach to finding the scene might look like
+                            <code class="language-xquery">//div[parent::div]</code>. This starts by
+                            selecting all <code class="language-xml">&lt;div&gt;</code> elements in
+                            the entire document and then applies a predicate that filters them to
+                            keep only the ones have have parent elements of type
+                            <code class="language-xml">&lt;div&gt;</code>.</p></li>
+                    <li><p>What XPath would find just the scenes in Act III?</p>
+                        <p><code class="language-xquery">//body/div[3]/div</code></p>
+                        <p>We start by finding the acts just as we did in part 1
+                            (<code class="language-xquery">//body/div</code>). This part of the
+                            XPath returns a <dfn>sequence</dfn> of
+                            <code class="language-xml">&lt;div&gt;</code> elements. Sequences have
+                            an order that in this case will be based on <dfn>document order</dfn>,
+                            or the order in which the <code class="language-xml">&lt;div&gt;</code>
+                            elements appear in the source document. This means that we can use a
+                            numerical predicate to indicate that we want the third item in the
+                            sequence of all of the <code class="language-xml">&lt;div&gt;</code>
+                            elements we found (<code class="language-xquery">//body/div[3]</code>).
+                            The new <em>context</em> for the next path step is this one
+                            <code class="language-xml">&lt;div&gt;</code>, and we use it to find all
+                            of its child <code class="language-xml">&lt;div&gt;</code> elements,
+                            that is, all of the scenes of that act.</p>
+                        <p>Note that numerical (and other) predicates are used to <em>filter</em>
+                            sequences, and you can use a predicate at any step in a path expression,
+                            including intermediate ones. In this case we collect all of the acts and
+                            filter them to keep just one, and we then collect all of the scenes of
+                            the one act that we care about. Predicates give XPath tremendous power
+                            to navigate within a document or set of documents.</p></li>
+                </ol></li>
+            <li>Stage directions (<code class="language-xml">&lt;stage&gt;</code>) occur in a
+                variety of contexts.<ol>
+                    <li><p>What XPath would find all of the stage directions that are inside a
+                            metrical line (<code class="language-xml">&lt;l&gt;</code>), that is,
+                            between the starting <code class="language-xml">&lt;l&gt;</code> and the
+                            ending <code class="language-xml">&lt;/l&gt;</code>? How many are
+                            there?</p>
+                        <p>There are two directions from which to approach this question. You could
+                            first find all of the the lines, and then find all of the stage
+                            directions within them, or you could find all of the stage directions,
+                            and then use a predicate to weed out the ones that aren’t inside a line.
+                            Here are two possible solutions:</p>
+                        <p><code class="language-xquery">//l//stage</code></p>
+                        <p><code class="language-xquery">//stage[ancestor::l]</code></p>
+                        <p>In both cases there are 128 items. Notice that the first answer used the
+                            <code class="language-xquery">descendant::</code> axis (using the
+                            shorthand <code class="language-xquery">//</code>), and the second
+                            answer used the <code class="language-xquery">ancestor::</code> axis.
+                            The question did not specify that the stage elements were
+                                <em>immediately</em> within lines (although they happen to be in the
+                            document), and so it is more correct to search as deeply or as high as
+                            possible to guarantee that you have all of the stage elements within
+                            lines. In contrast, <code class="language-xquery">//l/stage</code> would
+                            have found stage directions only if they were immediate children of
+                            lines, and not if they were grandchildren or deeper, that is, not if
+                            they were inside something else that was the actual immediate child of
+                            the line. Similarly, for the second solution, we look at all of the
+                            ancestor elements, and not just the immediate parent.</p>
+                        <p>If you tried to write out the full path as
+                            <code class="language-xquery">/TEI/text/body/div/div/sp/l/stage</code>
+                            you found only 127 results, even though there are 128. The one you
+                            missed is a child of a line, but the line itself is a child of a line
+                            group, and not of a speech. The mistake with this approach involves
+                            making the unnecessary assumption that all lines will be children of
+                            speeches, and the more general take-away is that when writing XPath you
+                            want to avoid making any unnecessary assumptions. Since the question was
+                            only about lines and stage directions, it’s best to write a path
+                            expression that refers only to those element types. See the note below,
+                            under question 2c, about robust vs brittle solutions.</p></li>
+                    <li><p>What XPath would find all of the stage directions that are
+                                <em>directly</em> inside a speech
+                            (<code class="language-xml">&lt;sp&gt;</code>), that is, inside a speech
+                            but not inside a line within a speech?</p>
+                        <p><code class="language-xquery">//stage[parent::sp]</code> or
+                            <code class="language-xquery">//sp/stage</code> will work equally well.
+                            In the first case, you find all stage directions and then filter them to
+                            keep only those that have a speech as their immediate parent. In the
+                            second case you find all of the speeches and then get all of their
+                            children that are stage directions.</p>
+                    </li>
+                    <li><p>What XPath would find all of the stage directions that are not directly
+                            inside a speech or a line. How many are there?</p>
+                        <p><code class="language-xquery">//stage[not(parent::sp) and not(parent::l)]</code></p>
+                        <p>This returns 40 items. Note that it uses a <dfn>compound predicate</dfn>,
+                            which filters the sequence of all stage directions to retain only those
+                            that satisfy both of the conditions: they don’t have a speech parent and
+                            they also don’t have a line parent. As an alternative, you could also
+                            use two predicates, writing
+                            <code class="language-xquery">//stage[not(parent::sp)][not(parent::l)]</code>
+                            This version operates in three steps: it finds all of the stage
+                            directions, it keeps only the ones that don’t have a speech as their
+                            parent, and then it filters the ones that survived that first predicate
+                            to keep only the ones that also don’t have a line as their parent.</p>
+                        <p>The path <code class="language-xquery">//div/stage</code> happens to
+                            return the correct result, but it’s nonetheless the wrong answer because
+                            it depends on your external knowledge of the document hierarchy and
+                            contents. Had there been <code class="language-xml">&lt;stage&gt;</code>
+                            elements not occurring directly within an
+                            <code class="language-xml">&lt;sp&gt;</code> or
+                            <code class="language-xml">&lt;l&gt;</code> that weren’t immediately
+                            inside a <code class="language-xml">&lt;div&gt;</code>,
+                            <code class="language-xquery">//div/stage</code> wouldn’t have found
+                            them. In general with XPath, you want to write an expression that will
+                            not only find all of the items it seeks for a particular document with
+                            particular content, but also not risk missing something that could occur
+                            but happens not to just by accident. In this XML version of this play,
+                            the taggers have used <code class="language-xml">&lt;l&gt;</code> only
+                            for metrical (iambic pentameter) lines of dialog, and where there is
+                            non-metrical speech, they’ve used the more generic TEI
+                            <code class="language-xml">&lt;ab&gt;</code> element (which stands,
+                            somewhat opaquely, for <q>anonymous block</q>). There could have been
+                            stage directions inside anonymous blocks, and it’s just an accident that
+                            there weren’t.</p>
+                        <p>An answer that happens to give the right results because of accidents
+                            about the data is called <dfn>fragile</dfn> or <dfn>brittle</dfn>
+                            because it can break as soon as a possible complication appears. An
+                            answer like the one we recommend here, which can survive more kinds of
+                            data, is called <dfn>robust</dfn>. Because a lot of coding in digital
+                            humanities is designed to be reused (for example, one might wish to use
+                            these XPath expressions to explore other plays that employ the same
+                            markup), you should favor a robust expression over a fragile
+                        one.</p></li>
+                    <li><p>For the stage directions you identified in #2c, above, write an XPath
+                            expression that will return not the
+                            <code class="language-xml">&lt;stage&gt;</code> elements themselves, but
+                            their parent elements, whatever they might be. What are those parent
+                            elements? (You haven’t yet learned the XPath to return just the names of
+                            the parent elements [rather than the elements themselves], but you can
+                            locate them, click on each one in the list &lt;oXygen/&gt; returns, and
+                            look at it directly.)</p>
+                        <p><code class="language-xquery">//stage[not(parent::sp) and not(parent::l)]/parent::*</code></p>
+                        <p>The asterisk is used to denote any element. Since elements will only have
+                            one direct parent, using the <code class="language-xquery">*</code> on
+                            the <code class="language-xquery">parent::</code> axis returns just the
+                            one element that is the immediate parent of whatever context you were in
+                            previously. In this case we just appended an additional path step,
+                            <code class="language-xquery">/parent::*</code>, to the end of the XPath
+                            solution to the preceding question. You could also use the shorthand
+                            expression <code class="language-xquery">..</code> in place of the
+                            <code class="language-xquery">parent::*</code> path step, since
+                            <code class="language-xquery">..</code> means <q>the parent, whatever it
+                                may be, of the current context.</q></p>
+                        <p>You can ask XPath to tell you the names of those elements, instead of
+                            just selecting them and making you look at the tags to learn the names,
+                            with
+                            <code class="language-xquery">//stage[not(parent::sp) and not(parent::l)]/parent::* ! name(.)</code>
+                            (using the XPath 3.1 simple map operator) or
+                            <code class="language-xquery">//stage[not(parent::sp) and not(parent::l)]/parent::*/name()</code>
+                            (using the older notation). The new last step applies the XPath
+                            <code class="language-xquery">name()</code> function to each of the
+                            context nodes, that is, the parent elements selected by the preceding
+                            path step. The XPath <code class="language-xquery">name()</code>
+                            function returns the name of a node (e.g., element or attribute type),
+                            rather than the node itself, which makes it especially useful during
+                            exploratory document analysis.</p></li>
+                </ol></li>
+        </ol>
+        <hr />
+        <section>
+            <h3>Advanced details</h3>
+            <p>You can skip the following part for now because it isn’t required to provide correct
+                answers to the questions above. With that said, we encourage at least to read
+                through it and think about it, since it will help you write clearer, more legible
+                XPath.</p>
+            <section>
+                <h4>The simple map operator</h4>
+                <p>In our answer to the last question, above, we showed how to use the
+                    <code class="language-xquery">name()</code> function as either part of a simple
+                    map operation (with <code class="language-xquery">!</code>) or a final path step
+                    (with a <code class="language-xquery">/</code>). Each step in a path expression
+                    is separated from the preceding step by a slash (or double slash), and the step
+                    to the left defines the context nodes that serve as the starting point for the
+                    step to the right. For example, in
+                    <code class="language-xquery">//body/div</code>, the first step selects all of
+                    the <code class="language-xml">&lt;body&gt;</code> elements in the document
+                    (there is only one), and each <code class="language-xml">&lt;body&gt;</code>
+                    element then serves, in turn, as the context for the next step, which finds all
+                    of the <code class="language-xml">&lt;div&gt;</code> element children of the
+                    current context node. When the last path step is a function, like
+                    <code class="language-xquery">name()</code>, it also uses each item selected by
+                    the path step immediately before it as the context item, which in this case
+                    means the context in which the function is applied. For example,
+                    <code class="language-xquery">//body/*/name(.)</code> has three steps: first
+                    find all of the <code class="language-xml">&lt;body&gt;</code> elements in the
+                    document, then find all of the element children of each of those
+                    <code class="language-xml">&lt;body&gt;</code> elements, and then compute the
+                    name of each of those child elements. If you run this expression against our
+                    text, it will return a sequence of five instances of the string
+                    <code class="language-xquery">div</code>, since the only children of the one
+                    <code class="language-xml">&lt;body&gt;</code> element in our document are the
+                    five <code class="language-xml">&lt;div&gt;</code> elements that contain the
+                    five acts of the play.</p>
+                <p>XPath provides an alternative notation, called the <dfn>simple map operator</dfn>
+                    and spelled as an exclamation point (<code class="language-xquery">!</code>),
+                    for applying functions to a sequence of context items. This means that the
+                    following two expressions are equivalent:</p>
+                <pre class="language-xquery"><code>//stage[not(parent::sp) and not(parent::l)]/parent::*/name(.)</code></pre>
+                <p>and</p>
+                <pre class="language-xquery"><code>//stage[not(parent::sp) and not(parent::l)]/parent::* ! name(.)</code></pre>
+                <p>We prefer the exclamation point when we are applying a function to the context
+                    items because that strategy helps us see more quickly which path steps are
+                    navigation and which apply functions. But that’s just a personal preference and
+                    you can use whichever notation you find easier to understand. (There is a
+                    difference in functionality between the two notations, but it is not relevant in
+                    this particular example.)</p>
+            </section>
+            <section>
+                <h4>The arrow operator</h4>
+                <p>The simple map operator or the slash that introduces a function mean <q>do the
+                        thing to the right once for each item in the sequence to the left</q>. For
+                    example, if we use the simple map operator to get the names of five elements,
+                    the expression will return five strings, that is, five element names. The arrow
+                    operator, spelled <code class="language-xquery">=></code>, means <q>apply the
+                        function to the right once, using the entire sequence to the left as input
+                        into the function</q>. This means that a function to the right of the simple
+                    map operator is applied once to each context item to the left, while a function
+                    to the right of the arrow operator is applied only once, taking the entire
+                    sequence to the left as its input. Here is why that’s useful.</p>
+                <p>Suppose we are returning the names of all of the elements that can be parents of
+                    stage directions. If we run:</p>
+                <pre class="language-xquery"><code>//stage/.. ! name(.)</code></pre>
+                <p>against our document we’ll return 218 strings because the expression will find
+                    all of the stage directions, use them to find all of their parents, and then
+                    return not the parent elements themselves, but just their names, one name per
+                    element. Suppose we want to find out what <em>types</em> of elements can be
+                    parents of stage directions. We could scroll through the 218 results, but that’s
+                    tedious and error-prone, and with a different source document there might be
+                    even more stage directions. This is the sort of task that computers perform more
+                    reliably than humans, though, so we can instead ask XPath to remove the
+                    duplicate values for us by applying the
+                    <code class="language-xquery">distinct-values()</code> function, which takes a
+                    sequence of items (in this case strings, since they’re the names of elements) as
+                    input, removes any duplicates, and returns a deduplicated sequence. We can do
+                    that by wrapping the function around the entire expression, since the entire
+                    result of the expression (the 218 values) is the input to the deduplication
+                    process:</p>
+                <pre class="language-xquery"><code>distinct-values(//stage/.. ! name(.))</code></pre>
+                <p>This returns just three values: <code class="language-xquery">div</code>,
+                    <code class="language-xquery">l</code>, and
+                    <code class="language-xquery">sp</code>, because those are the only element
+                    types that can be parents of stage directions in this play.</p>
+                <p>Wrapping a function around a long path expression can be difficult to read (and
+                    the difficulty increases if we want to nest several functions), and the arrow
+                    operator exists as a way to make long expressions with functions easier to read.
+                    In this case, we can rewrite our expressions as:</p>
+                <pre class="language-xquery"><code>//stage/.. ! name(.) => distinct-values()</code></pre>
+                <p>We can read this from left to right: first find the parent elements of the stage
+                    directions, then get the names of those elements, and then remove the duplicate
+                    names. We find this easier to read than the version that wraps the
+                    <code class="language-xquery">distinct-values()</code> function around the rest
+                    because we have to read the version with wrapping from the inside out, which
+                    doesn’t feel as natural as reading from left to right. With the notation that
+                    wraps the function around the rest, first we do the things inside the function
+                    parentheses and then we step outside the parentheses to apply the function to
+                    the results.</p>
+                <p>The simple map operator normally requires a dot inside the parentheses to specify
+                    that the function is being applied to the current context item. Some functions
+                    know that the current context item is the input into the function by default, so
+                    omitting the dot for those functions won’t do any harm, but it can be difficult
+                    to predict which functions require the dot and which regard it as optional. The
+                    function to the right of the arrow operator, though, never includes the dot.
+                    Keeping the two syntactic expectations separate will become more natural as you
+                    gain experience.</p>
+            </section>
+            <section>
+                <h4>Putting it all together: multi-line XPath expressions</h4>
+                <p>The simple map and arrow operators make complex path expressions easier to read,
+                    and that’s especially the case if we write the expression across multiple lines.
+                    e.g.:</p>
+                <pre class="language-xquery"><code>//stage/.. 
+! name(.)
+=> distinct-values()</code></pre>
+                <p>Writing each step on its own line makes the stepwise process even easier to see
+                    because it now takes advantage of our intuitive understanding of both <q>left to
+                        right</q> and <q>top to bottom</q>.</p>
+                <p>We encourage you to become comfortable with the simple map and arrow operators
+                    because they’ll help you write code that is easier to understand and therefore
+                    less prone to error and easier to debug when you do make a mistake. This method
+                    also encourages you to construct your XPath expressions one step at a time,
+                    which is always a good idea because it lets you test each step, so that as soon
+                    as something breaks, you’ll know that the last thing you did is the locus of the
+                    mistake. With that said, using alternative notations (like the
+                    <code class="language-xquery">distinct-values(//stage/.. ! name(.))</code>
+                    example above) isn’t wrong, and you’ll see it in a lot of examples you’ll find
+                    on the Internet (including on our course pages) because the simple map and arrow
+                    operators are relatively new features in XPath, so any expressions written
+                    before their introduction wouldn’t have been able to use them.</p>
+            </section>
+        </section>
+    </body>
+</html>
