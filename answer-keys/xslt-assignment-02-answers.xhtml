@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <!--#set var="title" value="XSLT assignment #2 answers" -->
+    <!--#config timefmt="%Y-%m-%dT%X%z" -->
+    <head>
+        <title>Answer Key: XSLT 2</title>
+        <link rel="stylesheet" type="text/css" href="../css/style_key.css"/>
+        <link href="https://fonts.googleapis.com/css?family=Assistant" rel="stylesheet"/>
+    </head>
+    <body class="line-numbers">
+        <!--#include virtual="inc/dh-boilerplate.html" -->
+        <h2>Answer Key: XSLT2</h2>
+        <section>
+            <h3>The assignment</h3>
+            <p>Write an XSLT stylesheet that will transform the XML input document into an HTML
+                document that consists entirely of tables of characters and factions. You can see
+                the desired output at <a href="skyrim-02.xhtml"
+                    >http://dh.obdurodon.org/skyrim-02.xhtml</a>.</p>
+        </section>
+        <section>
+            <h3>Our solution</h3>
+            <pre class="language-xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:math="http://www.w3.org/2005/xpath-functions/math" exclude-result-prefixes="#all"
+    version="3.0">
+    &lt;xsl:output method="xhtml" html-version="5" omit-xml-declaration="no" include-content-type="no"
+        indent="yes"/>
+    &lt;xsl:template match="/"&gt;
+        &lt;html&gt;
+            &lt;head&gt;
+                &lt;title&gt;Skyrim&lt;/title&gt;
+                &lt;style&gt;
+                    table { border-collapse: collapse; }
+                    table, th, td { border: 1px solid black; }
+                &lt;/style&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;h1&gt;Skyrim&lt;/h1&gt;
+                &lt;h2&gt;Cast of characters&lt;/h2&gt;
+                &lt;table&gt;
+                    &lt;tr&gt;
+                        &lt;th&gt;Name&lt;/th&gt;
+                        &lt;th&gt;Faction&lt;/th&gt;
+                        &lt;th&gt;Alignment&lt;/th&gt;
+                    &lt;/tr&gt;
+                    &lt;xsl:apply-templates select="//cast/character"/&gt;
+                &lt;/table&gt;
+                &lt;h2&gt;Factions&lt;/h2&gt;
+                &lt;table&gt;
+                    &lt;tr&gt;
+                        &lt;th&gt;Name&lt;/th&gt;
+                        &lt;th&gt;Alignment&lt;/th&gt;
+                    &lt;/tr&gt;
+                    &lt;xsl:apply-templates select="//cast/faction"/&gt;
+                &lt;/table&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;
+    &lt;/xsl:template&gt;
+    &lt;xsl:template match="character"&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;xsl:apply-templates select="@id"/&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;xsl:apply-templates select="@loyalty"/&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;xsl:apply-templates select="@alignment"/&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/xsl:template&gt;
+    &lt;xsl:template match="faction"&gt;
+        &lt;tr&gt;
+            &lt;td&gt;
+                &lt;xsl:apply-templates select="@id"/&gt;
+            &lt;/td&gt;
+            &lt;td&gt;
+                &lt;xsl:apply-templates select="@alignment"/&gt;
+            &lt;/td&gt;
+        &lt;/tr&gt;
+    &lt;/xsl:template&gt;
+&lt;/xsl:stylesheet&gt;</code></pre>
+        </section>
+        <section>
+            <h3>Preliminaries</h3>
+            <p>Before anything else: the Skyrim XML is not in a namespace. This means that you
+                should not include an <code class="language-xquery">@xpath-default-namespace</code>
+                attribute in your XSLT. If you make the mistake of specifying, say, the TEI
+                namespace as the default, your templates will match only TEI elements, and since
+                there aren’t any TEI elements in Skyrim, your templates will match nothing. That
+                isn’t an error, but it is a mistake and it isn’t what you want.</p>
+            <p>To keep everything in one place for this answer key, so that you don’t have to look
+                at multiple files simultaneously, we’ve used a
+                <code class="language-xml">&lt;style&gt;</code> element in the
+                <code class="language-xml">&lt;head&gt;</code> to hold the CSS that specifies a
+                border for the table. However, in your projects you’ll want to declare all CSS rules
+                in a separate CSS stylesheet, so that you can assign the same styles to multiple
+                HTML documents without having to repeat the same CSS instructions inside each of
+                those files. The old <code class="language-xquery">@border</code> attribute on
+                <code class="language-xml">&lt;table></code> elements is officially
+                    <dfn>non-conforming</dfn> in HTML5, which means that although it may work in
+                your browser, it should be avoided; best practice for specifying a table border is
+                now to use CSS.</p>
+        </section>
+        <section>
+            <h3>Template rules</h3>
+            <p>Before writing any code to extract the information that is going to populate the rows
+                of our tables, we begin by creating the superstructure of our HTML document, as we
+                did in <a href="xslt-assignment-01-answers.xhtml">XSLT assignment #1</a>. As always,
+                the HTML document that we create has an
+                <code class="language-xml">&lt;html&gt;</code> root element with two children,
+                <code class="language-xml">&lt;head&gt;</code> (with
+                <code class="language-xml">&lt;title&gt;</code> and, in this case, although not in
+                your projects, <code class="language-xml">&lt;style&gt;</code>) and
+                <code class="language-xml">&lt;body&gt;</code>. Inside the body, we create a
+                prominent <code class="language-xml">&lt;h1&gt;</code> element to title our page as
+                    <q>Skyrim</q>, and then an <code class="language-xml">&lt;h2&gt;</code> subtitle
+                followed by a <code class="language-xml">&lt;table&gt;</code> for the <q>Cast of
+                    characters</q> and another <code class="language-xml">&lt;h2&gt;</code> and
+                <code class="language-xml">&lt;table&gt;</code> for <q>Factions</q>. You can read
+                more about HTML tables at <a href="http://www.w3schools.com/html/html_tables.asp"
+                    >http://www.w3schools.com/html/html_tables.asp</a>.</p>
+            <p>The tables that we are creating need to be filled. HTML tables are constructed row by
+                row, and rows are defined by <code class="language-xml">&lt;tr&gt;</code>. Rows
+                contain cells, of which there are two types:
+                <code class="language-xml">&lt;th&gt;</code> (table header) is used to label a row
+                or column and <code class="language-xml">&lt;td&gt;</code> is used to represent
+                actual data. When, inside our template rule for the document node, we create the
+                start- and end-tags for the two tables themselves, we also create the header rows
+                for each table (<code class="language-xml">&lt;tr&gt;</code> containing
+                <code class="language-xml">&lt;th&gt;</code>), since we want to create the
+                <code class="language-xml">&lt;table></code> tags and the header rows just once per
+                table. Since every document has exactly one document node, the template that matches
+                the document node will fire exactly once, so by creating the tables and their header
+                rows in that template, we ensure that we create each table, with its single header
+                row, just once.</p>
+            <p>Meanwhile, though, although we want just a single header row, we want to create a
+                separate data row for each character or faction. Since we want to create one row per
+                character or faction, we need to create those in a template that fires once per
+                character or faction.</p>
+            <p>Our goal in the first table is to create a row for every character, and that row
+                should contain three cells, the first with the character’s name, the second with the
+                character’s faction, and the third with the character’s alignment. Every character
+                and every faction is listed in the <code class="language-xml">&lt;cast&gt;</code>
+                element in our XML document, and so we want to look there to retrieve the data that
+                we’re going to insert into our table rows. In other words, we need to apply
+                templates to each of the <code class="language-xml">&lt;character&gt;</code> and
+                <code class="language-xml">&lt;faction&gt;</code> elements that we find inside
+                <code class="language-xml">&lt;cast&gt;</code> to create rows for the HTML tables we
+                are creating. Since we want to create rows with information about characters after
+                the header row for that table, we put the
+                <code class="language-xml">&lt;xsl:apply-templates select="//cast/character"&gt;</code>
+                element right there, immediately after the first table row (the header row) inside
+                the table. The value of the <code class="language-xquery">@select</code> attribute
+                tells our stylesheet to navigate directly to the
+                <code class="language-xml">&lt;cast&gt;</code>, to find all of its
+                <code class="language-xml">&lt;character&gt;</code> children, and then to apply
+                templates to those <code class="language-xml">&lt;character&gt;</code> elements,
+                putting content exactly where the
+                <code class="language-xml">&lt;xsl:apply-templates&gt;</code> element was. That
+                tells the stylesheet where we want to process
+                <code class="language-xml">&lt;character&gt;</code> children of
+                <code class="language-xml">&lt;cast&gt;</code> (not other
+                <code class="language-xml">&lt;character&gt;</code> elements!), but it doesn’t say
+                how. In order to communicate to the stylesheet <em>how</em> we want to process
+                characters, we need to define a template for
+                <code class="language-xml">&lt;character&gt;</code> elements that tells our
+                stylesheet specifically what to do.</p>
+            <p>The template we use has a <code class="language-xquery">@match</code> attribute with
+                the value <code class="language-xquery">character</code>, which will match any
+                <code class="language-xml">&lt;character&gt;</code> it sees, which in this case
+                means the ones that are thrown at it when the
+                <code class="language-xml">&lt;xsl:apply-templates select="//cast/character"/&gt;</code>
+                element fires inside the first table, the one we create in the template rule for the
+                document node. (The template that matches those characters would also match any
+                other <code class="language-xml">&lt;character&gt;</code> elements it might see, but
+                it never sees any others, since this stylesheet never applies templates to anything
+                outside the <code class="language-xml">&lt;cast&gt;</code> element.) Inside the
+                template rule for <code class="language-xml">&lt;character&gt;</code> we create a
+                <code class="language-xml">&lt;tr&gt;</code>, which will be inserted into the table
+                we’re creating in exactly the place where the
+                <code class="language-xml">&lt;xsl:apply-templates select="//cast/character"/&gt;</code>
+                element was located, that is, right after the header row. This new row has three
+                <code class="language-xml">&lt;td&gt;</code> elements to hold the data for the
+                character we’re processing at the moment. That data is retrieved because each of the
+                data cells contains its own
+                <code class="language-xml">&lt;xsl:apply-templates&gt;</code> element, which selects
+                the <code class="language-xquery">@id</code>,
+                <code class="language-xquery">@alignment</code>, and
+                <code class="language-xquery">@loyalty</code> attributes of the particular
+                <code class="language-xml">&lt;character&gt;</code>, respectively. Since all we want
+                from those attributes is their textual value, we don’t have to define our own
+                templates to handle them; we can rely instead on the behavior of the build-in
+                default template, which just outputs the textual value of any attribute that does
+                not have its own template rule. As a result, each data cell will come to be
+                populated with the string value of the targeted attribute.</p>
+            <p>We follow a similar process for creating the table listing each faction. We call
+                <code class="language-xml">&lt;xsl:apply-templates select="//cast/faction"&gt;</code>,
+                define a template for factions
+                (<code class="language-xml">&lt;xsl:template match="faction"/&gt;</code>), and
+                create a table row inside the template with data cells applying templates to
+                <code class="language-xquery">@id</code> and
+                <code class="language-xquery">@alignment</code>. Keep in mind that
+                <code class="language-xml">&lt;faction&gt;</code> elements only have two properties,
+                so our table rows for factions will have only two data cells.</p>
+        </section>
+        <section>
+            <h3>The result</h3>
+            <div class="pre-colored">
+                <h1>Skyrim</h1>
+                <h2>Cast of characters</h2>
+                <table border="1">
+                    <tr>
+                        <th>Name</th>
+                        <th>Faction</th>
+                        <th>Alignment</th>
+                    </tr>
+                    <tr>
+                        <td>UrielSeptim</td>
+                        <td>empire blades</td>
+                        <td>good</td>
+                    </tr>
+                    <tr>
+                        <td>hero</td>
+                        <td>neutral</td>
+                        <td>neutral</td>
+                    </tr>
+                    <tr>
+                        <td>Jauffre</td>
+                        <td>empire blades</td>
+                        <td>good</td>
+                    </tr>
+                    <tr>
+                        <td>MartinSeptim</td>
+                        <td>empire blades</td>
+                        <td>good</td>
+                    </tr>
+                    <tr>
+                        <td>MehrunesDagon</td>
+                        <td>daedra</td>
+                        <td>evil</td>
+                    </tr>
+                    <tr>
+                        <td>MankarCamoran</td>
+                        <td>daedra MythicDawn</td>
+                        <td>evil</td>
+                    </tr>
+                </table>
+                <h2>Factions</h2>
+                <table border="1">
+                    <tr>
+                        <th>Name</th>
+                        <th>Alignment</th>
+                    </tr>
+                    <tr>
+                        <td>MythicDawn</td>
+                        <td>evil</td>
+                    </tr>
+                    <tr>
+                        <td>blades</td>
+                        <td>good</td>
+                    </tr>
+                    <tr>
+                        <td>daedra</td>
+                        <td>evil</td>
+                    </tr>
+                    <tr>
+                        <td>empire</td>
+                        <td>good</td>
+                    </tr>
+                    <tr>
+                        <td>DarkBrotherhood</td>
+                        <td>neutral</td>
+                    </tr>
+                </table>
+            </div>
+            <section class="note">
+                <p>The XML document includes <code class="language-xml">&lt;character&gt;</code> and
+                    <code class="language-xml">&lt;faction&gt;</code> elements in different
+                    contexts: some are children of <code class="language-xml">&lt;cast&gt;</code>
+                    and others are descendants of <code class="language-xml">&lt;body&gt;</code>.
+                    Our templates that match <code class="language-xml">&lt;character&gt;</code> and
+                    <code class="language-xml">&lt;faction&gt;</code> elements don’t specify a
+                    context, so they would match elements of those types both in the
+                    <code class="language-xml">&lt;cast&gt;</code> and in the
+                    <code class="language-xml">&lt;body&gt;</code>. Why, then, isn’t our output
+                    cluttered with unwanted <code class="language-xml">&lt;character&gt;</code> and
+                    <code class="language-xml">&lt;faction&gt;</code> elements elements from within
+                    the <code class="language-xml">&lt;body&gt;</code>?</p>
+                <p>The answer is that we never apply templates to anything inside the
+                    <code class="language-xml">&lt;body&gt;</code>. In order for a template to fire
+                    on an element, two things have to happen:</p>
+                <ol>
+                    <li><p>We have to apply templates to the element.</p></li>
+                    <li><p>A template has to match the element.</p></li>
+                </ol>
+                <p>Since we never apply templates to
+                    <code class="language-xml">&lt;character&gt;</code> and
+                    <code class="language-xml">&lt;faction&gt;</code> descendants of
+                    <code class="language-xml">&lt;body&gt;</code>, the first requirement is never
+                    met and those instances of <code class="language-xml">&lt;character&gt;</code>
+                    and <code class="language-xml">&lt;faction&gt;</code> elements are not
+                    processed. If we were processing both the
+                    <code class="language-xml">&lt;cast&gt;</code> and the
+                    <code class="language-body">&lt;body&gt;</code>, though, we would want
+                    <code class="language-xml">&lt;character&gt;</code> and
+                    <code class="language-xml">&lt;faction&gt;</code> elements in those two contexts
+                    to be processed differently, so we would need separate templates that match the
+                    element types in each context. This is similar to the way we wrote separate
+                    templates to match act and scene <code class="language-xml">&lt;div&gt;</code>
+                    elements in the <a href="xslt-assignment-01-answers.xhtml">first XSLT
+                        assignment</a>, since we needed to process those
+                    <code class="language-xml">&lt;div&gt;</code> elements differently in different
+                    contexts.</p>
+            </section>
+        </section>
+        <section>
+            <h3>Streamlining the XSLT</h3>
+            <p>You can stop reading here if you’d like, and something like the code above is a fine
+                solution for this assignment. At the same time, that XSLT has a lot of fragmentation
+                and repetition. The character table and the faction table have a lot in common, yet
+                we create them separately, and we treat all attributes pretty much the same way, yet
+                we create a <code class="language-xml">&lt;td&gt;</code> to hold each type of
+                attribute separately. We can make our XSLT more concise, and therefore easier to
+                maintain, in the following ways:</p>
+            <section>
+                <h4>Process all attributes in a single template</h4>
+                <p>Instead of our current templates for creating character and faction rows, we can
+                    write:</p>
+                <pre class="language-xml"><code><![CDATA[<xsl:template match="character">
+    <tr>
+        <xsl:apply-templates select="@id, @loyalty, @alignment"/>
+    </tr>
+</xsl:template>
+<xsl:template match="faction">
+    <tr>
+        <xsl:apply-templates select="@id, @alignment"/>
+    </tr>
+</xsl:template>
+<xsl:template match="@*">
+    <td>
+        <xsl:value-of select="."/>
+    </td>
+</xsl:template>]]></code></pre>
+                <p>The XPath expression <code class="language-xquery">@*</code> matches any
+                    attribute. When we apply templates to the attributes for the two element types
+                    we have to use the comma operator to combine them because the comma operator
+                    specifies the order. Although attributes inside a start-tag may look ordered to
+                    us, The Real XML is a tree, and not tags, and the order in which attributes are
+                    listed inside the start-tag is not part of the information available in the
+                    tree. Were we to apply templates to all of the attributes of the current context
+                    node with
+                    <code class="language-xml">&lt;xsl:apply-templates select="@*"/&gt;</code> there
+                    would be no guarantee that they would be output in the order in which they
+                    appear inside the start-tag. By specifying their order with the comma separator,
+                    though,we tell XSLT to apply templates to them in the order listed in the
+                    XSLT.</p>
+            </section>
+            <section>
+                <h4>Process characters and factions together</h4>
+                <p>As a result of this consolidation our XSLT has only one location where it creates
+                    <code class="language-xml">&lt;td&gt;</code> elements, removing a lot of
+                    repetition. We can consolidate further, though. Currently we create rows for
+                    characters in one template and rows for factions in a different template, but
+                    the processing is otherwise the same: we create a
+                    <code class="language-xml">&lt;tr&gt;</code> element and, inside it, apply
+                    templates to the attributes of the element we’re processing in a specific order.
+                    We can take advantage of the fact that although the attributes on characters and
+                    factions differ, those that are present on both types of element observe the
+                    same order. This means that we can further refactor the code above as:</p>
+                <pre class="language-xml"><code><![CDATA[<xsl:template match="character | faction">
+    <tr>
+        <xsl:apply-templates select="@id, @loyalty, @alignment"/>
+    </tr>
+</xsl:template>
+<xsl:template match="@*">
+    <td>
+        <xsl:value-of select="."/>
+    </td>
+</xsl:template>]]></code></pre>
+                <p>The first template matches anything that is either a
+                    <code class="language-xml">&lt;character&gt;</code> or a
+                    <code class="language-xml">&lt;faction&gt;</code> element, so we no longer need
+                    separate templates to process those two types of elements. This approach works
+                    even though characters and factions have different attributes because applying
+                    templates to something that doesn’t exist
+                    (<code class="language-xml">&lt;faction&gt;</code> elements do not have
+                    <code class="language-xquery">@loyalty</code> attributes) is not an error. What
+                    the code says is <q>apply templates to all of my
+                        <code class="language-xquery">@id</code>,
+                        <code class="language-xquery">@loyalty</code>, and
+                        <code class="language-xquery">@alignment</code> attributes in that
+                    order</q>. What happens with characters is straightforward: we get three cells
+                    per character, populated with information from those attributes in the specified
+                    order. What happens with factions is that it applies templates first to all of a
+                    faction’s <code class="language-xquery">@id</code> attributes (there is always
+                    exactly one), then to all of its <code class="language-xquery">@loyalty</code>
+                    attributes (there are never any, so it applies templates to all zero of
+                    them—that is, it does nothing), and then it applies templates to all the
+                    faction’s <code class="language-xquery">@alignment</code> attributes (there is
+                    always exactly one).</p>
+                <p>Our revised XSLT now looks like:</p>
+                <pre class="language-xml"><code><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml/" version="2.0">
+    <xsl:output indent="yes"/>
+    <xsl:template match="/">
+        <html>
+            <head>
+                <title>Skyrim</title>
+            <style>
+                table { border-collapse: collapse; }
+                table, th, td { border: 1px solid black; }
+            </style>
+            </head>
+            <body>
+                <h1>Skyrim</h1>
+                <h2>Cast of characters</h2>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Faction</th>
+                        <th>Alignment</th>
+                    </tr>
+                    <xsl:apply-templates select="//cast/character"/>
+                </table>
+                <h2>Factions</h2>
+                <table border="1">
+                    <tr>
+                        <th>Name</th>
+                        <th>Alignment</th>
+                    </tr>
+                    <xsl:apply-templates select="//cast/faction"/>
+                </table>
+            </body>
+        </html>
+    </xsl:template>
+    <xsl:template match="character | faction">
+        <tr>
+            <xsl:apply-templates select="@id, @loyalty, @alignment"/>
+        </tr>
+    </xsl:template>
+    <xsl:template match="@*">
+        <td>
+            <xsl:value-of select="."/>
+        </td>
+    </xsl:template>
+</xsl:stylesheet>]]></code></pre>
+            </section>
+            <section>
+                <h4>But that’s not all …</h4>
+                <p>There’s one more conspicuous repetition: for both characters and factions we
+                    create an <code class="language-xml">&lt;h2&gt;</code> header and a table with a
+                    row of labels above the actual table data. There is the further complication
+                    that the column labels are title-cased versions of the attribute names (e.g.,
+                    the attribute <code class="language-xquery">@alignment</code> goes in a column
+                    labeled <b>Alignment</b>), except that we want the first column to be headed
+                        <b>Name</b>, and not <b>Id</b>, and we have to specify that because it can’t
+                    be computed without more information. We also cannot compute the content of the
+                    <code class="language-xml">&lt;h2&gt;</code> headers automatically because there
+                    is no natural way for XSLT to know, unless we specify it, that
+                    <code class="language-xml">&lt;character&gt;</code> elements go in a table
+                    labeled <q>Cast of characters</q> and
+                    <code class="language-xml">&lt;faction&gt;</code> elements go in a table labeled
+                        <q>Factions</q>. Finally, there isn’t a particularly natural way for XSLT to
+                    look at the contents of the <code class="language-xml">&lt;cast&gt;</code>
+                    element and know to create one table for all
+                    <code class="language-xml">&lt;character&gt;</code> elements and one for all
+                    <code class="language-xml">&lt;faction&gt;</code> elements.</p>
+                <p>In Real Life we would probably stop here because the overhead of trying to
+                    combine the character and faction processing further would offset any savings
+                    realized through the consolidation. If, though, we had to create hundreds of
+                    tables instead of just two, the consolidation would pay off by removing a lot of
+                    repetition, and therefore a lot of unnecessary opportunity for error. Here’s
+                    what that might look like:</p>
+                <pre class="language-xml"><code><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/xhtml/" version="2.0">
+    <xsl:output indent="yes"/>
+    <!-- ================================================================ -->
+    <!-- Stylesheet variables                                             -->
+    <!-- ================================================================ -->
+    <xsl:variable name="root" as="document-node()" select="/"/>
+    <!-- ================================================================ -->
+    <!-- Templates                                                        -->
+    <!-- ================================================================ -->
+    <xsl:template match="/">
+        <html>
+            <head>
+                <title>Skyrim</title>
+                <style>
+                    table {
+                      border-collapse: collapse;
+                    }
+                    table,
+                    th,
+                    td {
+                      border: 1px solid black;
+                    }</style>
+            </head>
+            <body>
+                <h1>Skyrim</h1>
+                <xsl:for-each select="//cast/* ! name() => distinct-values() => sort()">
+                    <h2>
+                        <xsl:choose>
+                            <xsl:when test=". eq 'character'">Cast of characters</xsl:when>
+                            <xsl:otherwise>Factions</xsl:otherwise>
+                        </xsl:choose>
+                    </h2>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <xsl:if test=". eq 'character'">
+                                <th>Loyalty</th>
+                            </xsl:if>
+                            <th>Alignment</th>
+                            <xsl:apply-templates select="$root//cast/*[local-name() eq current()]">
+                                <xsl:sort select="lower-case(@id)"/>
+                            </xsl:apply-templates>
+                        </tr>
+                    </table>
+                </xsl:for-each>
+            </body>
+        </html>
+    </xsl:template>
+    <xsl:template match="character | faction">
+        <tr>
+            <xsl:apply-templates select="@id, @loyalty, @alignment"/>
+        </tr>
+    </xsl:template>
+    <xsl:template match="@*">
+        <td>
+            <xsl:value-of select="."/>
+        </td>
+    </xsl:template>
+</xsl:stylesheet>]]></code></pre>
+                <p>The XSLT above recruits some advanced features that we haven’t seen before:</p>
+                <ul>
+                    <li><p>We use <code class="language-xml">&lt;xsl:for-each&gt;</code> to create a
+                            deduplicated and alphabetized list of names of element types that are
+                            children of the cast list. The XPath expression</p>
+                        <pre class="language-xml"><code><![CDATA[<xsl:for-each select="//cast/* ! name() => distinct-values() => sort()"/>]]></code></pre>
+                        <p>says to select all element children of the cast list and, for each of
+                            them, return the element name. This returns a sequence of six instances
+                            of the string <q>character</q> and five instances of the string
+                                <q>faction</q>. We then remove the duplicates and sort
+                            alphabetically, so the expression eventually returns a sequence of two
+                            strings: <q>character</q> followed by <q>faction</q>. Because there are
+                            two strings in that sequence, we do everything inside the
+                            <code class="language-xml">&lt;xsl:for-each&gt;</code> element twice,
+                            once for each of the two strings.</p>
+                        <p>We use <code class="language-xml">&lt;xsl:for-each&gt;</code> because
+                            we’re dealing with strings (element names) and not nodes in the tree. It
+                            is possible to apply templates to strings, but a general rule of thumb
+                            is that we process a sequence of nodes by applying templates to them but
+                            we process a sequence of atomic values (strings or numbers) with
+                            <code class="language-xml">&lt;xsl:for-each&gt;</code>. This is why
+                            we’ve advised you not to use
+                            <code class="language-xml">&lt;xsl:for-each&gt;</code> so far (you
+                            haven’t had to process sequences of atomic values). When we get to our
+                            SVG unit, which is coming next, we’ll use
+                            <code class="language-xml">&lt;xsl:for-each&gt;</code> more often
+                            because with SVG we compute a lot of numerical values, that is, atomic
+                            values that are not in the tree. Stay tuned!</p></li>
+                    <li><p>Because our <code class="language-xml">&lt;xsl:for-each&gt;</code> will
+                            do two things, one for each of the two strings, we can use the same code
+                            to create the <code class="language-xml">&lt;h2&gt;</code> header and
+                            the table. We need to customize the header and the column labels in the
+                            table, though, and we use conditional expressions to do that. We
+                            describe conditionals
+                            (<code class="language-xml">&lt;xsl:choose&gt;</code> and
+                            <code class="language-xml">&lt;xsl:if&gt;</code>) in our <a
+                                href="xslt-basics-2.xhtml">second XSLT tutorial</a>, so we won’t
+                            repeat ourselves here, but here is a brief summary:</p>
+                        <ul>
+                            <li><p>The <code class="language-xml">&lt;xsl:choose&gt;</code> element
+                                    provides an
+                                    <code class="language-xquery">if … then … else</code> type of
+                                    functionality. We say that if we’re creating output for
+                                    characters the value inside the
+                                    <code class="language-xml">&lt;h2&gt;</code> should be the
+                                    string <q>Cast of characters</q>, and otherwise it should be the
+                                    string <q>Factions</q>.</p></li>
+                            <li><p>We want a column labeled <q>Loyalty</q> only for characters, but
+                                    not for factions. We use
+                                    <code class="language-xml">&lt;xsl:if&gt;</code> for that
+                                    because <code class="language-xml">&lt;xsl:if&gt;</code> doesn’t
+                                    have an <q>else</q>, so it means <q>do this for characters, but
+                                        otherwise (that is, for factions) do nothing</q>.</p></li>
+                        </ul>
+                        <p>The conditionals here let us create different headers and different
+                            column labels for characters and for factions within a single
+                            <code class="language-xml">&lt;h2&gt;</code> element and a single
+                            <code class="language-xml">&lt;table&gt;</code> element. With just two
+                            tables the overhead might outweigh any benefit of this consolidation (=
+                            we probably wouldn’t write our code this way in Real Life if we had only
+                            two tables to deal with), but the reduction in repetition would begin to
+                            pay off were there more tables.</p></li>
+                    <li><p>Inside <code class="language-xml">&lt;xsl:for-each&gt;</code> over a
+                            sequence of strings (the element type names are strings and not nodes in
+                            the tree) we’re cut off from the tree, which means that if we try to
+                            apply templates to something that begins
+                            <code class="language-xquery">//cast</code> we’ll raise an error that a
+                            string has no document node, so we can’t use a path that starts at a
+                            document node. In order to be able to refer to the input XML tree inside
+                            the <code class="language-xml">&lt;xsl:for-each&gt;</code>, then, we
+                            create a variable called <code class="language-xquery">$root</code> (the
+                            name is arbitrary, but we chose this one because it’s the root of the
+                            input tree) and <dfn>bind</dfn> the document node of the input XML to
+                            that variable name. We can then start our XPath expression inside the
+                            <code class="language-xml">&lt;xsl:for-each&gt;</code> from there, so
+                            that:</p>
+                        <pre class="language-xml"><code>$root//cast/*[local-name() eq current()]</code></pre>
+                        <p>means to start from the top of the input XML, find all of its
+                            <code class="language-xml">&lt;cast&gt;</code> descendants (there’s
+                            exactly one), and then find all of the children of that
+                            <code class="language-xml">&lt;cast&gt;</code> element that have names
+                            that are equal to the current value of the
+                            <code class="language-xml">&lt;xsl:for-each&gt;</code> operation. The
+                            function <code class="language-xquery">current()</code> is equivalent to
+                            the context item, that is, the thing we’re operating over, which here
+                            will be one of the two strings we selected with our
+                            <code class="language-xml">&lt;xsl:for-each&gt;</code>. That value will
+                            be the string <q>character</q> the first time and <q>faction</q> the
+                            second time, so our XPath expression will select the elements we care
+                            about for the particular table that we are creating. We use
+                            <code class="language-xml">&lt;xsl:sort&gt;</code> to sort those
+                            elements alphabetically after telling the sort instruction to ignore
+                            case differences by treating all text as if it were lower case.</p></li>
+                </ul>
+            </section>
+        </section>
+    </body>
+</html>
