@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>XSLT Batch Processing</title>
+        <link rel="stylesheet" href="../css/style.css"/>
+        <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+    </head>
+    <body>
+        <a href="#main-content" class="skip-link">Skip to main content</a>
+            <header>
+        <nav role="navigation" aria-label="Main navigation">
+            <a href="https://dh.bactriana.org/index.xhtml">Home</a>
+            <a href="https://dh.bactriana.org/syllabus.xhtml">Syllabus</a>
+            <a href="https://dh.bactriana.org/description.xhtml">Policies</a>
+            <a href="https://dh.bactriana.org/projects.xhtml">Projects</a>
+            <!-- <a href="assignments.xhtml">Assignments</a> -->
+            <a href="http://dh.obdurodon.org/" target="_blank" rel="noopener">Resources</a>
+            <a href="https://bactriana.org/" target="_blank" rel="noopener">Bactriana</a>
+        </nav>
+    </header>
+        <header>
+            <h1>XSLT Batch Processing</h1>
+            <nav aria-label="Page contents">
+                <ul>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#variables">Variables and <code>collection()</code></a></li>
+                    <li><a href="#initial-template"><code>xsl:initial-template</code></a></li>
+                    <li><a href="#result-document"><code>xsl:result-document</code></a></li>
+                    <li><a href="#many-to-one">Many-to-one output</a></li>
+                    <li><a href="#many-to-many">Many-to-many output</a></li>
+                    <li><a href="#filenames">Dynamic filenames</a></li>
+                    <li><a href="#reference">Quick reference</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main id="main-content">
+
+            <!-- OVERVIEW -->
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>Every XSLT stylesheet you have written so far takes a single XML file as its
+                input. Batch processing means applying the same transformation to an entire
+                directory of XML files at once. This page covers the pure XSLT approach: declaring
+                the input corpus from within the stylesheet itself using the
+                <span class="code-snippet">collection()</span> function, with no external
+                configuration required.</p>
+
+                <p>There are two output shapes to know:</p>
+                <ul>
+                    <li><strong>Many-to-one:</strong> many XML input files produce a single HTML
+                    output. Useful for aggregate analysis — statistics, indexes, summaries across
+                    a whole corpus.</li>
+                    <li><strong>Many-to-many:</strong> many XML input files each produce their own
+                    HTML output file. Useful for generating a set of individual pages — one per
+                    document — from a corpus.</li>
+                </ul>
+
+                <p>Both share the same three-part infrastructure: a corpus variable using
+                <span class="code-snippet">collection()</span>, an
+                <span class="code-snippet">xsl:initial-template</span> entry point, and
+                <span class="code-snippet">xsl:result-document</span> to write output to named
+                files. The only structural difference between the two shapes is whether
+                <span class="code-snippet">xsl:result-document</span> fires once or inside
+                a loop.</p>
+
+                <blockquote>
+                    Before running any batch stylesheet in oXygen, set the XML input dropdown
+                    to <strong>(None)</strong>. If a document is selected there, it overrides
+                    the <span class="code-snippet">collection()</span> variable declared inside
+                    the stylesheet. This is the most common source of errors in batch processing.
+                </blockquote>
+            </section>
+
+            <!-- VARIABLES AND COLLECTION -->
+            <section id="variables">
+                <h2>Variables and <code>collection()</code></h2>
+
+                <h3>xsl:variable</h3>
+                <p>A variable stores a value for reuse elsewhere in the stylesheet. XSLT variables
+                are <strong>immutable</strong> — unlike Python variables, once declared the value
+                cannot be changed. The basic syntax is:</p>
+
+                <pre>&lt;xsl:variable name="my-variable" as="xs:integer" select="42"/&gt;</pre>
+
+                <p>The <span class="code-snippet">name=</span> attribute gives the variable its
+                identifier; <span class="code-snippet">as=</span> declares its type;
+                <span class="code-snippet">select=</span> provides its value. You reference a
+                variable elsewhere in the stylesheet with a
+                <span class="code-snippet">$</span> prefix:
+                <span class="code-snippet">$my-variable</span>.</p>
+
+                <p>For a corpus of XML documents the type is
+                <span class="code-snippet">document-node()+</span>:</p>
+                <ul>
+                    <li><span class="code-snippet">document-node()</span> — the root node of a
+                    parsed XML document. This is the node <em>above</em> the root element — the
+                    same thing <span class="code-snippet">/</span> refers to in XPath.</li>
+                    <li><span class="code-snippet">+</span> — one or more (the same quantifier
+                    as in RelaxNG schemas).</li>
+                </ul>
+
+                <h3>The collection() function</h3>
+                <p>The <span class="code-snippet">collection()</span> function takes a path to a
+                directory and returns all matching XML documents in it as a sequence of document
+                nodes.</p>
+
+                <h4>Flat directory (no subdirectories)</h4>
+                <pre>&lt;xsl:variable name="my-corpus" as="document-node()+"
+    select="collection('./my-collection?select=*.xml')"/&gt;</pre>
+
+                <p>The <span class="code-snippet">?select=*.xml</span> filter is important. Without
+                it, any non-XML file in the directory — a <code>.DS_Store</code>, a
+                <code>README.md</code> — produces a cryptic error. The
+                <span class="code-snippet">?</span> signals that options follow;
+                <span class="code-snippet">*.xml</span> matches any filename ending in
+                <code>.xml</code>.</p>
+
+                <h4>Recursive directory (includes nested subdirectories)</h4>
+                <pre>&lt;xsl:variable name="my-corpus" as="document-node()+"
+    select="collection('./my-collection?recurse=yes;select=*.xml')"/&gt;</pre>
+
+                <p><span class="code-snippet">recurse=yes</span> tells
+                <span class="code-snippet">collection()</span> to descend into subdirectories.
+                Multiple options are separated by semicolons. This is useful when a corpus is
+                organized into subfolders by author, date, genre, or any other grouping.</p>
+
+                <h3>Querying across the corpus</h3>
+                <p>Once the corpus is in a variable, XPath expressions can run across all documents
+                at once. Reference the variable with a <span class="code-snippet">$</span>
+                prefix:</p>
+
+                <pre>&lt;xsl:value-of select="count($my-corpus//item)"/&gt;</pre>
+
+                <p>The <span class="code-snippet">//item</span> steps down through all document
+                nodes in the sequence simultaneously — no loop needed for a simple aggregate
+                count. For output that must be computed or written per document, use
+                <span class="code-snippet">xsl:for-each</span> to iterate over the corpus
+                variable.</p>
+            </section>
+
+            <!-- INITIAL TEMPLATE -->
+            <section id="initial-template">
+                <h2><code>xsl:initial-template</code></h2>
+
+                <p>Every stylesheet you have written so far begins by matching the root node of
+                a single input document:</p>
+
+                <pre>&lt;xsl:template match="/"&gt;
+    ...
+&lt;/xsl:template&gt;</pre>
+
+                <p>That works because oXygen supplies a default input document via the XML
+                dropdown. With <span class="code-snippet">collection()</span>, there is
+                <strong>no default input document</strong> — the corpus is declared inside the
+                stylesheet, and the XML dropdown is set to
+                <span class="code-snippet">(None)</span>. The root-match template therefore
+                never fires.</p>
+
+                <p>The solution is <span class="code-snippet">xsl:initial-template</span>: a
+                named template the processor runs first, before any document matching:</p>
+
+                <pre>&lt;xsl:template name="xsl:initial-template"&gt;
+    &lt;!-- entry point: query the corpus variable and write output here --&gt;
+&lt;/xsl:template&gt;</pre>
+
+                <p>Note that <span class="code-snippet">xsl:initial-template</span> is both the
+                attribute name <em>and</em> the value — this is intentional XSLT 3.0 syntax,
+                not a typo. Named templates are not triggered by document processing; they run
+                when explicitly called. In this case the processor calls it automatically at
+                startup because of the special reserved name.</p>
+            </section>
+
+            <!-- RESULT DOCUMENT -->
+            <section id="result-document">
+                <h2><code>xsl:result-document</code></h2>
+
+                <p>Normally a stylesheet writes all output to the primary output tree — the
+                single file configured in the oXygen output dropdown. With batch processing
+                you often want to control exactly where output goes.
+                <span class="code-snippet">xsl:result-document</span> lets you write to any
+                named file:</p>
+
+                <pre>&lt;xsl:result-document href="output/myfile.html" method="html"&gt;
+    &lt;!-- content to write to this file --&gt;
+&lt;/xsl:result-document&gt;</pre>
+
+                <p>The <span class="code-snippet">href</span> is an AVT — the curly-brace
+                attribute value template syntax you already know — so the filename can be
+                computed dynamically. Saxon will create intermediate directories (such as
+                <code>output/</code>) if they do not already exist.</p>
+
+                <p>In a many-to-one stylesheet,
+                <span class="code-snippet">xsl:result-document</span> appears once with a
+                hard-coded filename. In a many-to-many stylesheet, it appears inside an
+                <span class="code-snippet">xsl:for-each</span> loop so it fires once per
+                input document.</p>
+            </section>
+
+            <!-- MANY TO ONE -->
+            <section id="many-to-one">
+                <h2>Many-to-one output</h2>
+
+                <p>The many-to-one pattern collects data from all documents in the corpus and
+                writes a single HTML output — a summary page, a statistics table, an index.
+                The <span class="code-snippet">xsl:result-document</span> fires once, outside
+                any loop, with a hard-coded filename.</p>
+
+                <h3>Skeleton</h3>
+                <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    exclude-result-prefixes="#all"
+    version="3.0"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0"&gt;
+    &lt;xsl:output method="html" indent="yes"/&gt;
+
+    &lt;!-- 1. Declare the corpus variable --&gt;
+    &lt;xsl:variable name="my-corpus" as="document-node()+"
+        select="collection('./my-collection?select=*.xml')"/&gt;
+
+    &lt;!-- 2. Named entry point --&gt;
+    &lt;xsl:template name="xsl:initial-template"&gt;
+
+        &lt;!-- 3. Write to a single named file --&gt;
+        &lt;xsl:result-document href="output/summary.html" method="html"&gt;
+            &lt;html&gt;
+                &lt;head&gt;&lt;title&gt;Corpus Summary&lt;/title&gt;&lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h1&gt;Corpus Summary&lt;/h1&gt;
+
+                    &lt;!-- Corpus-level aggregate: no loop needed --&gt;
+                    &lt;p&gt;Total documents: &lt;xsl:value-of
+                        select="count($my-corpus)"/&gt;&lt;/p&gt;
+                    &lt;p&gt;Total items: &lt;xsl:value-of
+                        select="count($my-corpus//item)"/&gt;&lt;/p&gt;
+
+                    &lt;!-- Per-document breakdown: iterate with for-each --&gt;
+                    &lt;table&gt;
+                        &lt;tr&gt;&lt;th&gt;Document&lt;/th&gt;&lt;th&gt;Item count&lt;/th&gt;&lt;/tr&gt;
+                        &lt;xsl:for-each select="$my-corpus"&gt;
+                            &lt;xsl:sort select=".//title"/&gt;
+                            &lt;tr&gt;
+                                &lt;td&gt;&lt;xsl:value-of select=".//title"/&gt;&lt;/td&gt;
+                                &lt;td&gt;&lt;xsl:value-of select="count(.//item)"/&gt;&lt;/td&gt;
+                            &lt;/tr&gt;
+                        &lt;/xsl:for-each&gt;
+                    &lt;/table&gt;
+                &lt;/body&gt;
+            &lt;/html&gt;
+        &lt;/xsl:result-document&gt;
+    &lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;</pre>
+
+                <h3>Key points</h3>
+                <ul>
+                    <li>Corpus-level counts query <span class="code-snippet">$my-corpus</span>
+                    directly — <span class="code-snippet">//item</span> steps across all document
+                    nodes in the sequence simultaneously. No loop needed.</li>
+                    <li>Inside <span class="code-snippet">xsl:for-each</span>,
+                    <span class="code-snippet">.</span> is the current document node. Use
+                    <span class="code-snippet">.//item</span> (not
+                    <span class="code-snippet">//item</span>) to query within that document only.
+                    Without the leading <span class="code-snippet">.</span>, XPath searches the
+                    entire corpus.</li>
+                    <li><span class="code-snippet">xsl:sort</span> takes
+                    <span class="code-snippet">select=</span> (an expression), not
+                    <span class="code-snippet">match=</span> (a pattern).</li>
+                </ul>
+            </section>
+
+            <!-- MANY TO MANY -->
+            <section id="many-to-many">
+                <h2>Many-to-many output</h2>
+
+                <p>The many-to-many pattern produces one output file per input document.
+                <span class="code-snippet">xsl:result-document</span> moves inside an
+                <span class="code-snippet">xsl:for-each</span> loop so it fires once per
+                iteration. The corpus variable and
+                <span class="code-snippet">xsl:initial-template</span> are identical to the
+                many-to-one pattern.</p>
+
+                <h3>Skeleton</h3>
+                <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    exclude-result-prefixes="#all"
+    version="3.0"
+    xpath-default-namespace="http://www.tei-c.org/ns/1.0"&gt;
+    &lt;xsl:output method="html" indent="yes"/&gt;
+
+    &lt;!-- 1. Declare the corpus variable --&gt;
+    &lt;xsl:variable name="my-corpus" as="document-node()+"
+        select="collection('./my-collection?select=*.xml')"/&gt;
+
+    &lt;!-- 2. Named entry point --&gt;
+    &lt;xsl:template name="xsl:initial-template"&gt;
+
+        &lt;!-- 3. Loop over the corpus --&gt;
+        &lt;xsl:for-each select="$my-corpus"&gt;
+
+            &lt;!-- 4. Write one file per document --&gt;
+            &lt;xsl:result-document href="output/doc_{position()}.html" method="html"&gt;
+                &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;title&gt;&lt;xsl:value-of select=".//title"/&gt;&lt;/title&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;h1&gt;&lt;xsl:value-of select=".//title"/&gt;&lt;/h1&gt;
+                        &lt;xsl:apply-templates select=".//item"/&gt;
+                    &lt;/body&gt;
+                &lt;/html&gt;
+            &lt;/xsl:result-document&gt;
+        &lt;/xsl:for-each&gt;
+    &lt;/xsl:template&gt;
+
+    &lt;!-- 5. Match templates work exactly as in a single-document stylesheet --&gt;
+    &lt;xsl:template match="item"&gt;
+        &lt;p&gt;&lt;xsl:apply-templates/&gt;&lt;/p&gt;
+    &lt;/xsl:template&gt;
+
+&lt;/xsl:stylesheet&gt;</pre>
+
+                <h3>Key points</h3>
+                <ul>
+                    <li><span class="code-snippet">xsl:result-document</span> is inside the
+                    loop: one call per iteration, one output file per document.</li>
+                    <li>All XPath expressions inside the loop should be scoped with a leading
+                    <span class="code-snippet">.</span> to query only the current document,
+                    not the whole corpus.</li>
+                    <li>Match templates work exactly as they do in a single-document stylesheet.
+                    The push model is unchanged.</li>
+                    <li>Nothing is written to the primary output tree when all content goes
+                    through <span class="code-snippet">xsl:result-document</span>. oXygen may
+                    warn about an empty result — this is not an error.</li>
+                    <li>If a document in the corpus does not contain the element you are querying,
+                    its output file is still produced but the relevant portion of the body will
+                    be empty. Batch processing does not guarantee every document contains what
+                    you are looking for.</li>
+                </ul>
+            </section>
+
+            <!-- DYNAMIC FILENAMES -->
+            <section id="filenames">
+                <h2>Dynamic filenames</h2>
+
+                <h3>Using position() — simple and transparent</h3>
+                <p><span class="code-snippet">position()</span> returns the position of the
+                current node in the sequence being iterated. Inside an
+                <span class="code-snippet">xsl:for-each</span> over the corpus, it gives each
+                document a unique number. Use it in an AVT inside the
+                <span class="code-snippet">href</span>:</p>
+
+                <pre>&lt;xsl:result-document href="output/doc_{position()}.html" method="html"&gt;</pre>
+
+                <p>This produces <code>doc_1.html</code>, <code>doc_2.html</code>, etc. The
+                filenames are not descriptive of their content, but the mechanism is completely
+                transparent and easy to reason about.</p>
+
+                <h3>Derived from the input filename — descriptive</h3>
+                <p>To name each output file after its input file — so that
+                <code>myfile.xml</code> produces <code>myfile.html</code> — declare a variable
+                inside the loop that computes the filename from the input document's URI:</p>
+
+                <pre>&lt;xsl:variable name="filename"
+    select="substring-before(
+        tokenize(base-uri(), '/')[last()],
+        '.xml') || '.html'"/&gt;</pre>
+
+                <p>Then reference it in the <span class="code-snippet">href</span> with an AVT:</p>
+
+                <pre>&lt;xsl:result-document href="output/{$filename}" method="html"&gt;</pre>
+
+                <p>Breaking down the expression:</p>
+                <ul>
+                    <li><span class="code-snippet">base-uri()</span> — returns the full file
+                    path of the current document as a string</li>
+                    <li><span class="code-snippet">tokenize(..., '/')[last()]</span> — splits the
+                    path on <code>/</code> and selects the last segment, giving the bare
+                    filename</li>
+                    <li><span class="code-snippet">substring-before(..., '.xml')</span> — returns
+                    everything before <code>.xml</code>, stripping the extension without a
+                    regular expression</li>
+                    <li><span class="code-snippet">|| '.html'</span> — concatenates the new
+                    extension (<span class="code-snippet">||</span> is the XPath string
+                    concatenation operator)</li>
+                </ul>
+
+                <p>Because this variable is declared <em>inside</em> the
+                <span class="code-snippet">xsl:for-each</span> loop, it is re-evaluated for
+                each document in turn — each iteration gets its own value of
+                <span class="code-snippet">$filename</span>.</p>
+            </section>
+
+            <!-- QUICK REFERENCE -->
+            <section id="reference">
+                <h2>Quick reference</h2>
+
+                <h3>The two output patterns compared</h3>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Many-to-one</th>
+                        <th>Many-to-many</th>
+                    </tr>
+                    <tr>
+                        <td>Entry point</td>
+                        <td><code>xsl:initial-template</code></td>
+                        <td><code>xsl:initial-template</code></td>
+                    </tr>
+                    <tr>
+                        <td>Corpus variable</td>
+                        <td><code>collection()</code></td>
+                        <td><code>collection()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>xsl:result-document</code></td>
+                        <td>once, hard-coded filename</td>
+                        <td>inside loop, dynamic filename</td>
+                    </tr>
+                    <tr>
+                        <td>Primary output tree</td>
+                        <td>used by result-document</td>
+                        <td>empty (warning, not error)</td>
+                    </tr>
+                    <tr>
+                        <td><code>xsl:for-each</code> purpose</td>
+                        <td>one row or section per document</td>
+                        <td>one output file per document</td>
+                    </tr>
+                </table>
+
+                <h3>Common errors</h3>
+                <table>
+                    <tr>
+                        <th>Symptom</th>
+                        <th>Cause</th>
+                        <th>Fix</th>
+                    </tr>
+                    <tr>
+                        <td>Cryptic <code>collection()</code> error</td>
+                        <td>Non-XML file in the directory</td>
+                        <td>Add <code>?select=*.xml</code> to the path</td>
+                    </tr>
+                    <tr>
+                        <td>Wrong output / stylesheet ignores corpus</td>
+                        <td>XML input not set to (None) in oXygen</td>
+                        <td>Set XML dropdown to (None)</td>
+                    </tr>
+                    <tr>
+                        <td>XPath inside loop queries whole corpus</td>
+                        <td>Missing leading <code>.</code></td>
+                        <td>Use <code>.//element</code> not <code>//element</code></td>
+                    </tr>
+                    <tr>
+                        <td>Empty result warning in oXygen</td>
+                        <td>Nothing written to primary output tree</td>
+                        <td>Not an error — expected in many-to-many</td>
+                    </tr>
+                    <tr>
+                        <td>Output file produced but body is empty</td>
+                        <td>Document doesn't contain the queried element</td>
+                        <td>Expected batch behavior; add <code>xsl:if</code> guard if needed</td>
+                    </tr>
+                </table>
+
+                <h3><code>collection()</code> syntax</h3>
+                <table>
+                    <tr>
+                        <th>Use case</th>
+                        <th>Syntax</th>
+                    </tr>
+                    <tr>
+                        <td>Flat directory, XML files only</td>
+                        <td><code>collection('./my-dir?select=*.xml')</code></td>
+                    </tr>
+                    <tr>
+                        <td>Recursive (nested subdirectories), XML only</td>
+                        <td><code>collection('./my-dir?recurse=yes;select=*.xml')</code></td>
+                    </tr>
+                </table>
+            </section>
+
+        </main>
+    </body>
+</html>
