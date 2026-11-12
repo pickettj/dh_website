@@ -1,0 +1,42 @@
+{
+ "generated": [
+  ".build_manifest.json",
+  "ai_policies.html",
+  "copyright.html",
+  "course_description.html",
+  "favicon.svg",
+  "final_report.html",
+  "fonts/OFL-UnifrakturMaguntia.txt",
+  "fonts/OFL.txt",
+  "fonts/pt-sans-narrow-cyrillic-700.woff2",
+  "fonts/pt-sans-narrow-latin-700.woff2",
+  "fonts/pt-sans-narrow-latin-ext-700.woff2",
+  "fonts/unifraktur-maguntia-subset.woff2",
+  "format_materials.html",
+  "hist1030_digital_methods_spring2027_syllabus.pdf",
+  "images/illuminated_grimoire.jpg",
+  "index.html",
+  "learning_outcomes.html",
+  "past_projects.html",
+  "projects.html",
+  "setup.html",
+  "site.js",
+  "style.css",
+  "syllabus.html",
+  "ungrading.html"
+ ],
+ "sources": {
+  "syllabus_digital_methods.md": "5cfd332f5e9615d6cb5770a54550a9f5dccad74f",
+  "course_description.md": "f384890d8ffc07bcaa73981265ba2a3aac81b68a",
+  "learning_outcomes.md": "dfe22772b0a101c331e4bd6010422144f0132a49",
+  "format_materials.md": "ce210ceaa558c1c2268aa5f480d4345cba5f3d11",
+  "ungrading.md": "da8f834ba896f7def6f3a7c48a4d2f7dd4b787e5",
+  "projects.md": "62d1f25abd55be3ee8b49a9be420bf32c7ffd7c6",
+  "ai_policies.md": "b9fe8d0c9edca7e20413f8cf85962bd9f08d2cee",
+  "setup.md": "e8ed59654c5bc6fb5ea0cd21767e8d861b926854",
+  "copyright.md": "0fdae4e3ba416f3f7a198167daa4523fe10177fd",
+  "past_projects.md": "1d7ccf42ac79064b7d3b39ccf3faa097f5dbf399",
+  "final_report.md": "754911fbbaa76b1cd12ba28d1edfe48519a864b9",
+  "hist1030_digital_methods_spring2027.yaml": "3950332f15a0c6a068bc601fcf31e43dab6c0385"
+ }
+}
