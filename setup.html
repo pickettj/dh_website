@@ -33,17 +33,24 @@
 <p>For your <a href="ungrading.html#the-worm-journal">Worm Journal</a>: a paper notebook of your own, and a pen that writes in ink.</p>
 <!-- TODO: any preferences (size, binding)? -->
 </section>
-<section id="a-laptop" class="level2">
-<h2>A Laptop</h2>
-<!-- TODO -->
+<section id="scanning-your-journal" class="level2">
+<h2>Scanning Your Journal</h2>
+<p>Periodically you will scan pages of your <a href="ungrading.html#the-worm-journal">Worm Journal</a> and submit them to Canvas as a PDF. Your phone can do this; you do not need a scanner.</p>
+<!-- TODO: name the built-in options (iOS: Notes or the Files app; Android: Google Drive) and one free app as a fallback. State what we actually want: legible, right way up, one PDF per submission. -->
+</section>
+<section id="a-computer" class="level2">
+<h2>A Computer</h2>
+<!-- TODO: regular access to a computer, and bring it to every class, since we do not meet in a computer classroom. Point to Pitt's options for students who do not have one. Note that everything below has to run on whatever they bring. -->
 </section>
 <section id="vs-code" class="level2">
 <h2>VS Code</h2>
 <!-- TODO: download, install, first launch. -->
+<!-- TODO: the fiddly parts, which are worth doing together in the setup clinic rather than leaving to chance: (1) getting XML to pretty-print, which does not work out of the box and needs the formatter configured (and format-on-save turned on, or they will never use it); (2) installing Red Hat's "XML" extension so documents are validated against their schema as you type, which we definitely want them doing from the start. -->
+<!-- Red Hat XML does Relax NG (since 0.22.0), via an xml-model PI, an XML catalog, or a file association. One caveat to pin down before the clinic: the extension's own docs give full validation/completion/hover for .rng, and say .rnc compact syntax gets "only syntax coloration" (richer .rnc support is still an open PR, redhat-developer/vscode-xml#1189). This course is almost entirely .rnc, so worth a five-minute test with a deliberately invalid instance: confirm whether the squiggles come from the schema or just from well-formedness, and write down the exact xml-model line that works, since that is what the whole class will copy. -->
 </section>
-<section id="github-copilot" class="level2">
-<h2>GitHub Copilot</h2>
-<!-- TODO: GitHub account; apply for Copilot Student through GitHub Education early, since verification can take a while; sign in from VS Code. -->
+<section id="github-and-copilot" class="level2">
+<h2>GitHub and Copilot</h2>
+<!-- TODO: GitHub account; apply for Copilot Student through GitHub Education early, since verification can take a while; sign in from VS Code. Note that the same account is what they use for the course forum (see Course Format and Materials), so everyone needs one in week one, whether or not they ever use Git itself. -->
 </section>
 <section id="claude-for-education" class="level2">
 <h2>Claude for Education</h2>
@@ -52,6 +59,10 @@
 <section id="oxygen-xml-editor" class="level2">
 <h2>oXygen XML Editor</h2>
 <!-- TODO: download; license key on Canvas. -->
+</section>
+<section id="running-xslt" class="level2">
+<h2>Running XSLT</h2>
+<!-- TODO: belongs later in the semester, but the setup is here. Two different things that students routinely confuse: running a transformation (the oXygen transformation scenario, or the equivalent task in VS Code), which just produces output; and the XSLT debugger, which steps through templates and shows what matched what. Say when to reach for each: the debugger is for "why did nothing come out," not for everyday work. Include the one-time scenario setup, which is where people get stuck. -->
 </section>
 <section id="python" class="level2">
 <h2>Python</h2>
@@ -63,7 +74,7 @@
 <footer class="site-footer"><div class="wrap">
 <nav aria-label="More course pages"><ul class="more"><li><a href="ai_policies.html">AI Policies</a></li><li><a href="setup.html">Getting Set Up</a></li><li><a href="copyright.html">Copyright</a></li><li><a href="past_projects.html">Past Projects</a></li></ul></nav>
 <ul class="extras"><li><a class="pdf" href="hist1030_digital_methods_spring2027_syllabus.pdf"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2.5h8.2L19 7.3V21a.5.5 0 0 1-.5.5h-12A.5.5 0 0 1 6 21V3a.5.5 0 0 1 0-.5Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 2.8V7.5h4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><text x="12.5" y="17.6" text-anchor="middle" font-size="6.2" font-weight="700" font-family="Arial, sans-serif" fill="currentColor">PDF</text></svg><span>Printable syllabus (PDF)</span></a></li><li><a href="https://canvas.pitt.edu"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4.5" width="18" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 20h7M12 16.5V20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M7 13l3.2-3.4 2.4 2.2L16.8 8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Canvas</span></a></li><li><a href="https://jamespickett.info/">James Pickett</a></li></ul>
-<p class="fine">Last updated November 11, 2026. Site designed and built with the assistance of Claude Fable 5.2.</p>
+<p class="fine">Last updated November 12, 2026. Site designed and built with the assistance of Claude Fable 5.2.</p>
 </div></footer>
 <script src="site.js" defer></script>
 </body>

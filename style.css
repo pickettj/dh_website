@@ -278,9 +278,11 @@ h3.marker { border-top: 1px solid var(--rule); margin: 0; padding: .7rem 0; }
   --code-bg: #0f1620;     /* the machine */
   --code-ink: #7fe6ee;
   --blackletter: "UnifrakturMaguntia", "Old English Text MT", serif;
-  /* Book cloth: a fine plain weave, warp and weft, in the blue itself rather than in gold. */
-  --weave: repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 2px, rgba(0,0,0,.07) 2px 3px, transparent 3px 4px),
-           repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 1px, transparent 1px 2px, rgba(0,0,0,.06) 2px 3px, transparent 3px 4px);
+  /* Ground pigment: irregular mottling and a fine dust, as in hand-ground ultramarine.
+     Two tiles of SVG fractal noise, laid on in soft-light so the lapis keeps its hue. */
+  --pigment:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1400' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.012' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='1400' height='500' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .theme-anachronism ::selection { background: var(--code-ink); color: var(--code-bg); }
 
@@ -288,9 +290,20 @@ h3.marker { border-top: 1px solid var(--rule); margin: 0; padding: .7rem 0; }
 .theme-anachronism .topbar,
 .theme-anachronism .masthead {
   background-color: var(--loam);
-  background-image: var(--weave);
+  position: relative;
+  isolation: isolate;          /* keep the blend inside the band */
   border-bottom: 4px solid var(--gold);
   box-shadow: 0 3px 0 var(--vermilion);
+}
+.theme-anachronism .topbar::before,
+.theme-anachronism .masthead::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--pigment);
+  mix-blend-mode: soft-light;
+  opacity: .6;
 }
 .theme-anachronism .topbar nav a[aria-current] { border-bottom-color: var(--ochre); }
 
@@ -363,6 +376,7 @@ h3.marker { border-top: 1px solid var(--rule); margin: 0; padding: .7rem 0; }
 
 @media print {
   .theme-anachronism .topbar, .theme-anachronism .masthead { background: none; box-shadow: none; }
+  .theme-anachronism .topbar::before, .theme-anachronism .masthead::before { display: none; }
   .theme-anachronism code, .theme-anachronism pre { background: none; color: #000; box-shadow: none; }
   .theme-anachronism article > section.level1 > p:first-of-type::first-letter { color: #000; background: none; border: 0; }
   .theme-anachronism strong:not(.lead), .theme-anachronism strong.lead { color: #000; }

@@ -26,17 +26,17 @@
   "ungrading.html"
  ],
  "sources": {
-  "syllabus_digital_methods.md": "5cfd332f5e9615d6cb5770a54550a9f5dccad74f",
+  "syllabus_digital_methods.md": "bd42caf2ec81386bee5d75c9e6249f5b74f6c3a6",
   "course_description.md": "f384890d8ffc07bcaa73981265ba2a3aac81b68a",
-  "learning_outcomes.md": "dfe22772b0a101c331e4bd6010422144f0132a49",
-  "format_materials.md": "ce210ceaa558c1c2268aa5f480d4345cba5f3d11",
-  "ungrading.md": "da8f834ba896f7def6f3a7c48a4d2f7dd4b787e5",
-  "projects.md": "62d1f25abd55be3ee8b49a9be420bf32c7ffd7c6",
-  "ai_policies.md": "b9fe8d0c9edca7e20413f8cf85962bd9f08d2cee",
-  "setup.md": "e8ed59654c5bc6fb5ea0cd21767e8d861b926854",
+  "learning_outcomes.md": "67c074d5988844622fe36d8a8336f6a2e50f0502",
+  "format_materials.md": "d4e8ba642ce98d715f0accd8f01c6d6005271fec",
+  "ungrading.md": "bfb760c0c0b6ed06b824d4b9457a88d871c3ba32",
+  "projects.md": "7f5926b1163031779f6ce5f2d246354f88a8908e",
+  "ai_policies.md": "5c7c52206edf56cc5fd407444d6c39539e2cdd33",
+  "setup.md": "b698c47e156f722a5200045da06c9ab5d4b1f64f",
   "copyright.md": "0fdae4e3ba416f3f7a198167daa4523fe10177fd",
-  "past_projects.md": "1d7ccf42ac79064b7d3b39ccf3faa097f5dbf399",
-  "final_report.md": "754911fbbaa76b1cd12ba28d1edfe48519a864b9",
-  "hist1030_digital_methods_spring2027.yaml": "3950332f15a0c6a068bc601fcf31e43dab6c0385"
+  "past_projects.md": "4072a05cdb880dd4bb3767004ef0551e49c38285",
+  "final_report.md": "a0b475fc3f75f2b2a62b2be92b3bc8b4ac715a6d",
+  "hist1030_digital_methods_spring2027.yaml": "01defb4c6a6cb0bcf53d39fc676b12f8d2c0a672"
  }
 }
